@@ -1,0 +1,109 @@
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import Dashboard from "../admin/pages/Dashboard";
+import Lecturer from "../admin/pages/Lecturer";
+import Login from "../auth/Login";
+import DashBoardLecturer from "../lecturers/pages/DashBoardLecturer";
+import Programmes from "../admin/pages/Programmes";
+import Announcements from "../admin/pages/Announcements";
+import Timetables from "../admin/pages/Timetables";
+import Settings from "../admin/pages/Settings";
+import ProtectedRoute from "./ProtectedRoute";
+import Modules from "../lecturers/pages/Modules";
+import Bookings from "../lecturers/pages/Bookings";
+import SettingsLecturer from "../lecturers/pages/SettingsLecturer";
+
+function Routing() {
+  return (
+    <div>
+      <Routes>
+        {/* Authentication Router */}
+        <Route path="/" element={<Login />} />
+        {/* Admin Interface Router */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/lecturer"
+          element={
+            <ProtectedRoute>
+              <Lecturer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/programmes"
+          element={
+            <ProtectedRoute>
+              <Programmes />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/announcements"
+          element={
+            <ProtectedRoute>
+              <Announcements />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/timetable"
+          element={
+            <ProtectedRoute>
+              <Timetables />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
+        {/* Lecturer Interface Router */}
+        <Route
+          path="/homelecturer"
+          element={
+            <ProtectedRoute>
+              <DashBoardLecturer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/moduleslecturer"
+          element={
+            <ProtectedRoute>
+              <Modules />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/bookingslecturerfromstudent"
+          element={
+            <ProtectedRoute>
+              <Bookings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settingslecturer"
+          element={
+            // <ProtectedRoute>
+            <SettingsLecturer />
+            // </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </div>
+  );
+}
+
+export default Routing;
