@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Dashboard from "../admin/pages/Dashboard";
 import Lecturer from "../admin/pages/Lecturer";
 import Login from "../auth/Login";
@@ -12,8 +12,17 @@ import ProtectedRoute from "./ProtectedRoute";
 import Modules from "../lecturers/pages/Modules";
 import Bookings from "../lecturers/pages/Bookings";
 import SettingsLecturer from "../lecturers/pages/SettingsLecturer";
+import ModuleStudent from "../student/pages/ModuleStudent";
+import Calendar from "../student/pages/Calendar";
+import Chart from "../student/pages/Chart";
+import BookingsStudent from "../student/pages/BookingsStudent";
+import Profile from "../student/pages/Profile";
 
 function Routing() {
+  const navigate = useNavigate();
+  function handleProfile(){
+    navigate("/profile");
+  }
   return (
     <div>
       <Routes>
@@ -100,6 +109,38 @@ function Routing() {
             <SettingsLecturer />
             // </ProtectedRoute>
           }
+        />
+
+        {/* Student interface routing */}
+        <Route
+          path="/modules"
+          element={
+            <ModuleStudent handleProfile={handleProfile} />
+          }
+        />
+        <Route
+          path="calendar"
+          element={
+            <Calendar handleProfile={handleProfile} />
+          }
+        />
+        <Route
+          path="chart"
+          element={
+            <Chart handleProfile={handleProfile} />
+          }
+        />
+        <Route
+        path="bookings"
+        element={
+          <BookingsStudent handleProfile={handleProfile} />
+        }
+        />
+        <Route
+        path="profile"
+        element={
+          <Profile />
+        }
         />
       </Routes>
     </div>
