@@ -48,11 +48,11 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await logIn(email, password);
-      if(email.endsWith("@admin.uj.ac.za")){navigate("/dashboard")}
-      else if(email.endsWith("@uj.ac.za")){navigate("/homelecturer")}
-      console.log("Login");
-      // navigate("/dashboard");
+      // await logIn(email, password);
+      // if(email.endsWith("@admin.uj.ac.za")){navigate("/dashboard")}
+      // else if(email.endsWith("@uj.ac.za")){navigate("/homelecturer")}
+      // console.log("Login");
+      navigate("/modules");
     } catch(err) {
       console.log(err)
       console.log("Failed to Login");
