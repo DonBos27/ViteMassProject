@@ -12,7 +12,7 @@ import {
 } from "@material-tailwind/react";
 import Background from "./images/background.gif";
 import { useAuth } from "../context/AuthContext";
-import { Timestamp, updateDoc } from "firebase/firestore";
+import { Timestamp, doc, updateDoc } from "firebase/firestore";
 import { db, usersCollection } from "../firebase/configFirebase";
 
 function Login() {
@@ -57,6 +57,8 @@ function Login() {
         navigate("/dashboard");
       } else if (email.endsWith("@uj.ac.za")) {
         navigate("/homelecturer");
+      } else if (email.endsWith("@student.uj.ac.za")) {
+        navigate("/modules");
       }
       console.log("Login");
       // navigate("/dashboard");

@@ -110,9 +110,10 @@ function Lecturer() {
     const assignedModules = await Promise.all(
       selectedModules.map(async (moduleCode) => {
         const moduleSnapshot = await getDoc(
-          doc(db, "modulesAssign", moduleCode)
+          doc(db, "modules", moduleCode)
         );
         const assignedTo = moduleSnapshot.data()?.assignedTo;
+        console.log("Assigned to:", assignedTo)
         if (assignedTo && assignedTo !== selectedLecturerId) {
           return moduleCode;
         }
@@ -140,6 +141,8 @@ function Lecturer() {
         moduleCode: course.moduleCode,
         moduleName: course.moduleName,
         moduleImage: course.image,
+        assignedTo: selectedLecturerId,
+        lecturerName: lecturerData.title + " " + lecturerData.firstname + " " + lecturerData.name,
       };
     });
 
@@ -156,7 +159,7 @@ function Lecturer() {
     if (lecturerData.modules.length > 0) {
       const previousModuleRef = doc(
         db,
-        "modulesAssign",
+        "modules",
         lecturerData.modules[0].moduleCode
       );
       await setDoc(
@@ -171,11 +174,12 @@ function Lecturer() {
     // Update the assignedTo field for each module
     await Promise.all(
       selectedModules.map(async (moduleCode) => {
-        const moduleRef = doc(db, "modulesAssign", moduleCode);
+        const moduleRef = doc(db, "modules", moduleCode);
         await setDoc(
           moduleRef,
           {
             assignedTo: selectedLecturerId,
+            lecturerName: lecturerData.title + " " + lecturerData.firstname + " " + lecturerData.name,
           },
           { merge: true }
         );

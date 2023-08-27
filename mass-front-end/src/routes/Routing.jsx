@@ -20,7 +20,7 @@ import Profile from "../student/pages/Profile";
 
 function Routing() {
   const navigate = useNavigate();
-  function handleProfile(){
+  function handleProfile() {
     navigate("/profile");
   }
   return (
@@ -115,33 +115,36 @@ function Routing() {
         <Route
           path="/modules"
           element={
-            <ModuleStudent handleProfile={handleProfile} />
+            <ProtectedRoute>
+              <ModuleStudent handleProfile={handleProfile} />
+            </ProtectedRoute>
           }
         />
         <Route
           path="calendar"
           element={
-            <Calendar handleProfile={handleProfile} />
+            <ProtectedRoute>
+              <Calendar handleProfile={handleProfile} />
+            </ProtectedRoute>
           }
         />
         <Route
           path="chart"
           element={
-            <Chart handleProfile={handleProfile} />
+            <ProtectedRoute>
+              <Chart handleProfile={handleProfile} />
+            </ProtectedRoute>
           }
         />
         <Route
-        path="bookings"
-        element={
-          <BookingsStudent handleProfile={handleProfile} />
-        }
+          path="bookings"
+          element={
+            <ProtectedRoute>
+              <BookingsStudent handleProfile={handleProfile} />
+            </ProtectedRoute>
+          }
         />
-        <Route
-        path="profile"
-        element={
-          <Profile />
-        }
-        />
+        <Route path="profile" element={<Profile />} />
       </Routes>
     </div>
   );

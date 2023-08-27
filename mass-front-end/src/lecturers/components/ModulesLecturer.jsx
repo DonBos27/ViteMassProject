@@ -97,26 +97,9 @@ function ModulesLecturer() {
       )}
       <Dialog open={size === "lg"} size={size || "lg"} handler={handleOpen}>
         <DialogHeader>Add Test, Assignment, Labs</DialogHeader>
-        <DialogBody divider>
+        <DialogBody divider className="m-5">
           <CalendarPost />
         </DialogBody>
-        {/* <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={() => handleOpen(null)}
-            className="mr-1"
-          >
-            <span>Cancel</span>
-          </Button>
-          <Button
-            variant="gradient"
-            color="green"
-            onClick={() => handleOpen(null)}
-          >
-            <span>Confirm</span>
-          </Button>
-        </DialogFooter> */}
       </Dialog>
     </div>
   );

@@ -9,26 +9,27 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 
 function StatisticsCard() {
+
   const data = [
     {
       id: 1,
       icon: <PersonIcon />,
       title: "Total Lecturers",
-      amount: "50",
+      amount: "20",
       color: "blue",
     },
     {
       id: 2,
       icon: <PersonIcon />,
       title: "Undergraduates Students",
-      amount: "2,300",
+      amount: "661",
       color: "deep-orange",
     },
     {
         id: 3,
         icon: <PersonIcon />,
         title: "Postgraduates Students",
-        amount: "2,300",
+        amount: "315",
         color: "deep-purple",
       },
 
