@@ -1,6 +1,7 @@
 import React from "react";
 import Sidebar from "../global/Sidebar";
 import NavigationBar from "../global/NavigationBar";
+import AnnouncementComponents from "../components/AnnouncementComponents";
 
 function Announcements() {
   return (
@@ -10,6 +11,9 @@ function Announcements() {
       </div>
       <div className="flex flex-col w-full mx-5 mt-4">
         <NavigationBar title={"Announcements"} />
+        <div className="mt-0 mx-auto">
+          <AnnouncementComponents />
+        </div>
       </div>
     </div>
   );

@@ -10,45 +10,26 @@ import {
   TimelineIcon,
   TimelineHeader,
 } from "@material-tailwind/react";
-import {
-  BellIcon,
-  ArchiveBoxIcon,
-  CurrencyDollarIcon,
-} from "@heroicons/react/24/solid";
+import CampaignIcon from "@mui/icons-material/Campaign";
 import React, { useEffect, useState } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/configFirebase";
 import { useAuth } from "../../context/AuthContext";
+import { format } from "date-fns";
 
 function ModuleStudent({ handleProfile }) {
-  const data = [
-    {
-      title: "Developement Software",
-      date: "22 Dec 7:20PM",
-      descrption: "Test will be based on LU1 to Lu4",
-    },
-    {
-      title: "Business Analysis",
-      date: "22 Dec 7:20PM",
-      descrption: "Test will be based on LU1 to Lu4",
-    },
-    {
-      title: "Software Engineering",
-      date: "22 Dec 7:20PM",
-      descrption: "Test will be based on LU1 to Lu4",
-    },
-  ];
   const [userData, setUserData] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
   const { user } = useAuth();
 
   useEffect(() => {
     if (user) {
       const email = user.email;
-      console.log("Email:", email);
+      // console.log("Email:", email);
       const unsubscribe = onSnapshot(doc(db, "users", email), (doc) => {
         if (doc.exists()) {
           const data = doc.data();
-          console.log("Fetched data from Firestore:", data);
+          // console.log("Fetched data from Firestore:", data);
           setUserData(data);
         }
       });
@@ -57,6 +38,40 @@ function ModuleStudent({ handleProfile }) {
       };
     }
   }, [user]);
+
+  useEffect(() => {
+    fetchAnnouncements();
+  }, []);
+
+  const fetchAnnouncements = async () => {
+    try {
+      const lecturerAnnouncements = await getDocs(
+        collection(db, "announcements_lecturer")
+      );
+      const studentAnnouncements = await getDocs(
+        collection(db, "announcements_student")
+      );
+      const everyoneAnnouncements = await getDocs(
+        collection(db, "announcements_everyone")
+      );
+
+      const combinedAnnouncements = [
+        ...lecturerAnnouncements.docs,
+        ...studentAnnouncements.docs,
+        ...everyoneAnnouncements.docs,
+      ];
+
+      // Sort the combinedAnnouncements array by timestamp if needed
+
+      setAnnouncements(studentAnnouncements.docs);
+      // console.log("Announcements:", combinedAnnouncements)
+      console.log("Announcements Lecturer:", lecturerAnnouncements.docs);
+      console.log("Announcements Student:", studentAnnouncements.docs);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="flex">
       <div className="w-1/4">
@@ -68,66 +83,71 @@ function ModuleStudent({ handleProfile }) {
           title={"Modules"}
           handleProfile={handleProfile}
         />
-        {/* <div className="mt-4 rounded-lg">
-          <h3 className="m-4 text-5xl text-black font-bold">
-            Welcome to MASS {userData.initials} {userData.name}!
-          </h3>
-        </div> */}
         <Card className="w-full my-4 bg-transparent border-none shadow-none">
           <div className="p-8">
             <Typography variant="h3" color="black">
               Modules
             </Typography>
-            {/* <Breadcrumbs className="bg-white">
-              <span>current</span>
-              <span>Modules</span>
-            </Breadcrumbs> */}
           </div>
           <ModulesSstudent />
         </Card>
-        {/* <Card className="w-full mt-4"></Card> */}
-        <Card>
-          <div className="w-full ml-4 mt-4">
-            <div>
-              <Typography variant="h3" color="black">
-                Announcements
-              </Typography>
-            </div>
-            <div>
-              {data.map((item) => (
-                <Timeline key={item}>
-                  <TimelineItem className="h-28">
+        <div className="p-8">
+          <Typography variant="h3" color="black">
+            Announcements
+          </Typography>
+        </div>
+        <div className="w-full ml-6 mb-4 mt-0">
+          {announcements.length > 0 ? (
+            announcements.map((announcement) => (
+              <div className="mr-10 mt-5">
+                <Timeline key={announcements.id}>
+                  <TimelineItem className="h-28 ">
                     <TimelineConnector className="!w-[78px]" />
-                    <TimelineHeader className="relative rounded-xl  py-3 pl-4 pr-8 ">
+                    <TimelineHeader className="relative rounded-none hover:border-l-8 hover:border-primary  bg-transparent hover:bg-white py-3 pl-4 pr-8  shadow-blue-gray-900/5">
                       <TimelineIcon className="p-3" variant="ghost">
-                        <BellIcon className="h-5 w-5" />
+                        <CampaignIcon className="h-5 w-5" />
                       </TimelineIcon>
-                      <div className="flex flex-col gap-1">
+                      <div className="flex flex-col gap-2">
                         <Typography variant="h6" color="blue-gray">
-                          {item.title}
+                          {announcement.data().title}
                         </Typography>
                         <Typography
-                          variant="small"
-                          color="gray"
-                          className="font-normal"
+                          variant="h6"
+                          color="gary"
+                          className="text-base font-normal"
                         >
-                          {item.date}
+                          {announcement.data().content}
                         </Typography>
+                        {announcement.data().timestamp && (
+                          <Typography
+                            variant="small"
+                            color="gray"
+                            className="font-normal"
+                          >
+                            {format(
+                              announcement.data().timestamp.toDate(),
+                              "dd MMM h:mm a"
+                            )}
+                          </Typography>
+                        )}
                         <Typography
-                          variant="small"
-                          color="gray"
-                          className="font-normal"
+                          variant="h6"
+                          color="gary"
+                          className="text-base font-normal"
                         >
-                          {item.descrption}
+                          posted by {announcement.data().name}
                         </Typography>
                       </div>
                     </TimelineHeader>
                   </TimelineItem>
                 </Timeline>
-              ))}
-            </div>
-          </div>
-        </Card>
+              </div>
+            ))
+          ) : (
+            <p>No announcements to display</p>
+          )}
+        </div>
+        {/* </Card> */}
       </div>
     </div>
   );
