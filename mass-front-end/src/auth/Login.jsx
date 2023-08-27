@@ -12,6 +12,8 @@ import {
 } from "@material-tailwind/react";
 import Background from "./images/background.gif";
 import { useAuth } from "../context/AuthContext";
+import { Timestamp, updateDoc } from "firebase/firestore";
+import { db, usersCollection } from "../firebase/configFirebase";
 
 function Login() {
   // story months into an array
@@ -36,26 +38,49 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user, logIn } = useAuth();
+  const { user, logIn, logOut } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     console.log("Login");
-    console.log(user)
+    console.log(user);
+    handleLogout();
+    // handleLogin();
   }, []);
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // await logIn(email, password);
-      // if(email.endsWith("@admin.uj.ac.za")){navigate("/dashboard")}
-      // else if(email.endsWith("@uj.ac.za")){navigate("/homelecturer")}
-      // console.log("Login");
-      navigate("/modules");
-    } catch(err) {
-      console.log(err)
+      await logIn(email, password);
+      // Log the timeIn when the user logs in
+      if (email.endsWith("@admin.uj.ac.za")) {
+        navigate("/dashboard");
+      } else if (email.endsWith("@uj.ac.za")) {
+        navigate("/homelecturer");
+      }
+      console.log("Login");
+      // navigate("/dashboard");
+    } catch (err) {
+      console.log(err);
       console.log("Failed to Login");
+    }
+  };
+
+  const handleLogout = async () => {
+    
+    try {
+      // await logOut();
+      if (user) {
+        const userDocRef = doc(db, "users", user.email);
+        console.log(userDocRef);
+        await updateDoc(userDocRef, {
+          timeIn: Timestamp.fromDate(new Date()),
+        });
+      }
+      // navigate("/");
+      console.log("Logout");
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -80,13 +105,23 @@ function Login() {
             <Typography variant="small">
               Please enter your credentials:
             </Typography>
-            <Input type="text" color="deep-orange" label="Login ID" size="lg" onChange={(e)=>{setEmail(e.target.value)}}/>
+            <Input
+              type="text"
+              color="deep-orange"
+              label="Login ID"
+              size="lg"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
             <Input
               type="password"
               color="deep-orange"
               label="Password"
               size="lg"
-              onChange={(e)=>{setPassword(e.target.value)}}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
             />
           </CardBody>
           <CardFooter className="pt-0">

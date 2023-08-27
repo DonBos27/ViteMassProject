@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
+  Spinner,
 } from "@material-tailwind/react";
 import { useAuth } from "../../context/AuthContext";
 import { collection, doc, onSnapshot } from "firebase/firestore";
@@ -58,7 +59,10 @@ function ModulesLecturer() {
 
   return (
     <div className="flex flex-row gap-3">
-      {userData &&
+      {userData === null ? (
+        <Spinner color="blue" size="xl" />
+      ) : (
+        userData &&
         userData.map((item) => (
           <Card className="w-96 " key={item.moduleCode}>
             <CardHeader shadow={false} floated={false} className="h-96">
@@ -89,7 +93,8 @@ function ModulesLecturer() {
               </Button>
             </CardFooter>
           </Card>
-        ))}
+        ))
+      )}
       <Dialog open={size === "lg"} size={size || "lg"} handler={handleOpen}>
         <DialogHeader>Add Test, Assignment, Labs</DialogHeader>
         <DialogBody divider>

@@ -1,65 +1,86 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
   CardBody,
+  CardFooter,
   Typography,
-  Button,
+  Tooltip,
+  Avatar,
 } from "@material-tailwind/react";
+import Profile from "../images/profileicon.png";
+import UJLogo from "../images/uj.png";
+import { useAuth } from "../../context/AuthContext";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase/configFirebase";
+// import calculateTimeSpent from "./charts/calculateTime";
 
 function WelcomeCard() {
+  const { user: authUser } = useAuth();
+  const [userData, setUserData] = useState([]);
+  const [lecturerId, setLecturerId] = useState(null);
+
+  useEffect(() => {
+    if (authUser) {
+      const email = authUser.email;
+      console.log("Email:", email);
+      const unsubscribe = onSnapshot(doc(db, "users", email), (doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          console.log("Fetched data from Firestore:", data);
+          // console.log("Time spent:", calculateTimeSpent(email));
+          setUserData(data);
+          setLecturerId(data.name);
+        }
+      });
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [authUser]);
   return (
-    <div className="mt-6">
-      <Card className="w-full flex-row">
-        <CardHeader
-          shadow={false}
-          floated={false}
-          className="m-0 w-2/5 shrink-0 rounded-r-none"
+    <Card shadow={false} className="w-full mt-0 overflow-hidden text-center">
+      <CardHeader
+        floated={false}
+        shadow={false}
+        // color="transparent"
+        className="relative h-56 bg-[url('https://www.uj.ac.za/wp-content/uploads/2021/11/university-of-johannesburg.webp')] bg-cover bg-center"
+      >
+        <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-t from-black/80 via-black/50" />
+        <Avatar
+          size="xxl"
+          alt="avatar"
+          src={userData.image ? userData.image : Profile}
+          className="border shadow-xl shadow-green-900/20 mt-10 mx-auto "
+        />
+      </CardHeader>
+      <CardBody className="text-center border-b border-black/20 pb-4 mx-8 my-2 rounded-none">
+        <Typography variant="h4" color="blue-gray" className="mb-2">
+          {lecturerId}
+        </Typography>
+        <Typography color="blue-gray" className="font-medium" textGradient>
+          {userData.title}
+        </Typography>
+      </CardBody>
+      <CardFooter className=" justify-center">
+        <Typography color="blue-gray" className="font-medium my-2" >
+          {userData.department}
+        </Typography>
+        <Tooltip
+          placement="top"
+          // color="lightBlue"
+          content="University of Johannesburg"
         >
-          <img
-            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-            alt="card-image"
-            className=" w-full object-cover"
+          <Avatar
+            // color="lightBlue"
+            size="lg"
+            className="mx-1"
+            src={UJLogo}
+            alt="UJ Logo"
           />
-        </CardHeader>
-        <CardBody>
-          <Typography variant="h6" color="gray" className="mb-4 uppercase">
-            Mass
-          </Typography>
-          <Typography variant="h2" color="blue-gray" className="mb-2">
-            Welcome to your Dashboard
-          </Typography>
-          <Typography color="gray" className="mb-8 font-normal text-base">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-            voluptatum. Quisquam, voluptatum. Quisquam, voluptatum. Quisquam,
-            voluptatum. Quisquam, voluptatum. Quisquam, voluptatum.
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-            voluptatum. Quisquam, voluptatum. Quisquam, voluptatum. Quisquam,
-            voluptatum. Quisquam, voluptatum. Quisquam, voluptatum.
-            
-          </Typography>
-          {/* <a href="#" className="inline-block">
-            <Button variant="text" className="flex items-center gap-2">
-              View Profile
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                className="h-4 w-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-                />
-              </svg>
-            </Button>
-          </a> */}
-        </CardBody>
-      </Card>
-    </div>
+        </Tooltip>
+      </CardFooter>
+    </Card>
   );
 }
 
