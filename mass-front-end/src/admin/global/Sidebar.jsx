@@ -21,6 +21,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import LogoUJ from "../images/uj.png";
 import { useAuth } from "../../context/AuthContext";
 import "./Sidebar.css"
+import { Timestamp, doc, updateDoc } from "firebase/firestore";
+import { db } from "../../firebase/configFirebase";
 
 function Sidebar() {
   const [openAlert, setOpenAlert] = React.useState(true);
@@ -49,11 +51,11 @@ function Sidebar() {
       icon: <CampaignIcon />,
       path: "/announcements",
     },
-    {
-      name: "Timetables",
-      icon: <EventRepeatIcon />,
-      path: "/timetable",
-    },
+      // {
+      //   name: "Timetables",
+      //   icon: <EventRepeatIcon />,
+      //   path: "/timetable",
+      // },
     {
       name: "Settings",
       icon: <SettingsIcon />,
@@ -65,6 +67,13 @@ function Sidebar() {
     e.preventDefault();
     try {
       await logOut();
+      if (user) {
+        const userDocRef = doc(db, "users", user.email);
+        console.log(userDocRef);
+        await updateDoc(userDocRef, {
+          timeOut: Timestamp.fromDate(new Date()),
+        });
+      }
       navigate("/");
       console.log("Logout");
     } catch (err) {

@@ -28,7 +28,7 @@ const data = [
   {
     id: 3,
     icon: <PersonIcon />,
-    title: "Something",
+    title: "",
     amount: "52",
     color: "deep-purple",
   },

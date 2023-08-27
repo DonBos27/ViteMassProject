@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -10,9 +10,32 @@ import {
 } from "@material-tailwind/react";
 import Profile from "../images/profileicon.png";
 import UJLogo from "../images/uj.png";
-
+import { useAuth } from "../../context/AuthContext";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase/configFirebase";
 
 export default function ProfileCard() {
+  const { user: authUser } = useAuth();
+  const [userData, setUserData] = useState([]);
+  const [lecturerId, setLecturerId] = useState(null);
+
+  useEffect(() => {
+    if (authUser) {
+      const email = authUser.email;
+      console.log("Email:", email);
+      const unsubscribe = onSnapshot(doc(db, "users", email), (doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          console.log("Fetched data from Firestore:", data);
+          setUserData(data);
+          setLecturerId(data.name);
+        }
+      });
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [authUser]);
   return (
     <Card
       shadow={false}
@@ -21,63 +44,41 @@ export default function ProfileCard() {
       <CardHeader
         floated={false}
         shadow={false}
-        color="transparent"
-        className="relative h-56 bg-[url('https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80')] bg-cover bg-center"
+        // color="transparent"
+        className="relative h-56 bg-[url('https://www.uj.ac.za/wp-content/uploads/2021/11/university-of-johannesburg.webp')] bg-cover bg-center"
       >
         <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-t from-black/80 via-black/50" />
         <Avatar
           size="xxl"
           alt="avatar"
-          src={
-            Profile
-          }
+          src={userData.image ? userData.image : Profile}
           className="border shadow-xl shadow-green-900/20 mt-10 mx-auto "
         />
       </CardHeader>
 
       <CardBody className="text-center">
         <Typography variant="h4" color="blue-gray" className="mb-2">
-          Mabokela
+          {userData.title} {userData.firstname} {lecturerId}
         </Typography>
         <Typography color="blue-gray" className="font-medium" textGradient>
-          Senior Lecturer
+          {userData.function}
         </Typography>
       </CardBody>
-      {/* <CardFooter className="flex justify-center gap-7 pt-2">
-        <Tooltip content="Like">
-          <Typography
-            as="a"
-            href="#facebook"
-            variant="lead"
-            color="blue"
-            textGradient
-          >
-            <i className="fab fa-facebook" />
-          </Typography>
+      <CardFooter className="flex justify-center">
+        <Tooltip
+          placement="top"
+          // color="lightBlue"
+          content="University of Johannesburg"
+        >
+          <Avatar
+            // color="lightBlue"
+            size="lg"
+            className="mx-1"
+            src={UJLogo}
+            alt="UJ Logo"
+          />
         </Tooltip>
-        <Tooltip content="Follow">
-          <Typography
-            as="a"
-            href="#twitter"
-            variant="lead"
-            color="light-blue"
-            textGradient
-          >
-            <i className="fab fa-twitter" />
-          </Typography>
-        </Tooltip>
-        <Tooltip content="Follow">
-          <Typography
-            as="a"
-            href="#instagram"
-            variant="lead"
-            color="purple"
-            textGradient
-          >
-            <i className="fab fa-instagram" />
-          </Typography>
-        </Tooltip>
-      </CardFooter> */}
+      </CardFooter>
     </Card>
   );
 }

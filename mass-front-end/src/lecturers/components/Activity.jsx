@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -8,8 +8,60 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+import { useAuth } from "../../context/AuthContext";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase/configFirebase";
 
 function Activity() {
+  const { user: authUser } = useAuth();
+  const [userData, setUserData] = useState([]);
+  const [lecturerId, setLecturerId] = useState(null);
+
+  useEffect(() => {
+    if (authUser) {
+      const email = authUser.email;
+      console.log("Email:", email);
+      const unsubscribe = onSnapshot(doc(db, "calendarPost", email), (doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          console.log("Fetched data from Firestore:", data);
+          const dataModules = data.lecturerPost;
+          // console.log("Modules:", dataModules);
+          const posts = dataModules.map((post) => ({
+            ...post,
+            start: post.start.toDate(), 
+            end: post.end.toDate(), 
+          }));
+
+          // Convert dates to formatted strings
+          const formattedPosts = posts.map((post) => ({
+            ...post,
+            formattedStartDate: post.start.toLocaleDateString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+            }),
+            formattedEndDate: post.end.toLocaleDateString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+            }),
+          }));
+
+          setUserData(formattedPosts);
+          console.log(formattedPosts);
+          console.log(
+            "Modules:",
+            formattedPosts.map((item) => item.start)
+          );
+        }
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [authUser]);
   return (
     <div>
       <Card
@@ -32,27 +84,22 @@ function Activity() {
           </Typography>
         </CardHeader>
         <CardBody className="p-0">
-          <ul className="flex flex-col gap-4">
-            <li className="flex items-center gap-4">
-              <span className="rounded-full border border-white/20 bg-white/20 p-1">
-                <ArrowRightAltIcon />
-              </span>
-              <Typography className="font-normal">25 Aug: </Typography>
-              <Typography className="font-normal">Assignment 1</Typography>
-            </li>
-          </ul>
+          {userData.map((item) => (
+            <ul className="flex flex-col gap-4 m-2">
+              <li className="flex items-center gap-4">
+                <span className="rounded-full border border-white/20 bg-white/20 p-1">
+                  <ArrowRightAltIcon />
+                </span>
+                <Typography className="font-normal">
+                  {item.formattedEndDate}{" "}
+                </Typography>
+                <Typography className="font-normal">{item.title}</Typography>
+              </li>
+            </ul>
+          ))}
         </CardBody>
-        <CardFooter className="mt-12 p-0">
-          {/* <Button
-            size="lg"
-            color="white"
-            className="hover:scale-[1.02] focus:scale-[1.02] active:scale-100"
-            ripple={false}
-            fullWidth={true}
-          >
-            Buy Now
-          </Button> */}
-        </CardFooter>
+        {/* <CardFooter className="mt-12 p-0">
+        </CardFooter> */}
       </Card>
     </div>
   );

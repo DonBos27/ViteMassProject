@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../global/Sidebar";
 import NavigationBar from "../global/NavigationBar";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import Profile from "../images/profileicon.png";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
-import WarningIcon from '@mui/icons-material/Warning';
+import WarningIcon from "@mui/icons-material/Warning";
 import {
   Card,
   CardHeader,
@@ -18,6 +18,7 @@ import {
   Checkbox,
   DialogFooter,
   Alert,
+  Avatar,
 } from "@material-tailwind/react";
 import {
   collection,
@@ -34,7 +35,7 @@ import {
 } from "../../firebase/configFirebase";
 // import { firestore } from "firebase/firestore";
 
-const TABLE_HEAD = ["Name", "Email", "Cellphone", "Modules Taken", "Edit"];
+const TABLE_HEAD = ["Member", "Function", "Cellphone", "Modules Taken", "Edit"];
 
 function Lecturer() {
   const { user } = useAuth();
@@ -138,7 +139,7 @@ function Lecturer() {
       return {
         moduleCode: course.moduleCode,
         moduleName: course.moduleName,
-        moduleImage: course.image
+        moduleImage: course.image,
       };
     });
 
@@ -229,18 +230,21 @@ function Lecturer() {
         <Sidebar />
       </div>
       <div className="flex flex-col w-full mx-5 mt-4">
-        <NavigationBar title={"Lecturer"}/>
+        <NavigationBar title={"Lecturer"} />
         <Card className="h-full w-full mt-20">
           <CardHeader className="mb-4 flex h-16 place-items-center bg-primary shadow-lg">
             <Typography variant="h3" color="white" className="p-5">
-              MASS
+              Mass Lecturer
             </Typography>
           </CardHeader>
+          <Typography color="gray" className="mt-2 mx-8 font-normal">
+            See information about all members
+          </Typography>
           <table className="w-full min-w-max table-auto text-left mt-12">
             <thead>
               <tr>
                 {TABLE_HEAD.map((head) => (
-                  <th key={head} className="border-b p-4">
+                  <th key={head} className="border-b p-4 bg-blue-gray-50">
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -258,13 +262,29 @@ function Lecturer() {
                   <tbody key={user.id}>
                     <tr>
                       <td className="p-4">
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {user.name}
-                        </Typography>
+                        <div className="flex items-center gap-3">
+                          <Avatar
+                            src={user.image ? user.image : Profile}
+                            alt={user.name}
+                            size="sm"
+                          />
+                          <div className="flex flex-col">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {user.title} {user.firstname} {user.name}
+                            </Typography>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal opacity-70"
+                            >
+                              {user.id}
+                            </Typography>
+                          </div>
+                        </div>
                       </td>
                       <td className="p-4">
                         <Typography
@@ -272,7 +292,7 @@ function Lecturer() {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {user.id}
+                          {user.function}
                         </Typography>
                       </td>
                       <td className="p-4">
@@ -290,15 +310,17 @@ function Lecturer() {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {
+                          {user.modules ? (
                             user.modules?.map(
                               (module) => module.moduleCode + ", "
-                            ) // Display the module codes for the lecturer
-                          }
+                            )
+                          ) : (
+                            <p className="text-red">No modules</p>
+                          )}
                         </Typography>
                       </td>
                       <td className="">
-                        <Tooltip content="Edit User">
+                        <Tooltip content="Edit Modules">
                           <IconButton
                             variant="text"
                             color="deep-orange"
@@ -342,7 +364,10 @@ function Lecturer() {
                   </div>
                 ))}
               {modulExits && (
-                <Alert icon={<WarningIcon/>}  className="rounded-none border-l-4 border-red-700 bg-[#2ec946]/10 font-medium text-red-700 ">
+                <Alert
+                  icon={<WarningIcon />}
+                  className="rounded-none border-l-4 border-red-700 bg-[#2ec946]/10 font-medium text-red-700 "
+                >
                   A lecturer already assigned to {modulesAssign}
                 </Alert>
               )}
