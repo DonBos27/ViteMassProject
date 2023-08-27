@@ -9,7 +9,7 @@ import { db } from "../../firebase/configFirebase";
 import { useAuth } from "../../context/AuthContext";
 function Calendar({ handleProfile }) {
   const [event, setEvent] = useState([]);
-  const { user: authUser } = useAuth();
+  const { user, authUser } = useAuth();
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "events", "eventsPosts"), (doc) => {
       if (doc.exists()) {

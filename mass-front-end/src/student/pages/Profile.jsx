@@ -2,8 +2,30 @@ import NavbarStudent from '../global/NavbarStudent'
 import Sidebar from '../global/Sidebar'
 import { People, PeopleAlt } from '@mui/icons-material'
 import EditIcon from '@mui/icons-material/Edit';
-import ProfilePic from '../images/profile.jpeg';
+import ProfilePic from '../images/profileicon.png';
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase/configFirebase";
+import { useEffect, useState } from 'react';
+import { useAuth } from "../../context/AuthContext";
 function Profile({handleProfile}) {
+  const [userData, setUserData] = useState([]);
+  const { user, logOut } = useAuth();
+  useEffect(() => {
+    if (user) {
+      const email = user.email;
+      //console.log("Email:", email);
+      const unsubscribe = onSnapshot(doc(db, "users", email), (doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          console.log("Fetched data from Firestore:", data);
+          setUserData(data);
+        }
+      });
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [user]);
     return (
       <div className="flex">
       <div className="w-1/4">
@@ -21,8 +43,8 @@ function Profile({handleProfile}) {
                 
               </div>
               <div className='flex justify-center gap-2 items-center flex-col relative top-[-50px]'>
-                <img className='w-[150px] h-[150px] rounded-full' src={ProfilePic} alt='Profile' />
-                <span className=' font-semibold text-xl'>John Muninga</span>
+                <img className='w-[150px] h-[150px] rounded-full' src={userData.image ? userData.image : ProfilePic} alt='Profile' />
+                <span className=' font-semibold text-xl'>{userData.initials} {userData.name}</span>
               </div>
 
               <div className='flex justify-around'>
@@ -30,17 +52,25 @@ function Profile({handleProfile}) {
                   <h1 className=' text-2xl font-semibold '>Your Information</h1>
                   <div className='flex flex-col justify-center bg-white w-[25rem] gap-5 h-[15rem] p-3 rounded-lg'>
                     <div className='flex justify-around gap-3'>
-                    <div className='flex flex-col gap-3 font-semibold text-lg'>
+                    <div className='flex flex-col gap-3 font-normal text-lg'>
                       <h1>Full Name:</h1>
                       <h1>Email Address:</h1>
                       <h1>Student Number:</h1>
                       
                     </div>
-                    <div className='flex flex-col justify-center text-[16px] gap-3'>
-                      <p className=''>John Muninga</p>
-                      <p>jmuninga@gmail.com</p>
-                      <p className=''>227834150</p>
-                    </div>
+                    
+                      {
+                        userData && (
+                          <div className='flex flex-col justify-center text-[17px] font-semibold gap-3'>
+                            <p>{userData.name}</p>
+                            <p>{user.email}</p>
+                            <p>{userData.studentnumber}</p>
+                          </div>
+                        )
+
+                      }
+                      
+                    
                     </div>
                   </div>
                 </div>
