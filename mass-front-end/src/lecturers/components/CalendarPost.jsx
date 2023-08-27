@@ -37,8 +37,8 @@ import { v4 as uuidv4 } from "uuid";
 
 const radio = [
   { id: 1, value: "Assignment", color: "blue" },
-  { id: 2, value: "Exam", color: "red" },
-  { id: 3, value: "Test", color: "green" },
+  { id: 2, value: "Labs/Exercises", color: "green" },
+  { id: 3, value: "Test", color: "red" },
 ];
 
 function CalendarPost() {
@@ -46,7 +46,7 @@ function CalendarPost() {
   const [open, setOpen] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [event, setEvent] = useState([]);
-  const [eventUpdate, setEventUpdate] = useState([]);
+  // const [eventUpdate, setEventUpdate] = useState([]);
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState("");
   const [selectedUpdateStartDate, setSelectedUpdateStartDate] = useState("");
@@ -61,6 +61,8 @@ function CalendarPost() {
   const [descriptionUpdate, setDescriptionUpdate] = useState("");
   const [typeUpdate, setTypeUpdate] = useState("");
   const [scopeUpdate, setScopeUpdate] = useState("");
+  const [markweight, setMarkweight] = useState("");
+  const [markweightUpdate, setMarkweightUpdate] = useState("");
 
   const handleOpen = () => {
     setOpen((cur) => !cur);
@@ -356,11 +358,11 @@ function CalendarPost() {
     const getColorForEventType = (eventType) => {
       switch (eventType) {
         case "Assignment":
-          return "blue";
+          return "lightblue";
         case "Test":
-          return "green";
-        case "Exam":
           return "red";
+        case "Labs/Exercises":
+          return "green";
         default:
           return "purple";
       }
@@ -371,6 +373,7 @@ function CalendarPost() {
     const eventObject = {
       uid: uuidv4(),
       title: title,
+      weight: markweight,
       description: description,
       start: startTimestamp,
       end: endTimestamp,
@@ -447,6 +450,7 @@ function CalendarPost() {
     setType("");
     setSelectedStartDate("");
     setSelectedEndDate("");
+    setMarkweight("");
     // handleOpen();
   };
   const handleUpdate = async (arg) => {
@@ -467,11 +471,11 @@ function CalendarPost() {
     const getColorForEventType = (eventType) => {
       switch (eventType) {
         case "Assignment":
-          return "blue";
+          return "lightblue";
         case "Test":
-          return "green";
-        case "Exam":
           return "red";
+        case "Labs/Exercises":
+          return "green";
         default:
           return "purple";
       }
@@ -480,6 +484,7 @@ function CalendarPost() {
     const eventObject = {
       uid: id,
       title: titleUpdate,
+      weight: markweightUpdate,
       description: descriptionUpdate,
       start: startTimestamp,
       end: endTimestamp,
@@ -562,6 +567,7 @@ function CalendarPost() {
     setTypeUpdate("");
     setSelectedUpdateStartDate("");
     setSelectedUpdateEndDate("");
+    setMarkweightUpdate("");
     handleUpdateModal();
   };
   const handleDelete = async (arg) => {
@@ -592,6 +598,7 @@ function CalendarPost() {
     setTypeUpdate("");
     setSelectedUpdateStartDate("");
     setSelectedUpdateEndDate("");
+    setMarkweightUpdate("");
     handleUpdateModal();
   };
 
@@ -638,6 +645,19 @@ function CalendarPost() {
               placeholder="Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+              labelProps={{
+                className: "hidden",
+              }}
+              containerProps={{ className: "min-w-[100px]" }}
+            />
+            <Input
+              type="text"
+              maxLength="2"
+              placeholder="Weight in %"
+              icon={<p>%</p>}
+              value={markweight}
+              onChange={(e) => setMarkweight(e.target.value)}
               className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
               labelProps={{
                 className: "hidden",
@@ -749,6 +769,19 @@ function CalendarPost() {
             />
             <Input
               type="text"
+              maxLength="2"
+              placeholder="Weight in %"
+              icon={<p>%</p>}
+              value={markweightUpdate}
+              onChange={(e) => setMarkweightUpdate(e.target.value)}
+              className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+              labelProps={{
+                className: "hidden",
+              }}
+              containerProps={{ className: "min-w-[100px]" }}
+            />
+            <Input
+              type="text"
               placeholder="Scope"
               value={scopeUpdate}
               onChange={(e) => setScopeUpdate(e.target.value)}
@@ -806,7 +839,7 @@ function CalendarPost() {
                       />
                     </ListItemPrefix>
                     <Typography color="blue-gray" className="font-medium">
-                      {item.value} {item.color}
+                      {item.value}
                     </Typography>
                   </label>
                 </ListItem>

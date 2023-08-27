@@ -20,7 +20,6 @@ import TimetablesModules from "../components/TimetablesModules";
 import Timespent from "../components/Timespent";
 import AllActivities from "../components/AllActivities";
 
-
 function Dashboard() {
   const { user, logIn } = useAuth();
   // fetch data from firestore
@@ -59,7 +58,7 @@ function Dashboard() {
           <div className="w-1/3">
             <WelcomeCard />
             <div className="mt-12">
-             <AllActivities />
+              <AllActivities />
             </div>
           </div>
           <div className="mt-3 mx-10 w-2/3">
