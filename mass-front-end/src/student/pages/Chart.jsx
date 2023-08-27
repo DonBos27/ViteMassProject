@@ -18,7 +18,7 @@ function Chart({handleProfile}) {
       <div className="flex flex-col w-full mr-4 mb-4 mt-4 h-full">
         <NavbarStudent Icon={LeaderboardIcon} title={"Chart"} handleProfile={handleProfile} />
         <div className="mt-4">
-          <h2 className='text-3xl font-bold'>Your Performance</h2><br/>
+          <h2 className='text-3xl font-bold'>Your Semester Progress</h2><br/>
           <div className='mt-4'>
             <StatisticsChart />
           </div>

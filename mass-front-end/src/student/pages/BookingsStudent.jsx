@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import Sidebar from '../global/Sidebar'
 import {
     Card,
@@ -6,69 +7,71 @@ import {
     Typography,
     Button,
     CardBody,
-    Chip,
-    CardFooter,
-    Tabs,
-    TabsHeader,
-    Tab,
     Avatar,
     IconButton,
     Tooltip,
   } from "@material-tailwind/react";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import NavbarStudent from '../global/NavbarStudent';
-const TABLE_ROWS = [
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-      name: "John Michael",
-      email: "john@creative-tim.com",
-      job: "Manager",
-      org: "Organization",
-      online: true,
-      date: "23/04/18",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-      name: "Alexa Liras",
-      email: "alexa@creative-tim.com",
-      job: "Programator",
-      org: "Developer",
-      online: false,
-      date: "23/04/18",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-      name: "Laurent Perrier",
-      email: "laurent@creative-tim.com",
-      job: "Executive",
-      org: "Projects",
-      online: false,
-      date: "19/09/17",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg",
-      name: "Michael Levi",
-      email: "michael@creative-tim.com",
-      job: "Programator",
-      org: "Developer",
-      online: true,
-      date: "24/12/08",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg",
-      name: "Richard Gran",
-      email: "richard@creative-tim.com",
-      job: "Manager",
-      org: "Executive",
-      online: false,
-      date: "04/10/21",
-    },
-  ];
-  const TABLE_HEAD = ["Member", "Function", "Status", "Employed", ""];
+import { doc, onSnapshot, collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebase/configFirebase";
+import { useAuth } from "../../context/AuthContext";
+import ProfileIm from "../images/profileicon.png"
+import { Alert } from "@mui/material";
+
+
+const TABLE_HEAD = ["Member", "Function", "Message", ""];
 function BookingsStudent({handleProfile}) {
-    
+
+  const [lecturer, setLecture] = useState([]);
+  const [bookingMessage, setBookingMessage] = useState('');
+  const { user, logOut } = useAuth();
+  const display = user.email;
+  
+  const handleBooking = async (lecturerId) => {
+    if (bookingMessage.trim() !== '') {
+      const bookingData = {
+        lecturerId: lecturerId,
+        message: bookingMessage,
+        student: display,
+      };
+
+      try {
+        const docRef = await addDoc(collection(db, 'bookings'), bookingData);
+        console.log('Booking created with ID:', docRef.id);
+
+        // Clear the booking message after booking
+        setBookingMessage('');
+      } catch (error) {
+        console.error('Error creating booking:', error);
+      }
+      } else {
+        // return alert message
+        alert("Please fill the box")
+    }
+    if (lecturerId) {
+      console.log(`Booked session with lecturer ID: ${lecturerId}`);
+      console.log(`Booking Message: ${bookingMessage}`);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+  
+      const filteredUsers = data.filter((user) => user.id.endsWith("@uj.ac.za"));
+      console.log(filteredUsers);
+      setLecture(filteredUsers);
+    });
+  
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+  
     
     return (
         <div className="flex">
@@ -90,7 +93,7 @@ function BookingsStudent({handleProfile}) {
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="font-normal leading-none opacity-70"
+                      className="leading-none opacity-70 text-xl font-semibold"
                     >
                       {head}
                     </Typography>
@@ -99,32 +102,32 @@ function BookingsStudent({handleProfile}) {
               </tr>
             </thead>
             <tbody>
-              {TABLE_ROWS.map(
-                ({ img, name, email, job, org, online, date }, index) => {
-                  const isLast = index === TABLE_ROWS.length - 1;
+              {lecturer.map(
+                (item, index) => {
+                  const isLast = index === lecturer.length - 1;
                   const classes = isLast
                     ? "p-4"
                     : "p-4 border-b border-blue-gray-50";
    
                   return (
-                    <tr key={name}>
+                    <tr key={index}>
                       <td className={classes}>
                         <div className="flex items-center gap-3">
-                          <Avatar src={img} alt={name} size="sm" />
+                          <Avatar src={item.image ? item.image: ProfileIm} alt={item.name} size="xl" className="" />
                           <div className="flex flex-col">
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
+                              className="font-normal text-lg"
                             >
-                              {name}
+                              {item.name}
                             </Typography>
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal opacity-70"
+                              className="font-normal opacity-70 text-lg"
                             >
-                              {email}
+                              {item.id}
                             </Typography>
                           </div>
                         </div>
@@ -134,20 +137,20 @@ function BookingsStudent({handleProfile}) {
                           <Typography
                             variant="small"
                             color="blue-gray"
-                            className="font-normal"
+                            className="font-normal text-lg"
                           >
-                            {job}
+                            {item.function}
                           </Typography>
                           <Typography
                             variant="small"
                             color="blue-gray"
-                            className="font-normal opacity-70"
+                            className="font-normal opacity-70 text-lg"
                           >
-                            {org}
+                            Lecturer
                           </Typography>
                         </div>
                       </td>
-                      <td className={classes}>
+                      {/* <td className={classes}>
                         <div className="w-max">
                           <Chip
                             variant="ghost"
@@ -156,13 +159,21 @@ function BookingsStudent({handleProfile}) {
                             color={online ? "green" : "blue-gray"}
                           />
                         </div>
-                      </td>
+                      </td> */}
                       <td className={classes}>
-                      <textarea className='w-[247px] h-[100px] bg-[#D9D9D9] p-3 resize-none rounded-lg' />
+                      <textarea 
+                      className='w-[247px] h-[100px] bg-[#D9D9D9] p-3 resize-none rounded-lg text-lg'
+                      placeholder='Message'
+                      
+                      onChange={(e) => setBookingMessage(e.target.value)} 
+                      />
                       </td>
                       <td className={classes}>
                         <Tooltip content="Request">
-                        <button className='bg-[#F26522] h-[37px] w-[150px] rounded-lg text-white text-lg cursor-pointer ' >Book</button>
+                        <button 
+                        className='bg-[#F26522] h-[37px] w-[150px] rounded-lg text-white text-lg cursor-pointer'
+                        onClick={() => handleBooking(item.id)}
+                        >Book</button>
                         </Tooltip>
                       </td>
                     </tr>

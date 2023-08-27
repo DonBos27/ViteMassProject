@@ -26,7 +26,6 @@ function Calendar({ handleProfile }) {
   const [selectedEndDate, setSelectedEndDate] = useState("");
   const [open, setOpen] = useState(false);
   const { user: authUser } = useAuth();
-
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "events", "eventsPosts"), (doc) => {
       if (doc.exists()) {
