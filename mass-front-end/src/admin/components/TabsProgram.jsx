@@ -153,7 +153,7 @@ function TabsProgram() {
             <TabPanel key={value} value={value}>
               {classes.map((item) => (
                 <Alert
-                  className="rounded-none border-l-8 border-primary bg-primary/10 font-medium text-primary my-5 space-y-4"
+                  className="rounded-none border-l-8 border-primary bg-primary/10 font-medium text-black my-5 space-y-4"
                   key={item.year}
                 >
                   <div className="flex items-center gap-4 ">

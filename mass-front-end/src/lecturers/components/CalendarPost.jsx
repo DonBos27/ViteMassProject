@@ -94,6 +94,20 @@ function CalendarPost() {
     };
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "modules"), (snapshot) => {
+      const courses = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log("Courses:", courses);
+      setModulesData(courses);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   const handleDateClick = (arg) => {
     const currentDate = new Date(arg.date); // Create a new Date object from the clicked date
     const year = currentDate.getFullYear();
