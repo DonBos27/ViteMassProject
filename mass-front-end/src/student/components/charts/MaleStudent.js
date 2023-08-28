@@ -1,16 +1,11 @@
 const maleRegisterd = {
-    height: 220,
+    height: 400,
     series: [
         {
             type: "line",
-            name: "Males",
-            data: [80, 70, 75, 80, 70, 60, 60, 70, 60],
+            name: "Timespent",
+            data: [80, 70, 75, 80, 70, 60, 60],
         },
-        {
-            type: "area",
-            name: "Females",
-            data: [20, 30, 25, 20, 30, 40, 40, 30, 40],
-        }
     ],
 
     options: {
@@ -38,15 +33,13 @@ const maleRegisterd = {
         },
         xaxis: {
             categories: [
-                "15",
-                "16",
-                "17",
-                "18",
-                "19",
-                "20",
-                "21",
-                "22",
-                "23",
+                "Mon",
+                "Tue",
+                "Wed",
+                "Thu",
+                "Fri",
+                "Sat",
+                "Sun",
             ],
         },
     },

@@ -1,19 +1,15 @@
-import React from 'react'
+import React from "react";
 import Chart from "react-apexcharts";
 import MaleRegisterd from "./charts/MaleStudent";
+import { Card } from "@material-tailwind/react";
 function TimeSpandChart() {
-
-    
   return (
     <div>
-      <Chart
-              
-        type="bar"
-        width="500"
-        {...MaleRegisterd}
-    />
+      <Card className="">
+        <Chart {...MaleRegisterd} />
+      </Card>
     </div>
-  )
+  );
 }
 
-export default TimeSpandChart
+export default TimeSpandChart;
