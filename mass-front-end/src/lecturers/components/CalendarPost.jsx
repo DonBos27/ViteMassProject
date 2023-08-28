@@ -12,6 +12,8 @@ import {
   CardHeader,
   Checkbox,
   Dialog,
+  DialogBody,
+  DialogFooter,
   DialogHeader,
   Input,
   List,
@@ -20,6 +22,7 @@ import {
   Radio,
   Textarea,
   Typography,
+  Alert,
 } from "@material-tailwind/react";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -34,6 +37,7 @@ import {
 import { db } from "../../firebase/configFirebase";
 import { addDoc, serverTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
+import WarningIcon from "@mui/icons-material/Warning";
 
 const radio = [
   { id: 1, value: "Assignment", color: "blue" },
@@ -63,7 +67,9 @@ function CalendarPost() {
   const [scopeUpdate, setScopeUpdate] = useState("");
   const [markweight, setMarkweight] = useState("");
   const [markweightUpdate, setMarkweightUpdate] = useState("");
-  const [errorModal, setErrorModal] = useState("");
+  const [errorModal, setErrorModal] = useState(false);
+  const [dateBefore, setDateBefore] = useState(false);
+  const [errorAlert, setErrorAlert] = useState(false);
 
   const handleOpen = () => {
     setOpen((cur) => !cur);
@@ -77,6 +83,9 @@ function CalendarPost() {
 
   const preventErrors = () => {
     setErrorModal((cur) => !cur);
+  };
+  const handleDateBefore = () => {
+    setDateBefore((cur) => !cur);
   };
 
   useEffect(() => {
@@ -130,7 +139,8 @@ function CalendarPost() {
     // console.log("selectedDateTime:", selectedDateTime)
 
     if (selectedDateTime < new Date()) {
-      alert("You cannot post an event in the past!");
+      // alert("You cannot post an event in the past!");
+      handleDateBefore();
     } else {
       setTitle("");
       setDescription("");
@@ -138,6 +148,7 @@ function CalendarPost() {
       setType("");
       setSelectedStartDate(formattedDate + "T00:00"); // Set selected start date and time
       setSelectedEndDate(formattedDate + "T23:59"); // Set selected end date and time
+      setErrorAlert(false);
 
       console.log("Selected Date start ", formattedDate + "T00:00");
       handleOpen();
@@ -192,7 +203,6 @@ function CalendarPost() {
 
       console.log(formattedDate);
       console.log(formattedDateEnd);
-
       setTitleUpdate(title);
       // console.log("Title:", title);
       setDescriptionUpdate(description);
@@ -200,15 +210,14 @@ function CalendarPost() {
       setScopeUpdate(scope);
       // console.log("Scope:", scope);
       setTypeUpdate(type);
-
       setId(uid);
-
       setSelectedUpdateStartDate(formattedDate);
       setSelectedUpdateEndDate(formattedDateEnd);
-
       handleUpdateModal();
     } else {
-      alert("You cannot edit other lecturer's post!");
+      // alert("You cannot edit other lecturer's post!");
+      // preventErrors();
+      setErrorModal(true);
     }
   };
 
@@ -378,6 +387,13 @@ function CalendarPost() {
     const endTimestamp = Timestamp.fromDate(new Date(selectedEndDate)); // Convert to Timestamp
     const lecturerID = authUser.email;
 
+    if (!type) {
+      setErrorAlert(true);
+      // handleOpen();
+      return;
+      // preventErrors();
+    }
+
     const getColorForEventType = (eventType) => {
       switch (eventType) {
         case "Assignment":
@@ -387,7 +403,7 @@ function CalendarPost() {
         case "Labs/Exercises":
           return "green";
         default:
-          return "purple";
+          return "";
       }
     };
 
@@ -474,6 +490,7 @@ function CalendarPost() {
     setSelectedStartDate("");
     setSelectedEndDate("");
     setMarkweight("");
+    setErrorAlert(false);
     // handleOpen();
   };
   const handleUpdate = async (arg) => {
@@ -645,8 +662,58 @@ function CalendarPost() {
         dateClick={handleDateClick}
         eventClick={handleEventClick}
         eventContent={eventContent}
-        // dayCellContent={dateContent}
       />
+
+      {/* // error when clicking on days beforer */}
+
+      <Dialog open={dateBefore} handler={handleDateBefore} color="red">
+        <DialogHeader>
+          <Typography color="blueGray" size="lg" className="text-xl font-bold">
+            <WarningIcon className="text-red-500 mr-2" />
+            Error Message !
+          </Typography>
+        </DialogHeader>
+        <DialogBody divider>
+          <Typography color="blueGray">
+            You cannot post an event in the past!
+          </Typography>
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            color="red"
+            buttonType="link"
+            onClick={handleDateBefore}
+            ripple="dark"
+          >
+            Close
+          </Button>
+        </DialogFooter>
+      </Dialog>
+
+      {/* // error message when click on events not selected  */}
+      <Dialog open={errorModal} handler={preventErrors} color="red">
+        <DialogHeader>
+          <Typography color="blueGray" size="lg" className="text-xl font-bold">
+            <WarningIcon className="text-red-500 mr-2" />
+            Error Message !
+          </Typography>
+        </DialogHeader>
+        <DialogBody divider>
+          <Typography color="blueGray">
+            You cannot edit other lecturer's post!
+          </Typography>
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            color="red"
+            buttonType="link"
+            onClick={preventErrors}
+            ripple="dark"
+          >
+            Close
+          </Button>
+        </DialogFooter>
+      </Dialog>
 
       {/* // Update Modal for Lecturer Post when click on the date in calendar  */}
       <Dialog
@@ -726,6 +793,20 @@ function CalendarPost() {
               onChange={(e) => setSelectedEndDate(e.target.value)}
               containerProps={{ className: "min-w-[100px]" }}
             />
+            {errorAlert && (
+              <Alert
+                color="red"
+                className=""
+                icon={<WarningIcon className="text-white mr-2" />}
+                animate={{
+                  mount: { y: 0 },
+                  unmount: { y: 100 },
+                }}
+                onClose={() => setErrorAlert(false)}
+              >
+                Please select the assessment!
+              </Alert>
+            )}
             <List className="flex-row w-full">
               {radio.map((item) => (
                 <ListItem className="p-0" key={item.id}>
