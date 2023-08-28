@@ -1,26 +1,43 @@
 const studentsRegistered = {
-  type: "bar",
+  type: "radialBar",
   height: 220,
-  series: [
-    {
-      name: "Views",
-      data: [90, 80, 95, 62, 70, 60, 80],
-    },
-  ],
+  series: [50],
+  colors: ["#F26522"],
+
   options: {
-    colors: "#5E72E4",
     plotOptions: {
-      bar: {
-        columnWidth: "50%",
-        borderRadius: 1,
+      radialBar: {
+        hollow: {
+          margin: 0,
+          size: "70%",
+          background: "#293450",
+        },
+        dataLabels: {
+          showOn: "always",
+          name: {
+            show: true,
+            fontSize: "13px",
+            fontWeight: "700",
+            offsetY: -5,
+            color: "#fff",
+          },
+          value: {
+            color: "#fff",
+            fontSize: "20px",
+            fontWeight: "700",
+            offsetY: 5,
+            show: true,
+          },
+        },
+        track: {
+          background: "#293450",
+          strokeWidth: "100%",
+        },
       },
     },
-    dataLabels: {
-      enabled: false,
-  },
-    xaxis: {
-      categories: ["17", "18", "19", "20", "21", "22", "23"],
-    },
+    labels: [""],
+
+
   },
 };
 

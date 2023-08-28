@@ -7,30 +7,30 @@ import {
 } from "@material-tailwind/react";
 import Chart from "react-apexcharts";
 import StudentsRegistered from "./charts/StudentsRegistered";
-import MaleRegisterd from "./charts/MaleStudent";
+import ChartLabs from "./charts/ChartLabs";
 import ComparePass from "./charts/ComparePass";
 
 function StatisticsChart() {
   const menu = [
     {
       id: 1,
-      title: "Percentage of Students Enrolled",
+      title: "Percentage of number of Assigments",
       description:
-        "This describe the number of students enrolled in the department per year",
+        "This describe the number of assignments so far this year",
       data: StudentsRegistered,
     },
     {
       id: 2,
-      title: "Percentage of male and female students",
+      title: "Percentage of number of Labs and Tutorials",
       description:
-        "This describe the number of males students and females students in the department per year",
-      data: MaleRegisterd,
+        "This describe the number of Labs and Tutorials so far this year",
+      data: ChartLabs,
     },
     {
       id: 3,
-      title: "Percentage of students who passed/registered",
+      title: "Percentage of number of Tests and Exams",
       description:
-        "This describe the number of students who passed and registered in the department per year",
+        "This describe the number of Tests and Exams so far this year",
       data: ComparePass,
     },
   ];

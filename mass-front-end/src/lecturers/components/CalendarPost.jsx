@@ -63,6 +63,7 @@ function CalendarPost() {
   const [scopeUpdate, setScopeUpdate] = useState("");
   const [markweight, setMarkweight] = useState("");
   const [markweightUpdate, setMarkweightUpdate] = useState("");
+  const [errorModal, setErrorModal] = useState("");
 
   const handleOpen = () => {
     setOpen((cur) => !cur);
@@ -72,6 +73,10 @@ function CalendarPost() {
   const handleUpdateModal = () => {
     setOpenUpdateModal((cur) => !cur);
     // console.log("Open Modal");
+  };
+
+  const preventErrors = () => {
+    setErrorModal((cur) => !cur);
   };
 
   useEffect(() => {
@@ -265,6 +270,8 @@ function CalendarPost() {
         const userData = userSnapshot.data();
         const lecturerName = userData.name;
         const lecturerEmail = lecturerID;
+        const modules = userData.modules;
+        const moduleCode = modules.map((item) => item.moduleCode);
         // const eventID = id;
 
         // Add lecturer's name and email to the eventObject
@@ -272,6 +279,7 @@ function CalendarPost() {
           ...eventObject,
           lecturerName: lecturerName,
           lecturerEmail: lecturerEmail,
+          moduleCode: moduleCode,
           // id: eventID,
         };
 
@@ -307,6 +315,7 @@ function CalendarPost() {
           await setDoc(lecturerDocRef, {
             lecturerName: lecturerName,
             email: lecturerID,
+            moduleCode: moduleCode,
             lecturerPost: [updatedEventObject],
           });
         }
@@ -447,12 +456,12 @@ function CalendarPost() {
       } else if (existingEventsTypeDateAfter.length > 0) {
         alert("You cannot post a test 2 days after another test!");
       } else {
-        alert("Test posted successfully!");
+        // alert("Test posted successfully!");
         await handleEventPost(eventObject);
         handleOpen();
       }
     } else {
-      alert("Event posted successfully!");
+      // alert("Event posted successfully!");
       await handleEventPost(eventObject);
       handleOpen();
     }
@@ -559,16 +568,19 @@ function CalendarPost() {
     if (typeUpdate === "Test") {
       if (existingEventsTypeDate.length > 0) {
         alert("You cannot post a test on the same day as another test!");
+        preventErrors();
       } else if (existingEventsTypeDateBefore.length > 0) {
         alert("You cannot post a test 2 days before another test!");
+        // preventErrors();
       } else if (existingEventsTypeDateAfter.length > 0) {
         alert("You cannot post a test 2 days after another test!");
+        // preventErrors();
       } else {
-        alert("Test posted successfully!");
+        // alert("Test posted successfully!");
         await handleEventUpdate(eventObject);
       }
     } else {
-      alert("Event posted successfully!");
+      // alert("Event posted successfully!");
       await handleEventUpdate(eventObject);
     }
 

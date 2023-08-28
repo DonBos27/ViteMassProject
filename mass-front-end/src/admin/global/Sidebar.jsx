@@ -58,11 +58,11 @@ function Sidebar() {
     //   icon: <EventRepeatIcon />,
     //   path: "/timetable",
     // },
-    {
-      name: "Settings",
-      icon: <SettingsIcon />,
-      path: "/settings",
-    },
+    // {
+    //   name: "Settings",
+    //   icon: <SettingsIcon />,
+    //   path: "/settings",
+    // },
   ];
 
   useEffect(() => {

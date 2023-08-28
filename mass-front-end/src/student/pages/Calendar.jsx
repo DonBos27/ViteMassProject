@@ -12,8 +12,15 @@ import {
   CardBody,
   CardHeader,
   Dialog,
+  Tab,
+  TabPanel,
+  Tabs,
+  TabsBody,
+  TabsHeader,
   Typography,
 } from "@material-tailwind/react";
+import UJLogo from "../images/uj.png";
+
 function Calendar({ handleProfile }) {
   const [event, setEvent] = useState([]);
   const [title, setTitle] = useState("");
@@ -25,6 +32,7 @@ function Calendar({ handleProfile }) {
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState("");
   const [open, setOpen] = useState(false);
+  const [tabs, setTabs] = useState("Upcoming");
   const { user: authUser } = useAuth();
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "events", "eventsPosts"), (doc) => {
@@ -133,6 +141,15 @@ function Calendar({ handleProfile }) {
   const truncate = (str, n) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   };
+
+  const daysleft = (date) => {
+    const today = new Date();
+    const eventDate = new Date(date);
+    const diffTime = Math.abs(eventDate - today);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
   return (
     <div className="flex h-screen">
       <div className="w-1/4">
@@ -146,6 +163,78 @@ function Calendar({ handleProfile }) {
         />
         <div className="bg-white mt-4 rounded-lg">
           <div className="flex flex-1">
+            <div className="m-5 w">
+              <Card className="w-[450px]">
+                <CardHeader
+                  color="gray"
+                  floated={false}
+                  shadow={false}
+                  className="m-0 grid place-items-center rounded-b-none py-8 px-4 text-center"
+                >
+                  <div className="mb-4 rounded-full border border-white/10 bg-white/10 text-white">
+                    <img src={UJLogo} alt="UJ Logo" className="rounded-full" />
+                  </div>
+                  <Typography variant="h4" color="white">
+                    MASS
+                  </Typography>
+                </CardHeader>
+                <CardBody>
+                  <Tabs value="Upcoming" className="overflow-visible">
+                    <TabsHeader className="relative z-0 ">
+                      <Tab value="Upcoming" onClick={() => setTabs("Upcoming")}>
+                        UPCOMING ACTIVITIES
+                      </Tab>
+                      <Tab value="DaysLeft" onClick={() => setType("DaysLeft")}>
+                        DAYS LEFT
+                      </Tab>
+                    </TabsHeader>
+                    <TabsBody
+                      className="!overflow-x-hidden !overflow-y-visible"
+                      animate={{
+                        initial: {
+                          x: type === "Upcoming" ? 400 : -400,
+                        },
+                        mount: {
+                          x: 0,
+                        },
+                        unmount: {
+                          x: type === "Upcoming" ? 400 : -400,
+                        },
+                      }}
+                    >
+                      <TabPanel value="Upcoming" className="p-0">
+                        {event.map((item) => (
+                          <div className="flex flex-col gap-2 p-2">
+                            <div className="flex flex-row justify-between">
+                              <Typography variant="h6" color="gray">
+                                {item.title}
+                              </Typography>
+                              <Typography variant="h6" color="gray">
+                                {item.moduleCode}
+                              </Typography>
+                            </div>
+                          </div>
+                        ))}
+                      </TabPanel>
+                      <TabPanel value="DaysLeft" className="p-0">
+                        {event.map((item) => (
+                          <div className="flex flex-col gap-2 p-2">
+                            <div className="flex flex-row justify-between">
+                              <Typography variant="h6" color="gray">
+                                {item.title}
+                              </Typography>
+                              <Typography variant="h6" color="gray">
+                                {daysleft(item.start)} days left
+                              </Typography>
+                            </div>
+                          </div>
+                        ))}
+                      </TabPanel>
+                    </TabsBody>
+                  </Tabs>
+                </CardBody>
+              </Card>
+            </div>
             <FullCalendar
               plugins={[dayGridPlugin]}
               initialView="dayGridMonth"
