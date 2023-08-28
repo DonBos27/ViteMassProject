@@ -29,7 +29,7 @@ function Chart({ handleProfile }) {
             </div>
             <div className="mt-5 w-full">
               <h2 className="text-3xl font-bold mb-5">
-                Your Time Spand Progress
+                Your Time Spent Progress
               </h2>
               <TimeSpandChart />
             </div>
