@@ -46,11 +46,11 @@ function Sidebar() {
       icon: <MeetingRoomIcon />,
       path: "/bookingslecturerfromstudent",
     },
-    // {
-    //   name: "Settings",
-    //   icon: <SettingsIcon />,
-    //   path: "/settingslecturer",
-    // },
+    {
+      name: "Settings",
+      icon: <SettingsIcon />,
+      path: "/settingslecturer",
+    },
   ];
 
   useEffect(() => {
