@@ -4,6 +4,7 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import { CalendarMonth } from "@mui/icons-material";
 import { useAuth } from "../../context/AuthContext";
 import UJLOGO from "../images/uj.png";
@@ -47,6 +48,11 @@ function Sidebar() {
       icon: <LibraryBooksIcon />,
       path: "/bookings",
     },
+    // {
+    //   name: "Trello",
+    //   icon: <FormatListBulletedIcon />,
+    //   path: "/trello",
+    // }
   ];
 
   useEffect(() => {
