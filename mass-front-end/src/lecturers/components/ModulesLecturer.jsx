@@ -16,12 +16,14 @@ import { useAuth } from "../../context/AuthContext";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/configFirebase";
 import CalendarPost from "./CalendarPost";
+import SpinnerLoading from "./SpinnerLoading";
 
 function ModulesLecturer() {
   const { user: authUser } = useAuth();
   const [userData, setUserData] = useState([]);
   const [lecturerId, setLecturerId] = useState(null);
   const [size, setSize] = React.useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (authUser) {
@@ -35,8 +37,11 @@ function ModulesLecturer() {
             console.log("Fetched data from Firestore:", data);
             const dataModules = data.modules;
             console.log("Modules:", dataModules);
-            setUserData(dataModules);
-            setLecturerId(data.id);
+            setTimeout(() => {
+              setUserData(dataModules);
+              setLecturerId(data.id);
+              setIsLoading(false);
+            }, 2000);
             // console.log("Lecturer ID:", lecturerId);
             console.log(
               "Modules:",
@@ -59,41 +64,51 @@ function ModulesLecturer() {
 
   return (
     <div className="flex flex-row gap-3">
-      {userData === null ? (
-        <Spinner color="blue" size="xl" />
-      ) : (
+      {isLoading ? (
+        <SpinnerLoading />
+      ) : userData ? (
         userData &&
         userData.map((item) => (
-          <Card className="w-96 " key={item.moduleCode}>
-            <CardHeader shadow={false} floated={false} className="h-96">
-              <img
-                src={item.moduleImage}
-                alt="card-image"
-                className="h-full w-full object-cover"
-              />
-            </CardHeader>
-            <CardBody>
-              <div className="mb-2 flex items-center justify-between">
-                <Typography color="blue-gray" className="font-medium">
-                  {item.moduleName}
-                </Typography>
-                <Typography color="blue-gray" className="font-medium">
-                  {item.moduleCode}
-                </Typography>
-              </div>
-            </CardBody>
-            <CardFooter className="pt-0">
-              <Button
-                onClick={() => handleOpen("lg")}
-                ripple={false}
-                fullWidth={true}
-                className="bg-primary text-white shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
-              >
-                Open Calendar
-              </Button>
-            </CardFooter>
-          </Card>
+          <div>
+            <Typography className="text-4xl font-bold py-5">Modules</Typography>
+            <Card className="w-96 " key={item.moduleCode}>
+              <CardHeader shadow={false} floated={false} className="h-96">
+                <img
+                  src={item.moduleImage}
+                  alt="card-image"
+                  className="h-full w-full object-cover"
+                />
+              </CardHeader>
+              <CardBody>
+                <div className="mb-2 flex items-center justify-between">
+                  <Typography color="blue-gray" className="font-medium">
+                    {item.moduleName}
+                  </Typography>
+                  <Typography color="blue-gray" className="font-medium">
+                    {item.moduleCode}
+                  </Typography>
+                </div>
+              </CardBody>
+              <CardFooter className="pt-0">
+                <Button
+                  onClick={() => handleOpen("lg")}
+                  ripple={false}
+                  fullWidth={true}
+                  className="bg-primary text-white shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
+                >
+                  Open Calendar
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
         ))
+      ) : (
+        <div className="flex flex-col items-center justify-center">
+          <Typography className="text-2xl font-bold">No modules</Typography>
+          <Typography className="text-lg font-normal">
+            Please check back later
+          </Typography>
+        </div>
       )}
       <Dialog open={size === "lg"} size={size || "lg"} handler={handleOpen}>
         <DialogHeader>Add Test, Assignment, Labs</DialogHeader>

@@ -9,7 +9,6 @@ import {
   Chip,
   Alert,
 } from "@material-tailwind/react";
-import { CubeTransparentIcon } from "@heroicons/react/24/solid";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";

@@ -15,7 +15,9 @@ import { useAuth } from "../../context/AuthContext";
 function AllActivities() {
   const { user: authUser } = useAuth();
   const [userData, setUserData] = useState([]);
-  const [lecturerId, setLecturerId] = useState(null);
+  // const [lecturerId, setLecturerId] = useState(null);
+  // if the events date is less than the current date, then don't display it on the list
+  const filteredEvents = userData.filter((event) => event.start > new Date());
 
   useEffect(() => {
     if (authUser) {
@@ -49,13 +51,7 @@ function AllActivities() {
                 day: "numeric",
               }),
             }));
-
             setUserData(formattedPosts);
-            //   console.log(formattedPosts);
-            //   console.log(
-            //     "Modules:",
-            //     formattedPosts.map((item) => item.start)
-            //   );
           }
         }
       );
@@ -83,7 +79,7 @@ function AllActivities() {
             color="white"
             className="font-normal uppercase"
           >
-            Lecturer Activities 
+            Lecturer Activities
           </Typography>
         </CardHeader>
         <CardBody className="p-0">
@@ -97,11 +93,11 @@ function AllActivities() {
               </Typography>
             </div>
           ) : (
-            userData.map((item) => (
+            filteredEvents.map((item) => (
               <ul className="flex flex-col gap-4 m-2">
                 <li className="flex items-center gap-4">
                   <span className="rounded-full border border-white/20 bg-white/20 p-1">
-                    <ArrowRightAltIcon className="text-primary"/>
+                    <ArrowRightAltIcon className="text-primary" />
                   </span>
                   <Typography className="font-normal">
                     {item.formattedEndDate}{" "}

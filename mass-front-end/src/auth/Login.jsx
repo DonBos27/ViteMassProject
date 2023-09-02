@@ -9,11 +9,13 @@ import {
   Checkbox,
   Button,
   Typography,
+  Alert,
 } from "@material-tailwind/react";
 import Background from "./images/background.gif";
 import { useAuth } from "../context/AuthContext";
 import { Timestamp, doc, updateDoc } from "firebase/firestore";
 import { db, usersCollection } from "../firebase/configFirebase";
+// import { Alert } from "react-native-web";
 
 function Login() {
   // story months into an array
@@ -38,6 +40,8 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [errorAlert, setErrorAlert] = useState(false);
   const { user, logIn, logOut } = useAuth();
   const navigate = useNavigate();
 
@@ -48,9 +52,23 @@ function Login() {
     // handleLogin();
   }, []);
 
+  const clearFields = () => {
+    setEmail("");
+    setPassword("");
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      if (email === "" || password === "") {
+        console.log("Please enter your credentials");
+        setError("Please enter a username and or password");
+        setErrorAlert(true);
+        // setTimeout(() => {
+        //   setErrorAlert(false); // Automatically dismiss error alert after 2 seconds
+        // }, 2000);
+        return;
+      }
       await logIn(email, password);
       // Log the timeIn when the user logs in
       if (email.endsWith("@admin.uj.ac.za")) {
@@ -63,13 +81,20 @@ function Login() {
       console.log("Login");
       // navigate("/dashboard");
     } catch (err) {
+      setError(
+        "You could not be authenticated, please check your username/password then try again."
+      );
+      setErrorAlert(true);
       console.log(err);
-      console.log("Failed to Login");
+      // setEmail("");
+      setPassword("");
+      // setTimeout(() => {
+      //   setErrorAlert(false); // Automatically dismiss error alert after 2 seconds
+      // }, 2000);
     }
   };
 
   const handleLogout = async () => {
-    
     try {
       // await logOut();
       if (user) {
@@ -79,7 +104,6 @@ function Login() {
           timeIn: Timestamp.fromDate(new Date()),
         });
       }
-      // navigate("/");
       console.log("Logout");
     } catch (err) {
       console.log(err);
@@ -108,23 +132,26 @@ function Login() {
               Please enter your credentials:
             </Typography>
             <Input
-              type="text"
-              color="deep-orange"
+              type="email"
+              // color="deep-orange"
               label="Login ID"
               size="lg"
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
+              value={email}
             />
             <Input
               type="password"
-              color="deep-orange"
+              // color="deep-orange"
               label="Password"
               size="lg"
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
+              value={password}
             />
+            {errorAlert && <Typography color="red">{error}</Typography>}
           </CardBody>
           <CardFooter className="pt-0">
             <Button

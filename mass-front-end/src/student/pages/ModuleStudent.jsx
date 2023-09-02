@@ -61,9 +61,19 @@ function ModuleStudent({ handleProfile }) {
         ...everyoneAnnouncements.docs,
       ];
 
-      // Sort the combinedAnnouncements array by timestamp if needed
+      // Sort the combinedAnnouncements array by timestamp if needed 
+      // combinedAnnouncements.sort((a, b) => {
+      //   if (a.data().timestamp < b.data().timestamp) {
+      //     return 1;
+      //   } else {
+      //     return -1;
+      //   }
 
-      setAnnouncements(studentAnnouncements.docs);
+      const sortedAnnouncements = studentAnnouncements.docs.sort(
+        (a, b) => b.data().timestamp - a.data().timestamp
+      );
+      
+      setAnnouncements(sortedAnnouncements);
       // console.log("Announcements:", combinedAnnouncements)
       console.log("Announcements Lecturer:", lecturerAnnouncements.docs);
       console.log("Announcements Student:", studentAnnouncements.docs);
