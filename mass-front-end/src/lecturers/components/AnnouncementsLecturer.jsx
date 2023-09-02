@@ -44,25 +44,18 @@ function AnnouncementsLecturer() {
       const lecturerAnnouncements = await getDocs(
         collection(db, "announcements_lecturer")
       );
-      const studentAnnouncements = await getDocs(
-        collection(db, "announcements_student")
-      );
-      const everyoneAnnouncements = await getDocs(
-        collection(db, "announcements_everyone")
-      );
-
-      const combinedAnnouncements = [
+      // const studentAnnouncements = await getDocs(
+      //   collection(db, "announcements_student")
+      // );
+      // const everyoneAnnouncements = await getDocs(
+      //   collection(db, "announcements_everyone")
+      // );
+      const lecturerAnnouncementsDocs = [
         ...lecturerAnnouncements.docs,
-        ...studentAnnouncements.docs,
-        ...everyoneAnnouncements.docs,
+        // ...studentAnnouncements.docs,
+        // ...everyoneAnnouncements.docs,
       ];
-
-      // Sort the combinedAnnouncements array by timestamp if needed
-
-      setAnnouncements(lecturerAnnouncements.docs);
-      // console.log("Announcements:", combinedAnnouncements)
-      //   console.log("Announcements Lecturer:", lecturerAnnouncements.docs);
-      //   console.log("Announcements Student:", studentAnnouncements.docs);
+      setAnnouncements(lecturerAnnouncementsDocs);
     } catch (err) {
       console.log(err);
     }
@@ -74,21 +67,40 @@ function AnnouncementsLecturer() {
           Announcements
         </Typography>
       </div>
-      <div className="w-full ml-6 mb-4 mt-0">
+      <div className="w-full ml-0 mb-5 mt-0">
         {announcements.length > 0 ? (
           announcements.map((announcement) => (
-            <div className="mr-10 mt-5">
+            <div className="mr-5 mt-0 p-5">
               <Timeline key={announcements.id}>
                 <TimelineItem className="h-28 ">
-                  <TimelineConnector className="!w-[78px]" />
-                  <TimelineHeader className="relative rounded-none hover:border-l-8 hover:border-primary  bg-transparent hover:bg-white py-3 pl-4 pr-8  shadow-blue-gray-900/5">
+                  {/* <TimelineConnector className="!w-[78px]" /> */}
+                  <TimelineHeader className="relative rounded-none hover:border-l-8 hover:border-primary  bg-transparent hover:bg-white py-0 pl-4 pr-0  shadow-blue-gray-900/5">
                     <TimelineIcon className="p-3" variant="ghost">
                       <CampaignIcon className="h-5 w-5" />
                     </TimelineIcon>
-                    <div className="flex flex-col gap-2">
-                      <Typography variant="h6" color="blue-gray">
-                        {announcement.data().title}
-                      </Typography>
+                    <div className="flex flex-col gap-2 p-5 w-full">
+                      <div className="flex flex-row justify-between gap-2 items-center">
+                        <div>
+                          <Typography variant="h3" color="blue-gray">
+                            {announcement.data().title}
+                          </Typography>
+                        </div>
+                        <div>
+                          {announcement.data().timestamp && (
+                            <Typography
+                              variant="small"
+                              color="gray"
+                              className="font-normal"
+                            >
+                              {format(
+                                announcement.data().timestamp.toDate(),
+                                "dd MMM h:mm a"
+                              )}
+                            </Typography>
+                          )}
+                        </div>
+                      </div>
+
                       <Typography
                         variant="h6"
                         color="gary"
@@ -96,21 +108,9 @@ function AnnouncementsLecturer() {
                       >
                         {announcement.data().content}
                       </Typography>
-                      {announcement.data().timestamp && (
-                        <Typography
-                          variant="small"
-                          color="gray"
-                          className="font-normal"
-                        >
-                          {format(
-                            announcement.data().timestamp.toDate(),
-                            "dd MMM h:mm a"
-                          )}
-                        </Typography>
-                      )}
                       <Typography
                         variant="h6"
-                        color="gary"
+                        color="deep-orange"
                         className="text-base font-normal"
                       >
                         posted by {announcement.data().name}
@@ -122,7 +122,7 @@ function AnnouncementsLecturer() {
             </div>
           ))
         ) : (
-          <p>No announcements to display</p>
+          <p className="p-8">No announcements to display</p>
         )}
       </div>
     </div>

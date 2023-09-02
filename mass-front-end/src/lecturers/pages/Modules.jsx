@@ -13,7 +13,7 @@ function Modules() {
       <div className="flex flex-col w-full mx-5 mt-4 h-screen">
         <NavbarLecturer title={"Modules"} />
         <div className="m-6">
-          <Typography className="text-4xl font-bold py-5">Modules</Typography>
+          {/* <Typography className="text-4xl font-bold py-5">Modules</Typography> */}
           <ModulesLecturer />
         </div>
       </div>

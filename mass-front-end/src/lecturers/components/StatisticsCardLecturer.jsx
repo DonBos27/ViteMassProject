@@ -25,18 +25,18 @@ const data = [
     amount: "73",
     color: "deep-orange",
   },
-  {
-    id: 3,
-    icon: <PersonIcon />,
-    title: "",
-    amount: "52",
-    color: "deep-purple",
-  },
+  // {
+  //   id: 3,
+  //   icon: <PersonIcon />,
+  //   title: "",
+  //   amount: "52",
+  //   color: "deep-purple",
+  // },
 ];
 
 function StatisticsCardLecturer() {
   return (
-    <div className="my-12 grid gap-y-10 gap-x-5 md:grid-cols-2 xl:grid-cols-3">
+    <div className="my-12 grid gap-y-10 gap-x-5 md:grid-cols-1 xl:grid-cols-2">
       {data.map((item) => (
         <Card className="" key={item.id}>
           <CardHeader

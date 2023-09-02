@@ -50,7 +50,7 @@ function SettingsLecturer() {
                   alt="Profile"
                 />
                 <span className=" font-semibold text-xl">
-                  {userData.initials} {userData.name}
+                {userData.firstname} {userData.name}
                 </span>
               </div>
 
@@ -67,7 +67,7 @@ function SettingsLecturer() {
 
                       {userData && (
                         <div className="flex flex-col justify-center text-[17px] font-semibold gap-3">
-                          <p>{userData.name}</p>
+                          <p>{userData.firstname} {userData.name}</p>
                           <p>{user.email}</p>
                           {/* <p>{userData.studentnumber}</p> */}
                         </div>

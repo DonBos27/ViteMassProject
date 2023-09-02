@@ -44,7 +44,9 @@ function TimetablesModules() {
           right: "dayGridMonth,timeGridWeek,timeGridDay",
         }}
         titleFormat={{ year: "numeric", month: "long", day: "numeric" }}
-        height={"500px"}
+        height="500px"
+        slotDuration="00:30:00" // Adjust as needed
+        allDaySlot={false}
       />
     </div>
   );
