@@ -10,7 +10,7 @@ function Community({handleProfile}) {
       <div className="flex flex-col w-full mr-4 mb-4 mt-4 h-screen">
         <NavbarStudent Icon={PeopleAltIcon} title={"Community"} handleProfile={handleProfile} />
         <div className="">
-          Modules
+          community
         </div>
       </div>
     </div>
