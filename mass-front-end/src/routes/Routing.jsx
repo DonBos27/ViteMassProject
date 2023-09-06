@@ -17,6 +17,8 @@ import Calendar from "../student/pages/Calendar";
 import Chart from "../student/pages/Chart";
 import BookingsStudent from "../student/pages/BookingsStudent";
 import Profile from "../student/pages/Profile";
+import Trello from "../student/pages/Trello";
+import Community from "../student/pages/Community";
 
 function Routing() {
   const navigate = useNavigate();
@@ -125,6 +127,22 @@ function Routing() {
           element={
             <ProtectedRoute>
               <Calendar handleProfile={handleProfile} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="trello"
+          element={
+            <ProtectedRoute>
+              <Trello handleProfile={handleProfile} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="community"
+          element={
+            <ProtectedRoute>
+              <Community handleProfile={handleProfile} />
             </ProtectedRoute>
           }
         />

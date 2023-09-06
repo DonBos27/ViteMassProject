@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import PeopleIcon from '@mui/icons-material/People';
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -36,7 +37,16 @@ function Sidebar() {
       icon: <CalendarMonth />,
       path: "/calendar",
     },
-
+    {
+      name: "Trello",
+      icon: <BookmarkIcon />,
+      path: "/trello",
+    },
+    {
+      name: "Community",
+      icon: <PeopleIcon />,
+      path: "/community",
+    },
     {
       name: "Chart",
       icon: <LeaderboardIcon />,
