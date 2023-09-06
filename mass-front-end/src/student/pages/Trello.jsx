@@ -4,7 +4,7 @@ import Sidebar from '../global/Sidebar'
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 function Trello({handleProfile}) {
-    const[list, setLists] = useState();
+    const[list, setLists] = useState([]);
   return (
     <div className="flex">
       <div className="w-1/4">
