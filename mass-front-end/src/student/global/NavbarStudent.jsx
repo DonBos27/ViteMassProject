@@ -66,7 +66,7 @@ function NavbarStudent({ title, Icon, handleProfile }) {
               onClick={handleProfile}
               className="w-10 h-10"
             >
-              <img className="w-10 h-10 rounded-full" src={userData.image ? userData.image : ProfilePic} alt="" />
+              <img className="w-10 h-10 rounded-full cursor-pointer" src={userData.image ? userData.image : ProfilePic} alt="" />
             </div>
           </div>
         </div>
