@@ -17,7 +17,7 @@ import Calendar from "../student/pages/Calendar";
 import Chart from "../student/pages/Chart";
 import BookingsStudent from "../student/pages/BookingsStudent";
 import Profile from "../student/pages/Profile";
-import Trello from "../student/pages/Trello";
+
 
 function Routing() {
   const navigate = useNavigate();
@@ -145,14 +145,7 @@ function Routing() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="trello"
-          element={
-            <ProtectedRoute>
-              <Trello handleProfile={handleProfile} />
-            </ProtectedRoute>
-          }
-        />
+        
         <Route path="profile" element={<Profile />} />
       </Routes>
     </div>
