@@ -26,6 +26,7 @@ function Sidebar() {
   const [userData, setUserData] = useState([]);
   const { user, logOut } = useAuth();
   const navigate = useNavigate();
+  // Navigation Bar for students
   const menuItem = [
     {
       name: "Modules",
@@ -42,11 +43,11 @@ function Sidebar() {
       icon: <BookmarkIcon />,
       path: "/trello",
     },
-    {
-      name: "Community",
-      icon: <PeopleIcon />,
-      path: "/community",
-    },
+    // {
+    //   name: "Community",
+    //   icon: <PeopleIcon />,
+    //   path: "/community",
+    // },
     {
       name: "Chart",
       icon: <LeaderboardIcon />,
