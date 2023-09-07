@@ -1,7 +1,7 @@
 const data = {
     lists: [
         {
-            id: "list-1",
+            id: "1",
             title: "To do",
             cards: [
                 {
@@ -11,17 +11,17 @@ const data = {
             ],
         },
         {
-            id: "list-2",
+            id: "2",
             title: "In Progress",
             cards: [],
         },
         {
-            id: "list-3",
+            id: "3",
             title: "Done",
             cards: [],
         },
     ],
-    listIds: ["list-1", "list-2", "list-3"],
+    listIds: ["1", "2", "3"],
 }
 
 export default data;
