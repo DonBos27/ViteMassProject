@@ -9,6 +9,7 @@ import InputContainer from '../components/InputContainer';
 function Trello({handleProfile}) {
     const[lists, setLists] = useState(sampleData.lists);
     return (
+        
     <div className="flex">
       <div className="w-1/4">
         <Sidebar />
@@ -16,7 +17,7 @@ function Trello({handleProfile}) {
       <div className="flex flex-col w-full mr-4 mb-4 mt-4 h-screen">
         <NavbarStudent Icon={EventNoteIcon} title={"Trello"} handleProfile={handleProfile} />
         <div className="">
-          <DragDropContext>
+          
             {/* <Droppable droppableId='app' type='list' direction='list'>
                 {(provided) => (
                     <div className="flex justify-center" {...provided.droppableProps} ref={provided.innerRef}>
@@ -103,9 +104,10 @@ function Trello({handleProfile}) {
                     )
                 }
             </Droppable> */}
+            <DragDropContext>
             <Droppable droppableId='app' type='list' direction='horizontal'>
                 {(provided) => (
-                    <div className="flex justify-center" {...provided.droppableProps} ref={provided.innerRef}>
+                    <div className="wrapper" ref={provided.innerRef}>
                         {lists.map((list, index) => {
                             return <Lists key={list.id} list={list} index={index} />
                         })}
@@ -116,10 +118,11 @@ function Trello({handleProfile}) {
                     </div>
                 )}
             </Droppable>
-          </DragDropContext>
+            </DragDropContext>
         </div>
       </div>
     </div>
+    
   )
 }
 
