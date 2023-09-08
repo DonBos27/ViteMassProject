@@ -2,7 +2,20 @@ import { list } from '@material-tailwind/react';
 import React from 'react'
 import {Droppable, Draggable } from 'react-beautiful-dnd';
 import InputContainer from './InputContainer';
+import {
+    Card,
+    CardHeader,
+    CardBody,
+    CardFooter,
+    Typography,
+    Button,
+    Dialog,
+    DialogHeader,
+    DialogBody,
+    DialogFooter,
+  } from "@material-tailwind/react";
 function Lists({list, index}) {
+    console.log(list.id);
   return (
     <>
         {/* <Draggable draggableId={list.id} key={index}>
@@ -64,16 +77,16 @@ function Lists({list, index}) {
         <Draggable draggableId={list.id} key={index}>
             {
                 (provided) => (
-                    <div {...provided.draggableProps} ref={provided.innerRef}>
-                        <div {...provided.dragHandleProps}>
-                            <div>
-                                {list.title}
+                    <div  {...provided.draggableProps} ref={provided.innerRef}>
+                        <div className='list-cards' {...provided.dragHandleProps}>
+                            <div className='title-list'>
+                                {/* {list.title} */}
                             </div>
-                            <div>
-                                <Droppable droppableId={list.id} type='tasks'>
+                            <div className='container-cards'>
+                                <Droppable droppableId={list.id} type='task'>
                                     {
                                         (provided) => (
-                                            <div {...provided.droppableProps} ref={provided.innerRef}>
+                                            <div className='card-container' {...provided.droppableProps} ref={provided.innerRef}>
                                                 {
                                                     list.cards.map((card,index) => (
                                                         <h1 key={index}>Cards</h1>
