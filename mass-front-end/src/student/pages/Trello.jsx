@@ -3,9 +3,12 @@ import NavbarStudent from '../global/NavbarStudent';
 import Sidebar from '../global/Sidebar'
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import sampleData from "../utils/sampleData"
+import Lists from '../components/Lists';
+import InputContainer from '../components/InputContainer';
 function Trello({handleProfile}) {
-    const[list, setLists] = useState([]);
-  return (
+    const[lists, setLists] = useState(sampleData.lists);
+    return (
     <div className="flex">
       <div className="w-1/4">
         <Sidebar />
@@ -14,7 +17,7 @@ function Trello({handleProfile}) {
         <NavbarStudent Icon={EventNoteIcon} title={"Trello"} handleProfile={handleProfile} />
         <div className="">
           <DragDropContext>
-            <Droppable droppableId='app' type='list' direction='list'>
+            {/* <Droppable droppableId='app' type='list' direction='list'>
                 {(provided) => (
                     <div className="flex justify-center" {...provided.droppableProps} ref={provided.innerRef}>
                         <div className="w-1/4">
@@ -84,7 +87,34 @@ function Trello({handleProfile}) {
                 )}
                 
                 
-
+                {
+                    (provided) => (
+                        <div className='w-1/4'
+                        ref={provided.innerRef}
+                        >
+                            {lists.map((list, index) => {
+                                return <Lists key={list.id} list={list} index={index} />
+                            })}
+                            <div>
+                                
+                            </div>
+                        {provided.placeholder}
+                        </div>
+                    )
+                }
+            </Droppable> */}
+            <Droppable droppableId='app' type='list' direction='horizontal'>
+                {(provided) => (
+                    <div className="flex justify-center" {...provided.droppableProps} ref={provided.innerRef}>
+                        {lists.map((list, index) => {
+                            return <Lists key={list.id} list={list} index={index} />
+                        })}
+                        <div>
+                            <InputContainer type="list" />
+                        </div>
+                        {provided.placeholder}
+                    </div>
+                )}
             </Droppable>
           </DragDropContext>
         </div>
