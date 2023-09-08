@@ -5,6 +5,7 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import sampleData from "../utils/sampleData"
 import Lists from '../components/Lists';
+import InputContainer from '../components/InputContainer';
 function Trello({handleProfile}) {
     const[lists, setLists] = useState(sampleData.lists);
     return (
@@ -108,7 +109,9 @@ function Trello({handleProfile}) {
                         {lists.map((list, index) => {
                             return <Lists key={list.id} list={list} index={index} />
                         })}
-                        
+                        <div>
+                            <InputContainer type="list" />
+                        </div>
                         {provided.placeholder}
                     </div>
                 )}

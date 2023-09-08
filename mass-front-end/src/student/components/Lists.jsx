@@ -1,6 +1,7 @@
 import { list } from '@material-tailwind/react';
 import React from 'react'
 import {Droppable, Draggable } from 'react-beautiful-dnd';
+import InputContainer from './InputContainer';
 function Lists({list, index}) {
   return (
     <>
@@ -84,6 +85,7 @@ function Lists({list, index}) {
                                     }
                                 </Droppable>
                             </div>
+                            <InputContainer listId={list.id} type="card" />
                         </div>
                     </div>
                 )
