@@ -3,7 +3,7 @@ import React from 'react'
 import {Droppable, Draggable } from 'react-beautiful-dnd';
 import InputContainer from './InputContainer';
 import {
-    Card,
+    
     CardHeader,
     CardBody,
     CardFooter,
@@ -14,6 +14,8 @@ import {
     DialogBody,
     DialogFooter,
   } from "@material-tailwind/react";
+import Card from './Card';
+import { List } from '@mui/icons-material';
 function Lists({list, index}) {
     console.log(list.id);
   return (
@@ -89,7 +91,12 @@ function Lists({list, index}) {
                                             <div className='card-container' {...provided.droppableProps} ref={provided.innerRef}>
                                                 {
                                                     list.cards.map((card,index) => (
-                                                        <h1 key={index}>Cards</h1>
+                                                        <Card 
+                                                        key={card.id}
+                                                        card={card}
+                                                        index={index}
+                                                        listId={list.id} 
+                                                        />
                                                     ))
                                                 }
                                                 {provided.placeholder}
