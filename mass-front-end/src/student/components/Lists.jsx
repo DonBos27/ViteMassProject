@@ -76,6 +76,7 @@ function Lists({list, index}) {
             
 
         </Draggable> */}
+        
         <Draggable draggableId={list.id} key={index}>
             {
                 (provided) => (

@@ -10,9 +10,9 @@ function App() {
     <>
       <div className="bg-blue-gray-50">
         <AuthProvider>
-          
+        <DragDropContext>
             <Routing />
-          
+          </DragDropContext>
         </AuthProvider>
       </div>
     </>
