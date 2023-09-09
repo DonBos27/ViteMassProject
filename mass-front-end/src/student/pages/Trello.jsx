@@ -6,8 +6,20 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import sampleData from "../utils/sampleData"
 import Lists from '../components/Lists';
 import InputContainer from '../components/InputContainer';
+import { v4 as uuid } from 'uuid';
 function Trello({handleProfile}) {
     const[lists, setLists] = useState(sampleData.lists);
+    const addMoreCard = async(title,listId)=>{
+        if(!title){
+            return;
+        }
+        const newCardId = uuid();
+        const newCard = {
+            id: newCardId,
+            title,
+        };
+
+    }
     return (
         
     <div className="flex">
@@ -104,8 +116,8 @@ function Trello({handleProfile}) {
                     )
                 }
             </Droppable> */}
-            <DragDropContext>
-            <Droppable droppableId='app' type='list' direction='horizontal'>
+            
+            <Droppable droppableId='app' type='list' direction='list'>
                 {(provided) => (
                     <div className="wrapper" ref={provided.innerRef}>
                         {lists.map((list, index) => {
@@ -118,7 +130,7 @@ function Trello({handleProfile}) {
                     </div>
                 )}
             </Droppable>
-            </DragDropContext>
+           
         </div>
       </div>
     </div>
