@@ -39,7 +39,7 @@ function ModulesSstudent() {
   const handleOpen = () => setOpen(!open);
   return (
     <div>
-      <div className="mb-12 ml-4 mr-4 grid gap-y-10 gap-x-5 md:grid-cols-2 xl:grid-cols-4 ">
+      <div className="mb-12 grid gap-y-10 gap-x-5 md:grid-cols-2 xl:grid-cols-4 ">
         {modulesData.map((item) => (
           <div key={item}>
             <Card className="w-full h-96 shadow-lg">
