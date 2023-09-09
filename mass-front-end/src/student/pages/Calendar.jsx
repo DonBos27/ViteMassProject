@@ -151,7 +151,7 @@ function Calendar({ handleProfile }) {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex">
       <div className="w-1/4">
         <Sidebar />
       </div>
