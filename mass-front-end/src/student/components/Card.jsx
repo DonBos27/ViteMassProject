@@ -7,6 +7,7 @@ function Card({card, listId,index}) {
     const [open, setOpen] = useState(false);
     const [newTitle, setNewTitle] = useState(card.title)
     const handleBlur = (cardId) => {
+        //updateCardTitle
         setOpen((prev) =>!prev)
     }
   return (

@@ -7,6 +7,8 @@ import sampleData from "../utils/sampleData"
 import Lists from '../components/Lists';
 import InputContainer from '../components/InputContainer';
 import { v4 as uuid } from 'uuid';
+import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
+import { db } from '../../firebase/configFirebase';
 function Trello({handleProfile}) {
     const[lists, setLists] = useState(sampleData.lists);
     const addMoreCard = async(title,listId)=>{
@@ -19,6 +21,42 @@ function Trello({handleProfile}) {
             title,
         };
 
+        const listRef = doc(db, "lists",listId);
+        await updateDoc(listRef, {
+            cards: arrayUnion(newCard),
+        });
+
+    }
+    const removeCard = (index, listId,cardId) =>{
+        const listRef = doc(db, "lists",listId);
+        lists.forEach(async(list) =>{
+            if(list.id===listId){
+                list.cards.splice(index,1)
+                await updateDoc(listRef, {
+                    cards:list.cards.filter(card=>card.id!== cardId)
+                })
+            }
+            return list;
+        });
+    };
+
+    const updateCardTitle = (title,index,listId,cardId)=>{
+        const listRef = doc(db, "lists",listId);
+        lists.forEach(async(list) =>{
+            if(list.id===listId){
+                list.cards[index].title = title;
+                await updateDoc(listRef, {
+                    cards:list.cards.map((card)=>{
+                        if(card.id===cardId){
+                            card.title=title;
+                            return card
+                        }
+                        return card
+                    })
+                })
+            }
+            return list;
+        })
     }
     return (
         
