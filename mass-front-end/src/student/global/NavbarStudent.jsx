@@ -28,7 +28,7 @@ function NavbarStudent({ title, Icon, handleProfile }) {
       const unsubscribe = onSnapshot(doc(db, "users", email), (doc) => {
         if (doc.exists()) {
           const data = doc.data();
-          console.log("Fetched data from Firestore:", data);
+          //console.log("Fetched data from Firestore:", data);
           setUserData(data);
         }
       });

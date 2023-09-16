@@ -38,7 +38,7 @@ function BookingsStudent({handleProfile}) {
 
       try {
         const docRef = await addDoc(collection(db, 'bookings'), bookingData);
-        console.log('Booking created with ID:', docRef.id);
+        //console.log('Booking created with ID:', docRef.id);
 
         // Clear the booking message after booking
         setBookingMessage('');
@@ -51,8 +51,8 @@ function BookingsStudent({handleProfile}) {
         alert("Please fill the box")
     }
     if (lecturerId) {
-      console.log(`Booked session with lecturer ID: ${lecturerId}`);
-      console.log(`Booking Message: ${bookingMessage}`);
+      //console.log(`Booked session with lecturer ID: ${lecturerId}`);
+      //console.log(`Booking Message: ${bookingMessage}`);
     }
   };
 
@@ -64,7 +64,7 @@ function BookingsStudent({handleProfile}) {
       }));
   
       const filteredUsers = data.filter((user) => user.id.endsWith("@uj.ac.za"));
-      console.log(filteredUsers);
+      //console.log(filteredUsers);
       setLecture(filteredUsers);
     });
   
