@@ -45,7 +45,7 @@ function Calendar({ handleProfile }) {
           end: post.end.toDate(), // Convert Firestore Timestamp to JavaScript Date
         }));
 
-        console.log("Post from all lecturer:", posts);
+        //console.log("Post from all lecturer:", posts);
         setEvent(posts);
       }
     });

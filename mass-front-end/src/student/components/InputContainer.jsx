@@ -6,7 +6,7 @@ import InputCard from './InputCard';
 function InputContainer({listId, type}) {
     const [open, setOpen] = useState(false);
   return (
-    <div className='w-[100%] max-w-[300px] mr-[0.5rem] mt-4'>
+    <div className='w-[100%] max-w-[300px] mr-[0.5rem]'>
         <Collapse in={open}>
             <InputCard listId={listId} type={type} setOpen={setOpen} />
         </Collapse>

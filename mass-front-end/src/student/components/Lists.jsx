@@ -18,10 +18,10 @@ import Card from './Card';
 import { List } from '@mui/icons-material';
 import Tittle from './Tittle';
 function Lists({list, index}) {
-    console.log(list.id);
+    //console.log(list.id);
   return (
     <>  
-        <Draggable draggableId={list.id} key={index}>
+        <Draggable draggableId={list.id} index={index} key={index}>
             {
                 (provided) => (
                     <div  {...provided.draggableProps} ref={provided.innerRef}>
