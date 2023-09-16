@@ -27,12 +27,12 @@ function App() {
     }
     if(type === "list"){
       const destinationRef = doc(db,"lists",lists[destination.index].id);
-      const sourceRef = doc(db,"lists",lists[source.index].id);
-      await updateDoc(destinationRef, {
-        timestamp:lists[source.index].timestamp,
+      const sourceRef = doc(db,"lists",lists[source.index].id)
+      await updateDoc(destinationRef,{
+        timestamp:lists[source.index].timestamp
       });
       await updateDoc(sourceRef,{
-        timestamp:lists[destination.index].timestamp,
+        timestamp:lists[destination.index].timestamp
       });
       return;
     }
@@ -42,7 +42,7 @@ function App() {
         if(index===source.index){
           return list.cards[destination.index]
         }
-        if(index===source.index){
+        if(index===destination.index){
           return list.cards[source.index]
         }
         return card;
