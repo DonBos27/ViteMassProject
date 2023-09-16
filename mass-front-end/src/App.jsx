@@ -32,9 +32,9 @@ function App() {
     <>
       <div className="bg-blue-gray-50">
         <AuthProvider>
-        <DragDropContext onDragEnd={onDragEnd}>
+        
             <Routing lists={lists} setLists={setLists} />
-          </DragDropContext>
+        
         </AuthProvider>
       </div>
     </>
