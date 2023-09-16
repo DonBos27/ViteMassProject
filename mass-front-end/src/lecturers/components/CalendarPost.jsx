@@ -10,7 +10,6 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Checkbox,
   Dialog,
   DialogBody,
   DialogFooter,
@@ -29,13 +28,11 @@ import {
   collection,
   doc,
   getDoc,
-  getDocs,
   onSnapshot,
   setDoc,
   Timestamp,
 } from "firebase/firestore";
 import { db } from "../../firebase/configFirebase";
-import { addDoc, serverTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import WarningIcon from "@mui/icons-material/Warning";
 
@@ -50,7 +47,6 @@ function CalendarPost() {
   const [open, setOpen] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [event, setEvent] = useState([]);
-  // const [eventUpdate, setEventUpdate] = useState([]);
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState("");
   const [selectedUpdateStartDate, setSelectedUpdateStartDate] = useState("");
@@ -59,7 +55,6 @@ function CalendarPost() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState("");
-  // const [lecturerId, setLecturerId] = useState("");
   const [scope, setScope] = useState("");
   const [titleUpdate, setTitleUpdate] = useState("");
   const [descriptionUpdate, setDescriptionUpdate] = useState("");
