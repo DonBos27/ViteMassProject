@@ -109,11 +109,9 @@ function Lecturer() {
     // Check if selected modules are already assigned to other users
     const assignedModules = await Promise.all(
       selectedModules.map(async (moduleCode) => {
-        const moduleSnapshot = await getDoc(
-          doc(db, "modules", moduleCode)
-        );
+        const moduleSnapshot = await getDoc(doc(db, "modules", moduleCode));
         const assignedTo = moduleSnapshot.data()?.assignedTo;
-        console.log("Assigned to:", assignedTo)
+        console.log("Assigned to:", assignedTo);
         if (assignedTo && assignedTo !== selectedLecturerId) {
           return moduleCode;
         }
@@ -142,7 +140,12 @@ function Lecturer() {
         moduleName: course.moduleName,
         moduleImage: course.image,
         assignedTo: selectedLecturerId,
-        lecturerName: lecturerData.title + " " + lecturerData.firstname + " " + lecturerData.name,
+        lecturerName:
+          lecturerData.title +
+          " " +
+          lecturerData.firstname +
+          " " +
+          lecturerData.name,
       };
     });
 
@@ -166,6 +169,7 @@ function Lecturer() {
         previousModuleRef,
         {
           assignedTo: "",
+          lecturerName: "",
         },
         { merge: true }
       );
@@ -179,7 +183,12 @@ function Lecturer() {
           moduleRef,
           {
             assignedTo: selectedLecturerId,
-            lecturerName: lecturerData.title + " " + lecturerData.firstname + " " + lecturerData.name,
+            lecturerName:
+              lecturerData.title +
+              " " +
+              lecturerData.firstname +
+              " " +
+              lecturerData.name,
           },
           { merge: true }
         );
@@ -221,11 +230,13 @@ function Lecturer() {
   const handleOpen = (lecturerId) => {
     setSelectedLecturerId(lecturerId);
     setModulExits(false);
+    console.log(selectedModules)
     console.log("Selected lecturer id:", selectedLecturerId);
     setOpen((cur) => !cur);
   };
   useEffect(() => {
     console.log("Selected lecturer id:", selectedLecturerId);
+    console.log("Selected modules:", selectedModules)
   }, [selectedLecturerId]);
 
   return (
@@ -311,16 +322,17 @@ function Lecturer() {
                       <td className="p-4">
                         <Typography
                           variant="small"
-                          color="blue-gray"
+                          color="red"
                           className="font-normal"
                         >
-                          {user.modules ? (
-                            user.modules?.map(
-                              (module) => module.moduleCode + ", "
-                            )
-                          ) : (
-                            <p className="text-red">No modules</p>
-                          )}
+                          {user.modules && user.modules.length > 0
+                            ? user.modules.map((module, index) => (
+                                <span key={index} className="text-green-400">
+                                  {module.moduleCode}
+                                  {index < user.modules.length - 1 ? ", " : ""}
+                                </span>
+                              ))
+                            : "N/A"}
                         </Typography>
                       </td>
                       <td className="">

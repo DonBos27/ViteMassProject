@@ -1,8 +1,8 @@
 import React from "react";
-import Dashboard from "./admin/pages/Dashboard";
 import Routing from "./routes/Routing";
 import { AuthProvider } from "./context/AuthContext";
 // import { AuthProvider } from "./context/AuthContext";
+
 
 function App() {
   return (
