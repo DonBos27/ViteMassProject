@@ -108,7 +108,7 @@ function Trello({handleProfile, lists, setLists}) {
           
             <Droppable droppableId='app' type='list' direction='list'>
                 {(provided) => (
-                    <div className="wrapper" ref={provided.innerRef}>
+                    <div className=" w-[100%] m-[0 auto] p-[0 0.5rem] flex min-h-[calc(100hv-5rem)] overflow-y-auto" ref={provided.innerRef}>
                         {lists.map((list, index) => {
                             return <Lists key={list.id} list={list} index={index} />
                         })}
