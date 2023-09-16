@@ -7,7 +7,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase/configFirebase";
 import sampleData from "./student/utils/sampleData";
-import { timestamp } from "./firebase/configFirebase";
+
 
 function App() {
   const[lists, setLists] = useState(sampleData.lists);
