@@ -21,9 +21,41 @@ function App() {
       const sourceRef = doc(db,"lists",lists[source.index].id)
       await updateDoc(destinationRef,{
         timestamp:lists[source.index].timestamp
-      })
+      });
       await updateDoc(sourceRef,{
         timestamp:lists[destination.index].timestamp
+      });
+      return;
+    }
+    if(source.droppableId === destination.droppableId){
+      const list = lists.find((list)=>list.id===source.droppableId);
+      const updatedCards = list.cards.map((card,index) =>{
+        if(index===source.index){
+          return list.cards[destination.index]
+        }
+        if(index===source.index){
+          return list.cards[source.index]
+        }
+        return card;
+      })
+      const listRef = doc(db,"lists",destination.droppableId);
+      await updateDoc(listRef,{
+        cards:updatedCards
+      })
+    }
+    else{
+      const sourceList = lists.find((list)=>list.id===source.droppableId);
+      const destinationList = lists.find((list)=>list.id===destination.droppableId);
+      const draggingCard = sourceList.cards.filter((card)=>card.id===draggableId)[0];
+      const sourceListRef = doc(db,"lists",source.droppableId);
+      sourceList.cards.splice(source.index,1)
+      await updateDoc(sourceListRef,{
+        cards:sourceList.cards
+      })
+      const destinationListRef = doc(db,"lists",destination.droppableId);
+      destinationList.cards.splice(destination.index,0,draggingCard);
+      await updateDoc(destinationListRef,{
+        cards:destinationList.cards
       })
     }
   }
