@@ -19,7 +19,7 @@ function Card({card, listId,index}) {
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
                 >
-                    <div className=' min-h-[2.5rem] flex justify-center items-start mx-[1rem] bg-[#ebecf0] rounded-lg border-b-2 relative'>
+                    <div className=' min-h-[2.5rem] flex justify-center items-center mx-[1rem] bg-[#ebecf0] rounded-lg border-b-2 relative'>
                         {open ? (
                             <TextareaAutosize
                             type="text"
@@ -35,8 +35,8 @@ function Card({card, listId,index}) {
                             autoFocus
                             />
                         ): (
-                            <div onClick={()=> setOpen(prev=>!prev)} className='w-[100%] h-[100%] flex justify-between px-4 items-center text-[18px]'>
-                                <p className='p-[0.7rem 0.5rem 0.5rem] max-w-[90%] text-xl overflow-hidden break-words'>{card.title}</p>
+                            <div onClick={()=> setOpen(prev=>!prev)} className='w-[100%] h-[100%] flex justify-between px-4  text-[18px]'>
+                                <p className='p-[0.7rem 0.5rem 0.5rem] max-w-[90%] text-[22px] overflow-hidden break-words'>{card.title}</p>
                                 <button className='p-[0.5rem 0.5rem 0 0] bg-none border-none cursor-pointer '>
                                     <DeleteIcon className='hover:fill-primary' />
                                 </button>
