@@ -8,7 +8,6 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase/configFirebase";
 import sampleData from "./student/utils/sampleData";
 
-
 function App() {
   const[lists, setLists] = useState(sampleData.lists);
   const onDragEnd = async(result)=>{
@@ -33,7 +32,7 @@ function App() {
       <div className="bg-blue-gray-50">
         <AuthProvider>
         
-            <Routing lists={lists} setLists={setLists} />
+            
         
         </AuthProvider>
       </div>
