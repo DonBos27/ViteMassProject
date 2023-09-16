@@ -28,7 +28,7 @@ function InputCard({setOpen, listId, type}) {
         <div className="w-[268px] m-[0.2rem auto] flex items-center gap-4">
             
             
-            <Button size="sm" className="h-[3rem] w-[7rem] bg-[#F26522] cursor-pointer border-none rounded-lg text-white font-bold mr-[0.]" onClick={handleSubmit}>
+            <Button size="sm" className="h-[3rem] w-[7rem] bg-[#F26522] text-[12px] cursor-pointer border-none rounded-lg text-white font-bold mr-[0.]" onClick={handleSubmit}>
             {type === "card" ? "+ Add card": "Add list"}
             </Button>
             <Button size="lg" color="red" variant="text" className="h-[3rem] w-[7rem]" onClick={() => setOpen(false)}>

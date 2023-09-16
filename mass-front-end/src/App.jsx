@@ -70,7 +70,7 @@ function App() {
   }
   return (
     <>
-      <div className="bg-blue-gray-50">
+      <div className="bg-[#e5e4e4]">
         <AuthProvider>
           <DragDropContext onDragEnd={onDragEnd}>
             <Routing lists={lists} setLists={setLists} />
