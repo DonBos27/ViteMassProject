@@ -7,10 +7,11 @@ import sampleData from "../utils/sampleData"
 import Lists from '../components/Lists';
 import InputContainer from '../components/InputContainer';
 import { v4 as uuid } from 'uuid';
-import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase/configFirebase';
-function Trello({handleProfile}) {
-    const[lists, setLists] = useState(sampleData.lists);
+import { addDoc, arrayUnion, collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { db, timestamp } from '../../firebase/configFirebase';
+import StoreApi from '../utils/storeApi';
+function Trello({handleProfile, lists, setLists}) {
+    
     const addMoreCard = async(title,listId)=>{
         if(!title){
             return;
@@ -58,6 +59,34 @@ function Trello({handleProfile}) {
             return list;
         })
     }
+
+    const addMoreList = async(title)=>{
+        if(!title){
+            return;
+        }
+        await addDoc(collection(db,"lists"),{
+            title,
+            cards:[],
+            timestamp
+        })
+    }
+
+    const updateListTitle = (title,listId)=>{
+        const listRef = doc(db, "lists",listId);
+        lists.forEach(async(list) =>{
+            if(list.id===listId){
+                list.title = title;
+                await updateDoc(listRef, {
+                    title:title
+                })
+            }
+            return list;
+        })
+    }
+
+    const deleteList = async(listId)=>{
+        await deleteDoc(doc(db,"lists",listId));
+    }
     return (
         
     <div className="flex">
@@ -66,7 +95,20 @@ function Trello({handleProfile}) {
       </div>
       <div className="flex flex-col w-full mr-4 mb-4 mt-4 h-screen">
         <NavbarStudent Icon={EventNoteIcon} title={"Trello"} handleProfile={handleProfile} />
-        <div className="">
+        <StoreApi.Provider
+
+        value={
+            {
+                addMoreCard,
+                addMoreList,
+                updateCardTitle,
+                updateListTitle,
+                deleteList,
+                
+            }
+        }
+        
+        >
           
             {/* <Droppable droppableId='app' type='list' direction='list'>
                 {(provided) => (
@@ -169,7 +211,7 @@ function Trello({handleProfile}) {
                 )}
             </Droppable>
            
-        </div>
+        </StoreApi.Provider>
       </div>
     </div>
     
