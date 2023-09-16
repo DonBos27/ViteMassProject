@@ -20,7 +20,7 @@ import Profile from "../student/pages/Profile";
 import Trello from "../student/pages/Trello";
 import Community from "../student/pages/Community";
 
-function Routing({lists, setLists}) {
+function Routing() {
   const navigate = useNavigate();
   function handleProfile() {
     navigate("/profile");
@@ -134,7 +134,7 @@ function Routing({lists, setLists}) {
           path="trello"
           element={
             <ProtectedRoute>
-              <Trello handleProfile={handleProfile} lists={lists} setLists={setLists} />
+              <Trello handleProfile={handleProfile} />
             </ProtectedRoute>
           }
         />
