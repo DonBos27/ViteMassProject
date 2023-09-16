@@ -1,16 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dashboard from "./admin/pages/Dashboard";
 import Routing from "./routes/Routing";
 import { AuthProvider } from "./context/AuthContext";
 // import { AuthProvider } from "./context/AuthContext";
 import { DragDropContext } from "react-beautiful-dnd";
-import { doc, updateDoc } from "firebase/firestore";
+import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import { db } from "./firebase/configFirebase";
 import sampleData from "./student/utils/sampleData";
 
 
 function App() {
-  const[lists, setLists] = useState(sampleData.lists);
+  const[lists, setLists] = useState([]);
+  useEffect(()=>{
+    const q = query(collection(db,"lists"), orderBy("timestamp", "asc"));
+    onSnapshot(q, (snapShot) => {
+      setLists(snapShot.docs.map((doc)=>({
+        id:doc.id,
+        ...doc.data(),
+      })))
+    })
+  })
   const onDragEnd = async(result)=>{
     const {destination,source,draggableId,type} = result;
 
@@ -64,7 +73,7 @@ function App() {
     <>
       <div className="bg-blue-gray-50">
         <AuthProvider>
-        <DragDropContext onDragEnd={onDragEnd}>
+          <DragDropContext onDragEnd={onDragEnd}>
             <Routing lists={lists} setLists={setLists} />
           </DragDropContext>
         </AuthProvider>

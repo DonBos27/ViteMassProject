@@ -36,7 +36,7 @@ function Card({card, listId,index}) {
                             />
                         ): (
                             <div onClick={()=> setOpen(prev=>!prev)} className='w-[100%] h-[100%] flex justify-between px-4 items-center text-[18px]'>
-                                <p className='p-[0.7rem 0.5rem 0.5rem] max-w-[90%] overflow-hidden break-words'>{card.title}</p>
+                                <p className='p-[0.7rem 0.5rem 0.5rem] max-w-[90%] text-xl overflow-hidden break-words'>{card.title}</p>
                                 <button className='p-[0.5rem 0.5rem 0 0] bg-none border-none cursor-pointer '>
                                     <DeleteIcon className='hover:fill-primary' />
                                 </button>

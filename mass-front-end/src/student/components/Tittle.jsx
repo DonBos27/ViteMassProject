@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { MoreVert } from '@mui/icons-material';
 import ClickOutComponent from "react-onclickout";
+import storeApi from '../utils/storeApi';
 function Tittle({title,listId}) {
     const [open, setOpen] = useState(false);
     const [openOptions, setOpenOptions] = useState(false);
     const [newTitle, setNewTitle] = useState(title);
+    const {updateListTitle,deleteList} = useContext(storeApi)
     const handleOnBlur = () =>{
+        updateListTitle(newTitle,listId);
         setOpen((prev) => !prev);
     }
   return (
@@ -35,14 +38,16 @@ function Tittle({title,listId}) {
                         <ClickOutComponent onCliclout={(e)=>{
                             setOpenOptions(prev=>!prev);
                         }}>
-                            <ul className='absolute right-0 p-2 bg-[#ddd] border-2 z-999 list-none cursor-default'>
-                                <li className='' onClick={()=>{
+                            <ul className='absolute right-0  bg-[#ddd] border-2 z-50 list-none cursor-default'>
+                                <li className=' w-full px-4 py-2 text-lg hover:bg-white' onClick={()=>{
                                     setOpenOptions((curr)=>!curr);
+                                    deleteList(listId)
                                 }}>
                                     Delete List
                                 </li>
-                                <li onClick={() => {
+                                <li className='w-full px-4 py-2 text-lg hover:bg-white' onClick={() => {
                                     setOpenOptions((curr) => !curr);
+                                    setOpen((curr) => !curr);
                                 }}>
                                     Edit Card title
                                 </li>
