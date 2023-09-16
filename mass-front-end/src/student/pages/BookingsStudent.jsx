@@ -42,6 +42,7 @@ function BookingsStudent({handleProfile}) {
 
         // Clear the booking message after booking
         setBookingMessage('');
+        alert("Your booking was sent successfully");
       } catch (error) {
         console.error('Error creating booking:', error);
       }

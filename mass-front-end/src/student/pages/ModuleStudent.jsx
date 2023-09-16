@@ -106,10 +106,10 @@ function ModuleStudent({ handleProfile }) {
             Announcements
           </Typography>
         </div>
-        <div className="w-full ml-6 mb-4 mt-0">
+        <div className="w-full mb-4 mt-0">
           {announcements.length > 0 ? (
             announcements.map((announcement) => (
-              <div className="mr-10 mt-5">
+              <div className="mb-4 mt-8">
                 <Timeline key={announcements.id}>
                   <TimelineItem className="h-28 ">
                     <TimelineConnector className="!w-[78px]" />
