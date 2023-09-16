@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Dashboard from "./admin/pages/Dashboard";
 import Routing from "./routes/Routing";
 import { AuthProvider } from "./context/AuthContext";
@@ -31,7 +31,7 @@ function App() {
     <>
       <div className="bg-blue-gray-50">
         <AuthProvider>
-        <DragDropContext>
+        <DragDropContext onDragEnd={onDragEnd}>
             <Routing lists={lists} setLists={setLists} />
           </DragDropContext>
         </AuthProvider>
