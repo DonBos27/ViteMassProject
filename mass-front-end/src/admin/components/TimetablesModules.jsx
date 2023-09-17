@@ -7,33 +7,6 @@ import { db } from "../../firebase/configFirebase";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 
 function TimetablesModules() {
-  // const events = [
-  //   {
-  //     days: ["Monday", "Wednesday"],
-  //     startTime: "08:00:00",
-  //     endTime: "09:00:00",
-  //     moduleTitle: "Math",
-  //     location: "Room 101",
-  //     colors: {
-  //       backgroundColor: "skyblue",
-  //       borderColor: "skyblue",
-  //       textColor: "black",
-  //     },
-  //   },
-  //   {
-  //     days: ["Tuesday"],
-  //     startTime: "09:00:00",
-  //     endTime: "10:00:00",
-  //     moduleTitle: "English",
-  //     location: "Room 102",
-  //     colors: {
-  //       backgroundColor: "#3174ad",
-  //       borderColor: "#1e4a77",
-  //       textColor: "#ffffff",
-  //     },
-  //   },
-  // ];
-
   const [formattedEvents, setFormattedEvents] = useState([]);
   useEffect(() => {
     // Fetch timetable data from Firestore
@@ -110,10 +83,11 @@ function TimetablesModules() {
             })}
           </span>{" "}
         </div>
-        <p>{
-          eventInfo.event.extendedProps.lecturerName ? eventInfo.event.extendedProps.lecturerName : "No lecturer assigned"
-        
-        } </p>
+        <p>
+          {eventInfo.event.extendedProps.lecturerName
+            ? eventInfo.event.extendedProps.lecturerName
+            : "No lecturer assigned"}{" "}
+        </p>
         <div className="text-xs">{eventInfo.event.extendedProps.location}</div>
       </div>
     );
