@@ -20,14 +20,18 @@ function App() {
     })
   })
   const onDragEnd = async(result)=>{
+    // Destructure relevant properties from the 'result' object
     const {destination,source,draggableId,type} = result;
-
+    // Check if there is no valid destination for the drag-and-drop
     if(!destination){
       return;
     }
+    // If the type is "list," swap the positions of two lists
     if(type === "list"){
+      // Get references to the source and destination lists in Firestore
       const destinationRef = doc(db,"lists",lists[destination.index].id);
       const sourceRef = doc(db,"lists",lists[source.index].id)
+      // Swap the 'timestamp' values between the source and destination lists
       await updateDoc(destinationRef,{
         timestamp:lists[source.index].timestamp
       });
@@ -36,8 +40,11 @@ function App() {
       });
       return;
     }
+    // If the source and destination droppable IDs are the same, rearrange cards within the same list
     if(source.droppableId === destination.droppableId){
+      // Find the list where the drag-and-drop occurred
       const list = lists.find((list)=>list.id===source.droppableId);
+      // Create an updated list of cards with the order adjusted
       const updatedCards = list.cards.map((card,index) =>{
         if(index===source.index){
           return list.cards[destination.index]
@@ -47,22 +54,33 @@ function App() {
         }
         return card;
       })
+      // Get a reference to the Firestore document of the list and update the 'cards' field
       const listRef = doc(db,"lists",destination.droppableId);
       await updateDoc(listRef,{
         cards:updatedCards
       })
     }
     else{
+      // Moving a card from one list to another
+
+      // Find the source and destination lists
       const sourceList = lists.find((list)=>list.id===source.droppableId);
       const destinationList = lists.find((list)=>list.id===destination.droppableId);
+      // Get the card being dragged
       const draggingCard = sourceList.cards.filter((card)=>card.id===draggableId)[0];
+      // Get references to the source and destination lists in Firestore
       const sourceListRef = doc(db,"lists",source.droppableId);
+      // Remove the card from the source list
       sourceList.cards.splice(source.index,1)
+      // Update the source list in Firestore with the updated 'cards' field
       await updateDoc(sourceListRef,{
         cards:sourceList.cards,
       })
+      // Get a reference to the destination list in Firestore
       const destinationListRef = doc(db,"lists",destination.droppableId);
+      // Insert the dragging card at the appropriate position in the destination list
       destinationList.cards.splice(destination.index,0,draggingCard);
+      // Update the destination list in Firestore with the updated 'cards' field
       await updateDoc(destinationListRef,{
         cards:destinationList.cards,
       })
