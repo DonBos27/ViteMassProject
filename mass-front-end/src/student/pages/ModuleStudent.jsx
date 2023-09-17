@@ -108,9 +108,9 @@ function ModuleStudent({ handleProfile }) {
         </div>
         <div className="w-full mb-4 mt-0">
           {announcements.length > 0 ? (
-            announcements.map((announcement) => (
-              <div className="mb-4 mt-8">
-                <Timeline key={announcements.id}>
+            announcements.map((announcement, index) => (
+              <div className="mb-4 mt-8" key={index}>
+                <Timeline >
                   <TimelineItem className="h-28 ">
                     <TimelineConnector className="!w-[78px]" />
                     <TimelineHeader className="relative rounded-none hover:border-l-8 hover:border-primary  bg-transparent hover:bg-white py-3 pl-4 pr-8  shadow-blue-gray-900/5">

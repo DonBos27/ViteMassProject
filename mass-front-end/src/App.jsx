@@ -1,23 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dashboard from "./admin/pages/Dashboard";
 import Routing from "./routes/Routing";
 import { AuthProvider } from "./context/AuthContext";
 // import { AuthProvider } from "./context/AuthContext";
 import { DragDropContext } from "react-beautiful-dnd";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "./firebase/configFirebase";
+import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
+import { db, timestamp } from "./firebase/configFirebase";
 import sampleData from "./student/utils/sampleData";
 
 
 function App() {
-  const[lists, setLists] = useState(sampleData.lists);
+  const[lists, setLists] = useState([]);
+  useEffect(()=>{
+    const q = query(collection(db,"lists"), orderBy("timestamp", "asc"));
+    onSnapshot(q, (snapShot) => {
+      setLists(snapShot.docs.map((doc)=>({
+        id:doc.id,
+        ...doc.data(),
+      })))
+    })
+  })
   const onDragEnd = async(result)=>{
     const {destination,source,draggableId,type} = result;
 
     if(!destination){
       return;
     }
-    if(type=="list"){
+    if(type === "list"){
       const destinationRef = doc(db,"lists",lists[destination.index].id);
       const sourceRef = doc(db,"lists",lists[source.index].id)
       await updateDoc(destinationRef,{
@@ -34,7 +43,7 @@ function App() {
         if(index===source.index){
           return list.cards[destination.index]
         }
-        if(index===source.index){
+        if(index===destination.index){
           return list.cards[source.index]
         }
         return card;
@@ -62,9 +71,9 @@ function App() {
   }
   return (
     <>
-      <div className="bg-blue-gray-50">
+      <div className="bg-[#e5e4e4]">
         <AuthProvider>
-        <DragDropContext onDragEnd={onDragEnd}>
+          <DragDropContext onDragEnd={onDragEnd}>
             <Routing lists={lists} setLists={setLists} />
           </DragDropContext>
         </AuthProvider>

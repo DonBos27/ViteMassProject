@@ -22,16 +22,16 @@ function ProtectedRoute({ children }) {
 
   const email = user.email;
   if (email.endsWith("@admin.uj.ac.za")) {
-    console.log("admin");
+    //console.log("admin");
     return children;
   } else if (email.endsWith("@student.uj.ac.za")) {
-    console.log("student");
+    //console.log("student");
     return children;
   } else if (email.endsWith("@uj.ac.za")) {
-    console.log("staff");
+    //console.log("staff");
     return children;
   } else {
-    console.log("other");
+    //console.log("other");
     return <Navigate to="/" />;
   }
 }
