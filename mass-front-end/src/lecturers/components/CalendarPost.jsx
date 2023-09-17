@@ -381,12 +381,28 @@ function CalendarPost() {
     const startTimestamp = Timestamp.fromDate(new Date(selectedStartDate)); // Convert to Timestamp
     const endTimestamp = Timestamp.fromDate(new Date(selectedEndDate)); // Convert to Timestamp
     const lecturerID = authUser.email;
+    const today = new Date();
 
     if (!type) {
       setErrorAlert(true);
       // handleOpen();
       return;
       // preventErrors();
+    }
+
+    if (startTimestamp.toDate() < today) {
+      alert("You cannot post an event in the past!");
+      return;
+    }
+
+    if (endTimestamp.toDate() < today) {
+      alert("You cannot post an event in the past!");
+      return;
+    }
+
+    if (endTimestamp.toDate() < startTimestamp.toDate()) {
+      alert("You cannot post an event with end date before start date!");
+      return;
     }
 
     const getColorForEventType = (eventType) => {
