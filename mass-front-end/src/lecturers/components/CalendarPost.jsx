@@ -65,14 +65,20 @@ function CalendarPost() {
   const [errorModal, setErrorModal] = useState(false);
   const [dateBefore, setDateBefore] = useState(false);
   const [errorAlert, setErrorAlert] = useState(false);
+  const [minorError, setMinorError] = useState(false);
+  const [minorErrorText, setMinorErrorText] = useState("");
 
   const handleOpen = () => {
     setOpen((cur) => !cur);
+    setMinorError(false);
+    setErrorAlert(false);
     // console.log("Open Modal");
   };
 
   const handleUpdateModal = () => {
     setOpenUpdateModal((cur) => !cur);
+    setMinorError(false);
+    setErrorAlert(false);
     // console.log("Open Modal");
   };
 
@@ -143,6 +149,7 @@ function CalendarPost() {
       setType("");
       setSelectedStartDate(formattedDate + "T00:00"); // Set selected start date and time
       setSelectedEndDate(formattedDate + "T23:59"); // Set selected end date and time
+      setMarkweight("")
       setErrorAlert(false);
 
       console.log("Selected Date start ", formattedDate + "T00:00");
@@ -391,17 +398,44 @@ function CalendarPost() {
     }
 
     if (startTimestamp.toDate() < today) {
-      alert("You cannot post an event in the past!");
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event in the past! Check the start date."
+      );
       return;
     }
 
     if (endTimestamp.toDate() < today) {
-      alert("You cannot post an event in the past!");
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event in the past! Check the end date."
+      );
       return;
     }
 
     if (endTimestamp.toDate() < startTimestamp.toDate()) {
-      alert("You cannot post an event with end date before start date!");
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event with end date before start date!"
+      );
+      return;
+    }
+
+    // check regex for mark weight input field to only allow numbers and decimals
+    const regex = /^[0-9]*\.?[0-9]*$/;
+    if (!regex.test(markweight)) {
+      setMinorError(true);
+      setMinorErrorText(
+        "Mark weight must be a number between 1 and 99 and cannot be empty or null!"
+      );
+      return;
+    }
+
+    if (markweight > 100 || markweight < 0 || markweight === "") {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event with mark weight more than 99% or less than 0%  or null!"
+      );
       return;
     }
 
@@ -477,11 +511,19 @@ function CalendarPost() {
 
     if (type === "Test") {
       if (existingEventsTypeDate.length > 0) {
-        alert("You cannot post a test on the same day as another test!");
+        setMinorError(true);
+        setMinorErrorText(
+          "You cannot post a test on the same day as another test!"
+        );
+        // alert("You cannot post a test on the same day as another test!");
       } else if (existingEventsTypeDateBefore.length > 0) {
-        alert("You cannot post a test 2 days before another test!");
+        setMinorError(true);
+        setMinorErrorText("You cannot post a test 2 days before another test!");
+        // alert("You cannot post a test 2 days before another test!");
       } else if (existingEventsTypeDateAfter.length > 0) {
-        alert("You cannot post a test 2 days after another test!");
+        setMinorError(true);
+        setMinorErrorText("You cannot post a test 2 days after another test!");
+        // alert("You cannot post a test 2 days after another test!");
       } else {
         // alert("Test posted successfully!");
         await handleEventPost(eventObject);
@@ -518,6 +560,53 @@ function CalendarPost() {
 
     const lecturerName = userData.name;
     const lecturerEmail = lecturerID;
+
+    const today = new Date();
+
+    if (startTimestamp.toDate() < today) {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event in the past! Check the start date."
+      );
+      return;
+    }
+
+    if (endTimestamp.toDate() < today) {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event in the past! Check the end date."
+      );
+      return;
+    }
+
+    if (endTimestamp.toDate() < startTimestamp.toDate()) {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event with end date before start date!"
+      );
+      return;
+    }
+
+    const regex = /^[0-9]*\.?[0-9]*$/;
+    if (!regex.test(markweightUpdate)) {
+      setMinorError(true);
+      setMinorErrorText(
+        "Mark weight must be a number between 1 and 99 and cannot be empty or null!"
+      );
+      return;
+    }
+
+    if (
+      markweightUpdate > 100 ||
+      markweightUpdate < 0 ||
+      markweightUpdate === ""
+    ) {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event with mark weight more than 99% or less than 0% or null!"
+      );
+      return;
+    }
 
     const getColorForEventType = (eventType) => {
       switch (eventType) {
@@ -595,13 +684,21 @@ function CalendarPost() {
 
     if (typeUpdate === "Test") {
       if (existingEventsTypeDate.length > 0) {
-        alert("You cannot post a test on the same day as another test!");
+        setMinorError(true);
+        setMinorErrorText(
+          "You cannot post a test on the same day as another test!"
+        );
+        // alert("You cannot post a test on the same day as another test!");
         preventErrors();
       } else if (existingEventsTypeDateBefore.length > 0) {
-        alert("You cannot post a test 2 days before another test!");
+        setMinorError(true);
+        setMinorErrorText("You cannot post a test 2 days before another test!");
+        // alert("You cannot post a test 2 days before another test!");
         // preventErrors();
       } else if (existingEventsTypeDateAfter.length > 0) {
-        alert("You cannot post a test 2 days after another test!");
+        setMinorError(true);
+        setMinorErrorText("You cannot post a test 2 days after another test!");
+        // alert("You cannot post a test 2 days after another test!");
         // preventErrors();
       } else {
         // alert("Test posted successfully!");
@@ -677,24 +774,30 @@ function CalendarPost() {
 
       {/* // error when clicking on days beforer */}
 
-      <Dialog open={dateBefore} handler={handleDateBefore} color="red">
+      <Dialog
+        open={dateBefore}
+        handler={handleDateBefore}
+        size="xs"
+        color="red"
+      >
         <DialogHeader>
-          <Typography color="blueGray" size="lg" className="text-xl font-bold">
-            <WarningIcon className="text-red-500 mr-2" />
-            Error Message !
+          <Typography className="text-xl font-bold">
+            <WarningIcon className="text-red-700 mr-2" />
+            Error Message!
           </Typography>
         </DialogHeader>
         <DialogBody divider>
-          <Typography color="blueGray">
-            You cannot post an event in the past!
+          <Typography color="black">
+            You cannot post an event in the past
           </Typography>
         </DialogBody>
         <DialogFooter>
           <Button
-            color="red"
+            // color="red"
             buttonType="link"
             onClick={handleDateBefore}
             ripple="dark"
+            className="bg-red-700"
           >
             Close
           </Button>
@@ -702,9 +805,9 @@ function CalendarPost() {
       </Dialog>
 
       {/* // error message when click on events not selected  */}
-      <Dialog open={errorModal} handler={preventErrors} color="red">
+      <Dialog open={errorModal} size="xs" handler={preventErrors} color="red">
         <DialogHeader>
-          <Typography color="blueGray" size="lg" className="text-xl font-bold">
+          <Typography color="blueGray" className="text-xl font-bold">
             <WarningIcon className="text-red-500 mr-2" />
             Error Message !
           </Typography>
@@ -816,6 +919,20 @@ function CalendarPost() {
                 onClose={() => setErrorAlert(false)}
               >
                 Please select the assessment!
+              </Alert>
+            )}
+            {minorError && (
+              <Alert
+                color="red"
+                className=""
+                icon={<WarningIcon className="text-white mr-2" />}
+                animate={{
+                  mount: { y: 0 },
+                  unmount: { y: 100 },
+                }}
+                onClose={() => setMinorError(false)}
+              >
+                {minorErrorText}
               </Alert>
             )}
             <List className="flex-row w-full">
@@ -934,6 +1051,34 @@ function CalendarPost() {
               onChange={(e) => setSelectedUpdateEndDate(e.target.value)}
               containerProps={{ className: "min-w-[100px]" }}
             />
+            {errorAlert && (
+              <Alert
+                color="red"
+                className=""
+                icon={<WarningIcon className="text-white mr-2" />}
+                animate={{
+                  mount: { y: 0 },
+                  unmount: { y: 100 },
+                }}
+                onClose={() => setErrorAlert(false)}
+              >
+                Please select the assessment!
+              </Alert>
+            )}
+            {minorError && (
+              <Alert
+                color="red"
+                className=""
+                icon={<WarningIcon className="text-white mr-2" />}
+                animate={{
+                  mount: { y: 0 },
+                  unmount: { y: 100 },
+                }}
+                onClose={() => setMinorError(false)}
+              >
+                {minorErrorText}
+              </Alert>
+            )}
             <List className="flex-row w-full">
               {radio.map((item) => (
                 <ListItem className="p-0" key={item.id}>
