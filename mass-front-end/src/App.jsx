@@ -59,12 +59,12 @@ function App() {
       const sourceListRef = doc(db,"lists",source.droppableId);
       sourceList.cards.splice(source.index,1)
       await updateDoc(sourceListRef,{
-        cards:sourceList.cards
+        cards:sourceList.cards,
       })
       const destinationListRef = doc(db,"lists",destination.droppableId);
       destinationList.cards.splice(destination.index,0,draggingCard);
       await updateDoc(destinationListRef,{
-        cards:destinationList.cards
+        cards:destinationList.cards,
       })
     }
   }
