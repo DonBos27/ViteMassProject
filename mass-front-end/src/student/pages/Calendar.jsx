@@ -203,8 +203,8 @@ function Calendar({ handleProfile }) {
                       }}
                     >
                       <TabPanel value="Upcoming" className="p-0">
-                        {event.map((item) => (
-                          <div className="flex flex-col gap-2 p-2">
+                        {event.map((item,index) => (
+                          <div key={index} className="flex flex-col gap-2 p-2">
                             <div className="flex flex-row justify-between">
                               <Typography variant="h6" color="gray">
                                 {item.title}
@@ -217,8 +217,8 @@ function Calendar({ handleProfile }) {
                         ))}
                       </TabPanel>
                       <TabPanel value="DaysLeft" className="p-0">
-                        {event.map((item) => (
-                          <div className="flex flex-col gap-2 p-2">
+                        {event.map((item,index) => (
+                          <div key={index} className="flex flex-col gap-2 p-2">
                             <div className="flex flex-row justify-between">
                               <Typography variant="h6" color="gray">
                                 {item.title}

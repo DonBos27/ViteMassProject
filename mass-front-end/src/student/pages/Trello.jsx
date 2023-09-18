@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import { addDoc, arrayUnion, collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db, timestamp } from '../../firebase/configFirebase';
 import StoreApi from '../utils/storeApi';
-function Trello({handleProfile, lists, setLists}) {
+function Trello({handleProfile, lists}) {
     
     const addMoreCard = async(title,listId)=>{
         if(!title){
