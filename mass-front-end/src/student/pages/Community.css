@@ -30,7 +30,7 @@
     height: 100%;
     transform-origin: 0% 0%;
     position: relative;
-    border-radius: 20px;
+    border-radius: 10px;
   }
   
   .app__body {
@@ -42,7 +42,7 @@
     overflow: hidden;
     position: relative;
     border-top: 1px solid lightgrey;
-    border-radius: 20px;
+    border-radius: 10px;
   }
   
   .loader__container {
@@ -65,7 +65,7 @@
       border-radius: 0;
       background-color: white;
       border-top: none;
-      border-radius: 20px;
+      border-radius: 10px;
     }
   }
   
@@ -109,7 +109,7 @@
     position: absolute;
     height: 13px;
     width: 13px;
-    background-color: #06d755;
+    background-color: #F26522;
     border-radius: 50%;
     top: 0;
     right: 0;
@@ -162,7 +162,7 @@
   }
   
   .sidebar__chat--unreadMessages > div {
-    background-color: #06d755;
+    background-color: #F26522;
     border-radius: 50%;
     color: white;
     width: 21px;
@@ -367,6 +367,8 @@
   
   .sidebar__menu > .sidebar__menu--selected > div > .sidebar__menu--line {
     opacity: 1;
+    background-color: #F26522;
+    
   }
   
   .sidebar__chat--container {
@@ -408,7 +410,7 @@
     width: 50px;
     height: 50px;
     position: absolute;
-    background-color: #06d755 !important;
+    background-color: #F26522 !important;
     border-radius: 50%;
     bottom: 20px;
     right: 20px;
@@ -502,7 +504,7 @@
     width: 50px;
     height: 50px;
     position: absolute;
-    background-color: #06d755 !important;
+    background-color: #F26522 !important;
     border-radius: 50%;
     bottom: 20px;
     right: 20px;
@@ -637,7 +639,7 @@
   .login__container > button {
     margin-top: 50px;
     text-transform: inherit !important;
-    background-color: #0a8d48 !important;
+    background-color: #F26522 !important;
     color: white;
   }
   
@@ -683,7 +685,7 @@
     width: 46px;
     height: 46px;
     border-radius: 50%;
-    background: #06d755;
+    background: #F26522;
     box-shadow: 0px 0px 2px 0px #0000005e;
     border: none;
     transition: transform 150ms;
@@ -811,7 +813,7 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #f21d2f;
+    background: #F26522;
     animation: animate-record-circle 500ms infinite alternate;
   }
   
@@ -1076,7 +1078,7 @@
     width: 19px;
     height: 19px;
     border-radius: 50%;
-    background-color: #06d755;
+    background-color: #F26522;
     color: white;
     font-size: 10px;
     font-weight: 500;
@@ -1337,27 +1339,27 @@
   }
   
   .audioplayer__alt .audioplayer__slider::-webkit-slider-thumb {
-    background: #06d755;
+    background: #F26522;
   }
   
   .audioplayer__alt .audioplayer__slider::-moz-range-thumb {
-    background: #06d755;
+    background: #F26522;
   }
   
   .audioplayer__alt .audioplayer__slider--played {
-    background: #06d755;
+    background: #F26522;
   }
   
   .audioplayer__played .audioplayer__slider::-webkit-slider-thumb {
-    background: #2ab5eb;
+    background: #F26522;
   }
   
   .audioplayer__played .audioplayer__slider::-moz-range-thumb {
-    background: #2ab5eb;
+    background: #F26522;
   }
   
   .audioplayer__played .audioplayer__slider--played {
-    background: #2ab5eb;
+    background: #F26522;
   }
   
   .audioplayer__time {
