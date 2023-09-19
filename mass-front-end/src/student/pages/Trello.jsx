@@ -69,6 +69,7 @@ function Trello({handleProfile, lists}) {
             timestamp
         })
     }
+    
 
     const updateListTitle = (title,listId)=>{
         const listRef = doc(db, "lists",listId);
