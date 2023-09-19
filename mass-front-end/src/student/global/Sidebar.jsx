@@ -44,11 +44,11 @@ function Sidebar() {
       icon: <BookmarkIcon />,
       path: "/trello",
     },
-    // {
-    //   name: "Community",
-    //   icon: <PeopleIcon />,
-    //   path: "/community",
-    // },
+    {
+      name: "Community",
+      icon: <PeopleIcon />,
+      path: "/community",
+    },
     {
       name: "Chart",
       icon: <LeaderboardIcon />,
