@@ -14,6 +14,12 @@ import {
     Input,
     Textarea,
   } from "@material-tailwind/react";
+import { async } from '@firebase/util';
+import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
+import { db } from '../../firebase/configFirebase';
+import { useNavigate } from "react-router-dom";
+
+
 
 const tabs = [{
     id: 1,
@@ -37,6 +43,30 @@ function SidebarCommunity({userData}) {
         photoUrl: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
     }]
    const [isCreatingRoom, setCreatingRoom] = useState(false)
+    const route = useNavigate()
+   
+   
+   //   console.log("route",route,"userdata", userData )
+
+
+
+
+   async function creatinRoom(){
+    if(roomName?.trim()){
+        // create room
+        const roomsRef = collection(db, 'rooms')
+        const newRoom = await addDoc(roomsRef, {
+            name: roomName,
+            timestamp: serverTimestamp()
+        })
+        setCreatingRoom(false)
+        setRoomName("")
+        setMenu(2)
+        route(`/community/?roomId=${newRoom.id}`)
+
+        
+    }
+   }
   return (
     <div className='sidebar'>
         {/* Header */}
@@ -122,10 +152,9 @@ function SidebarCommunity({userData}) {
           <div className="grid gap-6">
             <Input 
             label="Room Name"
-            placeholder="Enter room name"
             value={roomName}
             onChange={(e) => setRoomName(e.target.value)}
-            id='name'
+            id='roomName'
              />
           </div>
         </DialogBody>
@@ -133,7 +162,7 @@ function SidebarCommunity({userData}) {
           <Button onClick={() => setCreatingRoom(false)} variant="outlined" color="red">
             close
           </Button>
-          <Button variant="gradient" color="green">
+          <Button onClick={creatinRoom} variant="gradient" color="green">
             Add room
           </Button>
         </DialogFooter>
