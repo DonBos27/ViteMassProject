@@ -12,7 +12,7 @@ function SidebarList({title,data}) {
     }
   return (
     <div className='sidebar__chat--container'>
-      <h2>{title}</h2>
+      <h2 className='text-3xl'>{title}</h2>
       {data.map(item => (
         <SidebarListItem key={item.id} item={item} />
       ))}

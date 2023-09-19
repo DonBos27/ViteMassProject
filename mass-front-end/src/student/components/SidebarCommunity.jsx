@@ -91,7 +91,7 @@ function SidebarCommunity({userData}) {
                 id='search'
                 placeholder='Search for users or rooms'
                  
-                 />
+                />
             </form>
 
         </div>
