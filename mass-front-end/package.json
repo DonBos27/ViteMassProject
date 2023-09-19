@@ -29,7 +29,6 @@
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "react-onclickout": "^2.0.8",
-    "react-router-dom": "^5.3.4",
     "react-textarea-autosize": "^8.5.3",
     "uuid": "^9.0.0"
   },
