@@ -4,6 +4,7 @@ import ProfilePic from "../images/profileicon.png";
 import { IconButton } from '@material-tailwind/react';
 import { Add, ExitToApp, Home, Message, PeopleAlt, SearchOutlined } from '@mui/icons-material';
 import SidebarTabCommunity from './SidebarTabCommunity';
+import PhotoUrl from "../images/profileicon.png"
 import SidebarList from './SidebarList';
 import {
     Button,
@@ -18,6 +19,7 @@ import { async } from '@firebase/util';
 import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
 import { db } from '../../firebase/configFirebase';
 import { useNavigate } from "react-router-dom";
+import UseRooms from '../utils/UseRooms';
 
 
 
@@ -37,13 +39,15 @@ const tabs = [{
 function SidebarCommunity({userData}) {
     const [menu, setMenu] = useState(1);
     const [roomName, setRoomName] = useState("");
+    const [isCreatingRoom, setCreatingRoom] = useState(false)
+    const route = useNavigate()
+    const rooms = UseRooms()
     const data = [{
         id: 1,
         name: 'John Doe',
-        photoUrl: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
+        photoUrl: PhotoUrl
     }]
-   const [isCreatingRoom, setCreatingRoom] = useState(false)
-    const route = useNavigate()
+   
    
    
    //   console.log("route",route,"userdata", userData )
@@ -116,7 +120,7 @@ function SidebarCommunity({userData}) {
         ): menu === 2 ? (
             <SidebarList title="Messages" data={data} />
         ): menu === 3 ? (
-            <SidebarList title="Group Class" data={data} />
+            <SidebarList title="Group Class" data={rooms} />
         ) : menu === 4 ? (
             <SidebarList title="Lecture" data={data} />
         ) : null

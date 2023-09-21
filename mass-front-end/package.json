@@ -28,6 +28,7 @@
     "react-apexcharts": "^1.4.1",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
+    "react-firebase-hooks": "^5.1.1",
     "react-onclickout": "^2.0.8",
     "react-router-dom": "^6.15.0",
     "react-textarea-autosize": "^8.5.3",
