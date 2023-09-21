@@ -4,6 +4,7 @@ import ProfilePic from "../images/profileicon.png";
 import { IconButton } from '@material-tailwind/react';
 import { Add, ExitToApp, Home, Message, PeopleAlt, SearchOutlined } from '@mui/icons-material';
 import SidebarTabCommunity from './SidebarTabCommunity';
+import PhotoUrl from "../images/profileicon.png"
 import SidebarList from './SidebarList';
 import {
     Button,
@@ -40,7 +41,7 @@ function SidebarCommunity({userData}) {
     const data = [{
         id: 1,
         name: 'John Doe',
-        photoUrl: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
+        photoUrl: PhotoUrl
     }]
    const [isCreatingRoom, setCreatingRoom] = useState(false)
     const route = useNavigate()
