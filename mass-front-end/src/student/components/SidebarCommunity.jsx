@@ -19,6 +19,7 @@ import { async } from '@firebase/util';
 import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
 import { db } from '../../firebase/configFirebase';
 import { useNavigate } from "react-router-dom";
+import UseRooms from '../utils/UseRooms';
 
 
 
@@ -38,13 +39,15 @@ const tabs = [{
 function SidebarCommunity({userData}) {
     const [menu, setMenu] = useState(1);
     const [roomName, setRoomName] = useState("");
+    const [isCreatingRoom, setCreatingRoom] = useState(false)
+    const route = useNavigate()
+    const rooms = UseRooms()
     const data = [{
         id: 1,
         name: 'John Doe',
         photoUrl: PhotoUrl
     }]
-   const [isCreatingRoom, setCreatingRoom] = useState(false)
-    const route = useNavigate()
+   
    
    
    //   console.log("route",route,"userdata", userData )
@@ -117,7 +120,7 @@ function SidebarCommunity({userData}) {
         ): menu === 2 ? (
             <SidebarList title="Messages" data={data} />
         ): menu === 3 ? (
-            <SidebarList title="Group Class" data={data} />
+            <SidebarList title="Group Class" data={rooms} />
         ) : menu === 4 ? (
             <SidebarList title="Lecture" data={data} />
         ) : null
