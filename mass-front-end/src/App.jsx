@@ -7,10 +7,12 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import { db, timestamp } from "./firebase/configFirebase";
 import sampleData from "./student/utils/sampleData";
+import useAuthUser from "./student/utils/useAuthUser";
 
 
 function App() {
   const[lists, setLists] = useState([]);
+  
   useEffect(()=>{
     const q = query(collection(db,"lists"), orderBy("timestamp", "asc"));
     onSnapshot(q, (snapShot) => {

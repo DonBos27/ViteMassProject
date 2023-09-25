@@ -35,7 +35,7 @@ function Community({handleProfile}) {
         <NavbarStudent Icon={PeopleAltIcon} title={"Community"} handleProfile={handleProfile} />
         <div className="app">
           <div className='app__body'>
-            <SidebarCommunity userData={userData} />
+            <SidebarCommunity user={userData} />
           </div>
         </div>
       </div>
