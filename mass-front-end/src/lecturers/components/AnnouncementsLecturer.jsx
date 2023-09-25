@@ -70,8 +70,8 @@ function AnnouncementsLecturer() {
       <div className="w-full ml-0 mb-5 mt-0">
         {announcements.length > 0 ? (
           announcements.map((announcement) => (
-            <div className="mr-5 mt-0 p-5">
-              <Timeline key={announcements.id}>
+            <div className="mr-5 mt-0 p-5" key={announcement.data().timestamp}>
+              <Timeline >
                 <TimelineItem className="h-28 ">
                   {/* <TimelineConnector className="!w-[78px]" /> */}
                   <TimelineHeader className="relative rounded-none hover:border-l-8 hover:border-primary  bg-transparent hover:bg-white py-0 pl-4 pr-0  shadow-blue-gray-900/5">
@@ -103,7 +103,7 @@ function AnnouncementsLecturer() {
 
                       <Typography
                         variant="h6"
-                        color="gary"
+                        color="gray"
                         className="text-base font-normal"
                       >
                         {announcement.data().content}
