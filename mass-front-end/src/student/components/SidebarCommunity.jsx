@@ -20,6 +20,8 @@ import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
 import { db } from '../../firebase/configFirebase';
 import { useNavigate } from "react-router-dom";
 import UseRooms from '../utils/UseRooms';
+import useUsers from '../utils/useUsers';
+import useAuthUser from '../utils/useAuthUser';
 
 
 
@@ -36,25 +38,20 @@ const tabs = [{
     icon: <PeopleAlt />
 }
 ]
-function SidebarCommunity({userData}) {
+function SidebarCommunity({user}) {
     const [menu, setMenu] = useState(1);
     const [roomName, setRoomName] = useState("");
     const [isCreatingRoom, setCreatingRoom] = useState(false)
     const route = useNavigate()
     const rooms = UseRooms()
+   
+    const users = useUsers(user)
     const data = [{
         id: 1,
         name: 'John Doe',
         photoUrl: PhotoUrl
     }]
    
-   
-   
-   //   console.log("route",route,"userdata", userData )
-
-
-
-
    async function creatinRoom(){
     if(roomName?.trim()){
         // create room
@@ -76,9 +73,9 @@ function SidebarCommunity({userData}) {
         {/* Header */}
         <div className='sidebar__header'>
             <div className='sidebar__header--left'>
-                <Avatar src={userData.image ? userData.image : ProfilePic}
+                <Avatar src={user.image ? user.image : ProfilePic}
                     alt="Profile" />
-                    <h4>{userData?.initials} {userData?.name}</h4>
+                    <h4>{user?.initials} {user?.name}</h4>
             </div>
             <div className='sidebar__header--right'>
                 <IconButton className='bg-primary'>
@@ -118,9 +115,9 @@ function SidebarCommunity({userData}) {
         {menu === 1 ? (
             <SidebarList title="Chats" data={data} />
         ): menu === 2 ? (
-            <SidebarList title="Messages" data={data} />
+            <SidebarList title="Messages" data={rooms} />
         ): menu === 3 ? (
-            <SidebarList title="Group Class" data={rooms} />
+            <SidebarList title="Lecturer" data={users} />
         ) : menu === 4 ? (
             <SidebarList title="Lecture" data={data} />
         ) : null
