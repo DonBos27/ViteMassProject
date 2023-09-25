@@ -15,6 +15,7 @@ import Background from "./images/background.gif";
 import { useAuth } from "../context/AuthContext";
 import { Timestamp, doc, updateDoc } from "firebase/firestore";
 import { db, usersCollection } from "../firebase/configFirebase";
+import useAuthUser from "../student/utils/useAuthUser";
 // import { Alert } from "react-native-web";
 
 function Login() {
@@ -44,7 +45,7 @@ function Login() {
   const [errorAlert, setErrorAlert] = useState(false);
   const { user, logIn, logOut } = useAuth();
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     console.log("Login");
     console.log(user);

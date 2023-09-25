@@ -12,6 +12,7 @@ import "primereact/resources/primereact.min.css";
 
 function App() {
   const[lists, setLists] = useState([]);
+  
   useEffect(()=>{
     const q = query(collection(db,"lists"), orderBy("timestamp", "asc"));
     onSnapshot(q, (snapShot) => {
