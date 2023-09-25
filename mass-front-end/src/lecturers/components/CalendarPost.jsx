@@ -479,8 +479,8 @@ function CalendarPost() {
     const studentsEmail = studentsData.map((student) => student.email);
     console.log("studentsEmail:", studentsEmail);
 
-    // check if student email finished with @student and add to array if true and send email to students in the array 
-    const studentEmail = studentsEmail.filter((email) => { 
+    // check if student email finished with @student and add to array if true and send email to students in the array
+    const studentEmail = studentsEmail.filter((email) => {
       if (email && email.endsWith("@student.uj.ac.za")) {
         return email;
       }
@@ -498,7 +498,7 @@ function CalendarPost() {
             <div style="padding:30px; background-color: #ffffff">
               <div style="height: 100%; padding-right: 10%; padding-left: 20%;">
                 <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/af/University_of_Johannesburg_Logo.svg/1200px-University_of_Johannesburg_Logo.svg.png" alt="University Logo" style="max-width: 50px; max-height: 50px; padding-right: 0%; padding-left: 30%;" /> <br/>
-                <h2 style="color: #333; font-size: 25px" className:"text-red-700" >Mass Notification</h2>
+                <h2 style="color: #333; font-size: 25px" className:"text-red-700" >Mass Notification New Post</h2>
               </div>
               <p style=" padding-right: 0%; padding-left: 0%;">A new ${type} has been posted on the calendar by ${lecturerID}.</p>
               <p style=" padding-right: 0%; padding-left: 0%;">Please check the calendar for more details.</p>
@@ -576,12 +576,12 @@ function CalendarPost() {
         // alert("You cannot post a test 2 days after another test!");
       } else {
         // alert("Test posted successfully!");
-        // await handleEventPost(eventObject);
+        await handleEventPost(eventObject);
         handleOpen();
       }
     } else {
       // alert("Event posted successfully!");
-      // await handleEventPost(eventObject);
+      await handleEventPost(eventObject);
       handleOpen();
     }
 
@@ -684,6 +684,53 @@ function CalendarPost() {
       lecturerEmail: lecturerEmail,
       lecturerName: lecturerName,
     };
+
+    // retrieve student emails from the database
+    const studentsCollectionRef = collection(db, "users");
+    const studentsSnapshot = await getDocs(studentsCollectionRef);
+    const studentsData = studentsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const studentsEmail = studentsData.map((student) => student.email);
+    console.log("studentsEmail:", studentsEmail);
+
+    // check if student email finished with @student and add to array if true and send email to students in the array
+    const studentEmail = studentsEmail.filter((email) => {
+      if (email && email.endsWith("@student.uj.ac.za")) {
+        return email;
+      }
+    });
+    console.log("studentEmail:", studentEmail);
+
+    // Email notificaion to students
+    try {
+      const docRef = await addDoc(collection(db, "mail"), {
+        to: studentEmail,
+        message: {
+          subject: `${type} Notifications`,
+          html: `
+              <div style="background-color: #f2f2f2; padding: 5px; height: 100%">
+                <div style="padding:30px; background-color: #ffffff">
+                  <div style="height: 100%; padding-right: 10%; padding-left: 20%;">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/af/University_of_Johannesburg_Logo.svg/1200px-University_of_Johannesburg_Logo.svg.png" alt="University Logo" style="max-width: 50px; max-height: 50px; padding-right: 0%; padding-left: 30%;" /> <br/>
+                    <h2 style="color: #333; font-size: 25px" className:"text-red-700" >Mass Notification Update</h2>
+                  </div>
+                  <p style=" padding-right: 0%; padding-left: 0%;">A new ${type} has been updated on the calendar by ${lecturerID}.</p>
+                  <p style=" padding-right: 0%; padding-left: 0%;">Please check the calendar for more details.</p>
+                </div>
+              </div> 
+              <div>
+                <p style="color: #888; font-size: 10px">This email was sent to you by MASS. Please do not reply to this email.</p>
+              </div>
+            `,
+        },
+      });
+      console.log("Document written with ID: ", docRef.id);
+      console.log("Email sent successfully!: ", docRef);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
 
     const eventsCollectionRef = doc(db, "events", "eventsPosts");
     const eventSnapshot = await getDoc(eventsCollectionRef);
