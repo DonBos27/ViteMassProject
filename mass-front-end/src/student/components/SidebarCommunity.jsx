@@ -1,5 +1,5 @@
 import { Avatar } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ProfilePic from "../images/profileicon.png";
 import { IconButton } from '@material-tailwind/react';
 import { Add, ExitToApp, Home, Message, PeopleAlt, SearchOutlined } from '@mui/icons-material';
@@ -22,7 +22,8 @@ import { useNavigate } from "react-router-dom";
 import UseRooms from '../utils/UseRooms';
 import useUsers from '../utils/useUsers';
 import useAuthUser from '../utils/useAuthUser';
-
+import useChats from '../utils/useChats';
+import { doc, onSnapshot } from "firebase/firestore";
 
 
 const tabs = [{
@@ -40,11 +41,13 @@ const tabs = [{
 ]
 function SidebarCommunity({user}) {
     const [menu, setMenu] = useState(1);
+    const [userChat, setUserChat] = useState([])
     const [roomName, setRoomName] = useState("");
     const [isCreatingRoom, setCreatingRoom] = useState(false)
     const route = useNavigate()
     const rooms = UseRooms()
-   
+    const chats = useChats(user)
+    
     const users = useUsers(user)
     const data = [{
         id: 1,
@@ -113,13 +116,13 @@ function SidebarCommunity({user}) {
         </div>
 
         {menu === 1 ? (
-            <SidebarList title="Chats" data={data} />
+            <SidebarList title="Chats" data={chats} />
         ): menu === 2 ? (
             <SidebarList title="Messages" data={rooms} />
         ): menu === 3 ? (
             <SidebarList title="Lecturer" data={users} />
         ) : menu === 4 ? (
-            <SidebarList title="Lecture" data={data} />
+            <SidebarList title="Search Results" data={data} />
         ) : null
         }
         {/* create room button */}
