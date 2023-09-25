@@ -14,7 +14,7 @@ function SidebarListItem({item}) {
              />
         </div>
         <div className='sidebar__chat--info'>
-            <h4>{item.name}</h4>
+            <h4 className='text-xl font-medium'>{item.name}</h4>
             <p>{item.lastMessage}</p>
             </div>
       </div>
