@@ -7,6 +7,7 @@ import { db } from "../../firebase/configFirebase";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import './Community.css'
+import Chat from '../components/Chat';
 function Community({handleProfile}) {
   const [userData, setUserData] = useState([]);
   const { user, logOut } = useAuth();
@@ -36,6 +37,7 @@ function Community({handleProfile}) {
         <div className="app">
           <div className='app__body'>
             <SidebarCommunity user={userData} />
+            <Chat user={user} />
           </div>
         </div>
       </div>
