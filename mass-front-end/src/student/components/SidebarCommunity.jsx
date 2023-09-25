@@ -16,7 +16,7 @@ import {
     Textarea,
   } from "@material-tailwind/react";
 import { async } from '@firebase/util';
-import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
+import { addDoc, collection, serverTimestamp, query, where, getDocs } from '@firebase/firestore';
 import { db } from '../../firebase/configFirebase';
 import { useNavigate } from "react-router-dom";
 import UseRooms from '../utils/UseRooms';
@@ -41,7 +41,7 @@ const tabs = [{
 ]
 function SidebarCommunity({user}) {
     const [menu, setMenu] = useState(1);
-    const [userChat, setUserChat] = useState([])
+    const [searchResults, setSearchResults] = useState([]);
     const [roomName, setRoomName] = useState("");
     const [isCreatingRoom, setCreatingRoom] = useState(false)
     const route = useNavigate()
@@ -49,13 +49,8 @@ function SidebarCommunity({user}) {
     const chats = useChats(user)
     
     const users = useUsers(user)
-    const data = [{
-        id: 1,
-        name: 'John Doe',
-        photoUrl: PhotoUrl
-    }]
-   
-   async function creatinRoom(){
+    
+    async function creatinRoom(){
     if(roomName?.trim()){
         // create room
         const roomsRef = collection(db, 'rooms')
@@ -71,6 +66,26 @@ function SidebarCommunity({user}) {
         
     }
    }
+  async function searchUsersAndRooms(event){
+    event.preventDefault()
+    const searchValue = event.target.elements.search.value
+    const userQeury = query(collection(db, "usersChat"), where("name", "==", searchValue))
+    const roomQuery = query(collection(db, "rooms"), where("name", "==", searchValue))
+    const userSnapshot = await getDocs(userQeury)
+    const roomsSnapshot = await getDocs(roomQuery)
+    const userResults = userSnapshot?.docs.map((doc) => {
+      const id = doc.id > user.uid ? `${doc.id}${user.uid}` : `${user.uid}${doc.id}`;
+      return { id, ...doc.data()} 
+    })
+    const roomResults = roomsSnapshot?.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
+
+    const searchResults = [...userResults, ...roomResults];
+    setMenu(4);
+    setSearchResults(searchResults)
+  }
   return (
     <div className='sidebar'>
         {/* Header */}
@@ -88,7 +103,7 @@ function SidebarCommunity({user}) {
         </div>
         {/* search */}
         <div className='sidebar__search'>
-            <form className='sidebar__search--container'>
+            <form onSubmit={searchUsersAndRooms} className='sidebar__search--container'>
                 <SearchOutlined />
                 <input 
                 type="text"
@@ -122,7 +137,7 @@ function SidebarCommunity({user}) {
         ): menu === 3 ? (
             <SidebarList title="Lecturer" data={users} />
         ) : menu === 4 ? (
-            <SidebarList title="Search Results" data={data} />
+            <SidebarList title="Search Results" data={searchResults} />
         ) : null
         }
         {/* create room button */}
