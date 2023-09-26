@@ -47,7 +47,7 @@ function ChatFooter({
                 async success(result){
                     setSrc('')
                     setImage(null)
-                    await uploadBytes(ref(storage, `images/${imageName}`, result))
+                    await uploadBytes(ref(storage, `images/${imageName}`), result)
                     const url = await getDownloadURL(ref(storage, `images/${imageName}`))
                     await updateDoc(doc(db, `rooms/${roomId}/messages/${newDoc.id}`), {
                         imageUrl: url,
@@ -56,7 +56,7 @@ function ChatFooter({
             })
         }
     }
-    console.log("Hello user", user.name)
+    
     const canRecord = true
     const isRecording = false
     const canSendMessage = input.trim() || (input === "" && image)

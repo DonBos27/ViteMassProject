@@ -10,6 +10,8 @@ import { addDoc, collection, doc, serverTimestamp, setDoc, updateDoc } from 'fir
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from '../../firebase/configFirebase';
 import Compressor from "compressorjs"
+import useChatMessage from '../utils/useChatMessages';
+import ChatMessages from './ChatMessages';
 function Chat({user}) {
     const navigate = useNavigate();
     const location = useLocation();
@@ -20,7 +22,7 @@ function Chat({user}) {
     const roomId = new URLSearchParams(location.search).get("roomId");
     const userId = user.uid
     const room = useRoom(roomId, userId)
-    console.log("Check chat: ", user.email)
+    const messages = useChatMessage(roomId)
     function showPreview(event){
         const file = event.target.files[0]
         if(file){
@@ -115,6 +117,13 @@ function Chat({user}) {
             </div>
         </div>
       </div>
+
+        {/* chat body */}
+        <div className='chat__body--container'>
+            <div className='chat__body'>
+                <ChatMessages messages={messages} user={user} roomId={roomId} />
+            </div>
+        </div>
       <MediaPreview src={src} closePreview={closePreview} />
       <ChatFooter 
         input={input} 
