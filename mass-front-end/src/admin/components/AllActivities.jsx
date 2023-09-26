@@ -84,7 +84,7 @@ function AllActivities() {
         </CardHeader>
         <CardBody className="p-0">
           {userData.length === 0 ? (
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center" key={userData.name}>
               <Typography className="text-2xl font-bold">
                 No activities
               </Typography>
@@ -94,7 +94,7 @@ function AllActivities() {
             </div>
           ) : (
             filteredEvents.map((item) => (
-              <ul className="flex flex-col gap-4 m-2">
+              <ul className="flex flex-col gap-4 m-2" key={item.lecturerName}>
                 <li className="flex items-center gap-4">
                   <span className="rounded-full border border-white/20 bg-white/20 p-1">
                     <ArrowRightAltIcon className="text-primary" />

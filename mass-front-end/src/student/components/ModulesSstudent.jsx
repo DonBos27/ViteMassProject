@@ -15,11 +15,12 @@ import PersonIcon from "@mui/icons-material/Person";
 import { useAuth } from "../../context/AuthContext";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/configFirebase";
+import BayPDF from "../files/Bay.pdf";
 
 import "./Modules.css";
 
 function ModulesSstudent() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(null);
   const [modulesData, setModulesData] = useState([]);
 
   useEffect(() => {
@@ -36,12 +37,19 @@ function ModulesSstudent() {
     };
   }, []);
 
-  const handleOpen = () => setOpen(!open);
+  const handleOpen = (moduleCode) => {
+    setOpen(moduleCode);
+  };
+
+  const handleClose = () => {
+    setOpen(null);
+  };
+
   return (
     <div>
       <div className="mb-12 grid gap-y-10 gap-x-5 md:grid-cols-2 xl:grid-cols-4 ">
         {modulesData.map((item) => (
-          <div key={item}>
+          <div key={item.moduleCode}>
             <Card className="w-full h-96 shadow-lg">
               <CardHeader floated={false} color="blue-gray">
                 <img src={item.image} alt="ui/ux review check" />
@@ -57,13 +65,11 @@ function ModulesSstudent() {
                     {item.moduleName}
                   </Typography>
                 </div>
-                <Typography color="gray">
-                  {item.lecturerName}
-                </Typography>
+                <Typography color="gray">{item.lecturerName}</Typography>
               </CardBody>
               <CardFooter className="pt-3">
                 <Button
-                  onClick={handleOpen}
+                  onClick={() => handleOpen(item.moduleCode)}
                   className="bg-primary"
                   size="lg"
                   fullWidth={true}
@@ -72,9 +78,17 @@ function ModulesSstudent() {
                 </Button>
               </CardFooter>
             </Card>
-            <Dialog tabIndex={item} open={open} handler={handleOpen}>
-              <DialogHeader>{item.title}</DialogHeader>
+            {/* <Dialog tabIndex={item} open={open} handler={handleOpen}>
+              <DialogHeader>{item.moduleCode}</DialogHeader>
               <DialogBody divider className="h-[40rem] overflow-scroll">
+                <iframe
+                  src={
+                    item.moduleCode === "IFS03B1" ? BayPDF : "https://www.google.com"
+                  }
+                  width="100%"
+                  height="100%"
+                  title="PDF Viewer"
+                />
                 <Typography className="font-normal">
                   I always felt like I could do anything. That&apos;s the main
                   thing people are controlled by! Thoughts- their perception of
@@ -107,8 +121,32 @@ function ModulesSstudent() {
                   close
                 </Button>
               </DialogFooter>
-            </Dialog>
+            </Dialog> */}
           </div>
+        ))}
+        {modulesData.map((item) => (
+          <Dialog
+            key={item.moduleCode}
+            open={open === item.moduleCode}
+            handler={handleClose}
+          >
+            <DialogHeader>{item.moduleCode}</DialogHeader>
+            <DialogBody divider className="h-[40rem] overflow-scroll">
+              <iframe
+                src={
+                  item.moduleInfo ? item.moduleInfo : "nothing"
+                }
+                width="100%"
+                height="100%"
+                title="PDF Viewer"
+              />
+            </DialogBody>
+            <DialogFooter className="space-x-2">
+              <Button variant="outlined" color="red" onClick={handleClose}>
+                close
+              </Button>
+            </DialogFooter>
+          </Dialog>
         ))}
       </div>
     </div>

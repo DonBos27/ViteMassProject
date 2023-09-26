@@ -6,19 +6,13 @@ import {
   Input,
   Button,
   Typography,
-  Tabs,
-  TabsHeader,
-  TabsBody,
-  Tab,
-  TabPanel,
-  Select,
-  Option,
   Textarea,
   List,
   ListItem,
   ListItemPrefix,
   Radio,
 } from "@material-tailwind/react";
+import { Editor } from "primereact/editor";
 import { useAuth } from "../../context/AuthContext";
 import {
   addDoc,
@@ -30,7 +24,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase/configFirebase";
 import UJLogo from "../images/uj.png";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/ReactToastify.min.css";
 const radio = [
   { id: 1, value: "everyone", color: "blue" },
   { id: 2, value: "lecturer", color: "green" },
@@ -44,6 +39,7 @@ function AnnouncementComponents() {
   const [recipient, setRecipient] = useState("");
   const [userData, setUserData] = useState([]);
   const [name, setName] = useState("");
+  const [text, setText] = useState("");
 
   useEffect(() => {
     if (authUser) {
@@ -55,11 +51,8 @@ function AnnouncementComponents() {
           if (doc.exists()) {
             const data = doc.data();
             console.log("Fetched data from Firestore:", data);
-            // const dataModules = data.modules;
-            // console.log("Modules:", dataModules);
-            // setUserData(dataModules);
             setName(data.name);
-            console.log("Lecturer ID:", name);
+            console.log("Admin name:", name);
           }
         }
       );
@@ -73,6 +66,20 @@ function AnnouncementComponents() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // if (!title || !content || !recipient) {
+    //   toast.error("Please fill in all the fields!", {
+    //     position: "top-right",
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "light",
+    //   });
+    //   return;
+    // }
+
     try {
       const email = authUser.email;
       const userRole = email.endsWith("@uj.ac.za") ? "lecturer" : "student";
@@ -82,45 +89,131 @@ function AnnouncementComponents() {
       if (recipient === "everyone") {
         // Create announcements in both lecturer and student collections
         announcementsCollection = collection(db, `announcements_lecturer`);
-        await addDoc(announcementsCollection, {
-          title,
-          content,
-          recipient: recipient,
-          timestamp: serverTimestamp(),
-          name: name,
-        });
+        // await addDoc(announcementsCollection, {
+        //   title,
+        //   content,
+        //   recipient: recipient,
+        //   timestamp: serverTimestamp(),
+        //   name: name,
+        // });
 
         announcementsCollection = collection(db, `announcements_student`);
-        await addDoc(announcementsCollection, {
-          title,
-          content,
-          recipient: recipient,
-          timestamp: serverTimestamp(),
-          name: name,
-        });
+        // await addDoc(announcementsCollection, {
+        //   title,
+        //   content,
+        //   recipient: recipient,
+        //   timestamp: serverTimestamp(),
+        //   name: name,
+        // });
         console.log("Announcement created successfully for everyone!");
       } else {
         // Create announcement in the corresponding collection
         announcementsCollection = collection(db, `announcements_${recipient}`);
-        await addDoc(announcementsCollection, {
-          title,
-          content,
-          recipient,
-          timestamp: serverTimestamp(),
-          name: name,
-        });
+        // await addDoc(announcementsCollection, {
+        //   title,
+        //   content,
+        //   recipient,
+        //   timestamp: serverTimestamp(),
+        //   name: name,
+        // });
         console.log(`Announcement created successfully for ${recipient}!`);
       }
-
-      // Clear form after successful announcement creation
+      // setText(text);
+      console.log("Content:", content);
+      toast("Announcement created successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       setTitle("");
       setContent("");
       setRecipient("");
-      //   alert("Announcement created successfully!");
     } catch (err) {
       console.log(err);
       alert("Failed to create announcement!");
     }
+
+    // Retrieve student emails from the database
+    const studentsCollectionRef = collection(db, "users");
+    const studentsSnapshot = await getDocs(studentsCollectionRef);
+    const studentsData = studentsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const studentsEmail = studentsData.map((student) => student.email);
+    const studentEmail = studentsEmail.filter((email) => {
+      if (
+        email &&
+        email.endsWith("@student.uj.ac.za") &&
+        !email.endsWith("@admin.uj.ac.za")
+      ) {
+        return email;
+      }
+    });
+    // Retrieve lecturer emails from the database
+    const lecturersCollectionRef = collection(db, "users");
+    const lecturersSnapshot = await getDocs(lecturersCollectionRef);
+    const lecturersData = lecturersSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const lecturersEmail = lecturersData.map((lecturer) => lecturer.email);
+    const lecturerEmail = lecturersEmail.filter((email) => {
+      if (
+        email &&
+        email.endsWith("@uj.ac.za") &&
+        !email.endsWith("@admin.uj.ac.za")
+      ) {
+        return email;
+      }
+    });
+    // Create a Set to store unique emails
+    const uniqueEmails = new Set([...studentEmail, ...lecturerEmail]);
+    // Convert the Set back to an array
+    const everyoneEmail = Array.from(uniqueEmails);
+
+    if (recipient === "student") {
+      console.log("Sending email to students", studentEmail);
+    } else if (recipient === "lecturer") {
+      console.log("Sending email to lecturers", lecturerEmail);
+    } else if (recipient === "everyone") {
+      console.log("Sending email to everyone", everyoneEmail);
+    }
+
+    // Email notificaion to students, lecturer or everyone
+    // try {
+    //   const docRef = await addDoc(collection(db, "mail"), {
+    //     // to: recipient === "everyone" ? everyoneEmail : recipient === "student" ? studentEmail : lecturerEmail,
+    //     to: "bosengad@gmail.com", // For testing purposes
+    //     message: {
+    //       subject: `Announcements Notifications`,
+    //       html: `
+    //       <div style="background-color: #f2f2f2; padding: 5px; height: 100%">
+    //         <div style="padding:30px; background-color: #ffffff">
+    //           <div style="height: 100%; padding-right: 10%; padding-left: 20%;">
+    //             <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/af/University_of_Johannesburg_Logo.svg/1200px-University_of_Johannesburg_Logo.svg.png" alt="University Logo" style="max-width: 50px; max-height: 50px; padding-right: 0%; padding-left: 30%;" /> <br/>
+    //             <h2 style="color: #333; font-size: 25px" className:"text-red-700" >Mass Notification</h2>
+    //           </div>
+    //           <p style=" padding-right: 0%; padding-left: 0%;">A new announcement has been posted by ${name}.</p>
+    //           <p style=" padding-right: 0%; padding-left: 0%;">Please check the timeline for more details.</p>
+    //         </div>
+    //       </div>
+    //       <div>
+    //         <p style="color: #888; font-size: 10px">This email was sent to you by MASS. Please do not reply to this email.</p>
+    //       </div>
+    //     `,
+    //     },
+    //   });
+    //   console.log("Document written with ID: ", docRef.id);
+    //   console.log("Email sent successfully!: ", docRef);
+    // } catch (e) {
+    //   console.error("Error adding document: ", e);
+    // }
   };
 
   return (
@@ -169,6 +262,11 @@ function AnnouncementComponents() {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
+              {/* <Editor
+                value={text}
+                onTextChange={(e) => setText(e.textValue)}
+                style={{ height: "320px" }}
+              /> */}
             </div>
             <div className="mb-5">
               <List className="flex-row w-full">
@@ -204,9 +302,11 @@ function AnnouncementComponents() {
             <Button size="lg" className="bg-primary" onClick={handleSubmit}>
               <Typography color="white">Submit</Typography>
             </Button>
+            {/* <ToastContainer /> */}
           </form>
         </CardBody>
       </Card>
+      <ToastContainer />
     </div>
   );
 }
