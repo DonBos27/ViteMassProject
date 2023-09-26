@@ -38,7 +38,7 @@ function Chat({user}) {
     }
     async function SendRecording(e){
         e.preventDefault()
-        console.log("recording");
+        console.log("recordind");
     }
     async function SendMessage(e){
         e.preventDefault()
