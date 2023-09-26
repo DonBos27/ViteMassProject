@@ -24,7 +24,7 @@ import useAuthUser from "../student/utils/useAuthUser";
 
 function Routing({lists, setLists}) {
   const navigate = useNavigate();
-  
+  useAuthUser()
   function handleProfile() {
     navigate("/profile");
   }

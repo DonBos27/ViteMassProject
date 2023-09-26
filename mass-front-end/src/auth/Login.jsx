@@ -48,7 +48,7 @@ function Login() {
   
   useEffect(() => {
     console.log("Login");
-    console.log(user);
+    console.log();
     handleLogout();
     // handleLogin();
   }, []);
@@ -57,7 +57,7 @@ function Login() {
     setEmail("");
     setPassword("");
   };
-
+ 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
