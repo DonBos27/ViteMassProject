@@ -20,7 +20,7 @@ function Chat({user}) {
     const roomId = new URLSearchParams(location.search).get("roomId");
     const userId = user.uid
     const room = useRoom(roomId, userId)
-    console.log("Check chat: ", userId)
+    console.log("Check chat: ", user.email)
     function showPreview(event){
         const file = event.target.files[0]
         if(file){
