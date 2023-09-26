@@ -4,7 +4,7 @@ import { db } from "../../firebase/configFirebase";
 
 export default function useRoom(roomId, userId){
     const isUserRoom = roomId && roomId.includes(userId); // Check if roomId is not null
-    const collectionId = isUserRoom ? "usersChat" : "rooms";
+    const collectionId = isUserRoom ? "users" : "rooms";
     const docId = isUserRoom ? roomId.replace(userId, "") : roomId;
     const [snapShot] = useDocument(docId ? doc(db, `${collectionId}/${docId}`) : null);
 

@@ -10,7 +10,7 @@ export default function useUsers(user){
     //     where("email", "<", `${user.email}@uj.ac.za`) // EndAt current user's email (z is used as the upper bound)
     //   );
     const [snapShot] = useCollection(
-        query(collection(db,"usersChat"), orderBy("timestamp", "desc"))
+        query(collection(db,"users"), orderBy("timestamp", "desc"))
     );
 
     const users = []
