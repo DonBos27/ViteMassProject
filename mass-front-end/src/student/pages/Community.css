@@ -672,7 +672,7 @@
     position: absolute;
     width: calc(100% + 56px);
     bottom: 0;
-   
+    z-index: 5;
     transform: translateZ(456px);
   }
   
@@ -936,6 +936,7 @@
     background-color: transparent;
     z-index: 1;
     position: relative;
+    top: 75px;
     height: calc(100% - 125px);
   }
   

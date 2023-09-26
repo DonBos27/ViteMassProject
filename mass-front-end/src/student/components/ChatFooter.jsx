@@ -24,6 +24,7 @@ function ChatFooter({
     async function IsSend(e){
         e.preventDefault()
         setInput("")
+        
         if(image) closePreview()
         const imageName = nanoid()
         await setDoc(doc(db, `users/${userId}/chats/${roomId}`),{
@@ -32,7 +33,7 @@ function ChatFooter({
             timestamp: serverTimestamp()
         })
         const newDoc = await addDoc(collection(db, `rooms/${roomId}/messages`), {
-            name: user.displayName,
+            name: user.email,
             message: input,
             uid: user.uid,
             timestamp: serverTimestamp(),
@@ -46,7 +47,7 @@ function ChatFooter({
                 async success(result){
                     setSrc('')
                     setImage(null)
-                    await uploadBytes(ref(storage, `images/${imageName}`, result))
+                    await uploadBytes(ref(storage, `images/${imageName}`), result)
                     const url = await getDownloadURL(ref(storage, `images/${imageName}`))
                     await updateDoc(doc(db, `rooms/${roomId}/messages/${newDoc.id}`), {
                         imageUrl: url,
@@ -55,6 +56,7 @@ function ChatFooter({
             })
         }
     }
+    
     const canRecord = true
     const isRecording = false
     const canSendMessage = input.trim() || (input === "" && image)
