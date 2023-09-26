@@ -25,7 +25,7 @@ function ChatFooter({
         e.preventDefault()
         if(image) closePreview()
         const imageName = nanoid()
-        await setDoc(doc(db, `usersChat/${userId}/chats/${roomId}`),{
+        await setDoc(doc(db, `users/${userId}/chats/${roomId}`),{
             name: room.name,
             photoUrl: room.photoUrl || null,
             timestamp: serverTimestamp()

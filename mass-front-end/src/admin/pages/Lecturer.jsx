@@ -63,6 +63,10 @@ function Lecturer() {
     };
   }, []);
   console.log("Rendering component with userData:", userData);
+  const filteredLecturers = userData.filter((user) =>
+  user.email.endsWith('@uj.ac.za')
+);
+console.log("Filtered lecturers:", filteredLecturers);
   const modulesTaken = userData.map((user) =>
     user.id.endsWith("@uj.ac.za")
       ? user.modules.map((module) => module.moduleCode)
@@ -271,9 +275,9 @@ function Lecturer() {
                 ))}
               </tr>
             </thead>
-            {userData &&
-              userData.map((user) =>
-                user.id.endsWith("@uj.ac.za") ? (
+            {filteredLecturers &&
+              filteredLecturers.map((user) =>
+                user.email.endsWith("@uj.ac.za") ? (
                   <tbody key={user.id}>
                     <tr>
                       <td className="p-4">
@@ -296,7 +300,7 @@ function Lecturer() {
                               color="blue-gray"
                               className="font-normal opacity-70"
                             >
-                              {user.id}
+                              {user.email}
                             </Typography>
                           </div>
                         </div>

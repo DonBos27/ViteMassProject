@@ -69,7 +69,7 @@ function SidebarCommunity({user}) {
   async function searchUsersAndRooms(event){
     event.preventDefault()
     const searchValue = event.target.elements.search.value
-    const userQeury = query(collection(db, "usersChat"), where("name", "==", searchValue))
+    const userQeury = query(collection(db, "users"), where("name", "==", searchValue))
     const roomQuery = query(collection(db, "rooms"), where("name", "==", searchValue))
     const userSnapshot = await getDocs(userQeury)
     const roomsSnapshot = await getDocs(roomQuery)

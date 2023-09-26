@@ -8,7 +8,7 @@ export default function useAuthUser(){
     const [user] = useAuthState(auth);
     useEffect(() => {
         if(user){
-            const userRef = doc(db, `usersChat/${user.uid}`)
+            const userRef = doc(db, `users/${user.uid}`)
             getDoc(userRef).then(snapshot => {
                 if(!snapshot.exists()){
                     setDoc(snapshot.ref, {
