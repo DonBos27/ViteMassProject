@@ -14,7 +14,7 @@ export default function useAuthUser(){
                     setDoc(snapshot.ref, {
                         email: user.email,
                         photoURL: user.photoURL,
-                        displayName: user.displayName,
+                        name: user.displayName,
                         timestamp: serverTimestamp()
                     
                     })

@@ -23,6 +23,7 @@ function ChatFooter({
     const [text, setText] = useState("")
     async function IsSend(e){
         e.preventDefault()
+        setInput("")
         if(image) closePreview()
         const imageName = nanoid()
         await setDoc(doc(db, `users/${userId}/chats/${roomId}`),{

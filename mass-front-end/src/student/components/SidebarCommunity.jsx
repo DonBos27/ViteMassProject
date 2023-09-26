@@ -49,7 +49,9 @@ function SidebarCommunity({user}) {
     const chats = useChats(user)
     
     const users = useUsers(user)
-    
+    const filteredLecturers = users.filter((user) =>
+  user.email.endsWith('@uj.ac.za')
+);
     async function creatinRoom(){
     if(roomName?.trim()){
         // create room
@@ -135,7 +137,7 @@ function SidebarCommunity({user}) {
         ): menu === 2 ? (
             <SidebarList title="Messages" data={rooms} />
         ): menu === 3 ? (
-            <SidebarList title="Lecturer" data={users} />
+            <SidebarList title="Lecturer" data={filteredLecturers} />
         ) : menu === 4 ? (
             <SidebarList title="Search Results" data={searchResults} />
         ) : null

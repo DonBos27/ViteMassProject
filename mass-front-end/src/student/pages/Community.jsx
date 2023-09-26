@@ -8,14 +8,16 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import './Community.css'
 import Chat from '../components/Chat';
+import useAuthUser from '../utils/useAuthUser';
 function Community({handleProfile}) {
   const [userData, setUserData] = useState([]);
   const { user, logOut } = useAuth();
+  const users = useAuthUser()
   useEffect(() => {
     if (user) {
-      const email = user.email;
+      const email = user.uid;
       //console.log("Email:", email);
-      const unsubscribe = onSnapshot(doc(db, "users", email), (doc) => {
+      const unsubscribe = onSnapshot(doc(db, "users", user.uid), (doc) => {
         if (doc.exists()) {
           const data = doc.data();
           console.log("Fetched data from Firestore:", data);
@@ -27,6 +29,7 @@ function Community({handleProfile}) {
       };
     }
   }, [user]);
+  console.log("data from community", users.uid)
   return (
     <div className="flex">
       <div className="w-1/4">
@@ -36,8 +39,8 @@ function Community({handleProfile}) {
         <NavbarStudent Icon={PeopleAltIcon} title={"Community"} handleProfile={handleProfile} />
         <div className="app">
           <div className='app__body'>
-            <SidebarCommunity user={userData} />
-            <Chat user={user} />
+            <SidebarCommunity user={users} />
+            <Chat user={users} />
           </div>
         </div>
       </div>
