@@ -28,7 +28,7 @@ function Sidebar() {
   const [userData, setUserData] = useState([]);
   const { user, logOut } = useAuth();
   const navigate = useNavigate();
-  useAuthUser()
+  
   const menuItem = [
     {
       name: "Home",
