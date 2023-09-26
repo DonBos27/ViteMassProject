@@ -18,9 +18,9 @@ function Chat({user}) {
     const [src, setSrc] = useState("")
   // Get the query parameter 'roomId' from the location object
     const roomId = new URLSearchParams(location.search).get("roomId");
-    const userId = user.userId
+    const userId = user.uid
     const room = useRoom(roomId, userId)
-    
+    console.log("Check chat: ", userId)
     function showPreview(event){
         const file = event.target.files[0]
         if(file){

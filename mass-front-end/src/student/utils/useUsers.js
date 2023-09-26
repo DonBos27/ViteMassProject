@@ -22,6 +22,6 @@ export default function useUsers(user){
         }
         
     });
-    //console.log(users)
+    
     return users;
 }
