@@ -85,7 +85,7 @@ function Activity() {
         </CardHeader>
         <CardBody className="p-0">
           {userData.map((item) => (
-            <ul className="flex flex-col gap-4 m-2">
+            <ul className="flex flex-col gap-4 m-2" key={item.uid}>
               <li className="flex items-center gap-4">
                 <span className="rounded-full border border-white/20 bg-white/20 p-1">
                   <ArrowRightAltIcon />

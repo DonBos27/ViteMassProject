@@ -10,7 +10,6 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Checkbox,
   Dialog,
   DialogBody,
   DialogFooter,
@@ -26,6 +25,7 @@ import {
 } from "@material-tailwind/react";
 import { useAuth } from "../../context/AuthContext";
 import {
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -35,9 +35,9 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "../../firebase/configFirebase";
-import { addDoc, serverTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import WarningIcon from "@mui/icons-material/Warning";
+import UJ from "../images/uj.png";
 
 const radio = [
   { id: 1, value: "Assignment", color: "blue" },
@@ -50,7 +50,6 @@ function CalendarPost() {
   const [open, setOpen] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [event, setEvent] = useState([]);
-  // const [eventUpdate, setEventUpdate] = useState([]);
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState("");
   const [selectedUpdateStartDate, setSelectedUpdateStartDate] = useState("");
@@ -59,7 +58,6 @@ function CalendarPost() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState("");
-  // const [lecturerId, setLecturerId] = useState("");
   const [scope, setScope] = useState("");
   const [titleUpdate, setTitleUpdate] = useState("");
   const [descriptionUpdate, setDescriptionUpdate] = useState("");
@@ -70,14 +68,20 @@ function CalendarPost() {
   const [errorModal, setErrorModal] = useState(false);
   const [dateBefore, setDateBefore] = useState(false);
   const [errorAlert, setErrorAlert] = useState(false);
+  const [minorError, setMinorError] = useState(false);
+  const [minorErrorText, setMinorErrorText] = useState("");
 
   const handleOpen = () => {
     setOpen((cur) => !cur);
+    setMinorError(false);
+    setErrorAlert(false);
     // console.log("Open Modal");
   };
 
   const handleUpdateModal = () => {
     setOpenUpdateModal((cur) => !cur);
+    setMinorError(false);
+    setErrorAlert(false);
     // console.log("Open Modal");
   };
 
@@ -148,6 +152,7 @@ function CalendarPost() {
       setType("");
       setSelectedStartDate(formattedDate + "T00:00"); // Set selected start date and time
       setSelectedEndDate(formattedDate + "T23:59"); // Set selected end date and time
+      setMarkweight("");
       setErrorAlert(false);
 
       console.log("Selected Date start ", formattedDate + "T00:00");
@@ -386,12 +391,55 @@ function CalendarPost() {
     const startTimestamp = Timestamp.fromDate(new Date(selectedStartDate)); // Convert to Timestamp
     const endTimestamp = Timestamp.fromDate(new Date(selectedEndDate)); // Convert to Timestamp
     const lecturerID = authUser.email;
+    const today = new Date();
 
     if (!type) {
       setErrorAlert(true);
       // handleOpen();
       return;
       // preventErrors();
+    }
+
+    if (startTimestamp.toDate() < today) {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event in the past! Check the start date."
+      );
+      return;
+    }
+
+    if (endTimestamp.toDate() < today) {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event in the past! Check the end date."
+      );
+      return;
+    }
+
+    if (endTimestamp.toDate() < startTimestamp.toDate()) {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event with end date before start date!"
+      );
+      return;
+    }
+
+    // check regex for mark weight input field to only allow numbers and decimals
+    const regex = /^[0-9]*\.?[0-9]*$/;
+    if (!regex.test(markweight)) {
+      setMinorError(true);
+      setMinorErrorText(
+        "Mark weight must be a number between 1 and 99 and cannot be empty or null!"
+      );
+      return;
+    }
+
+    if (markweight > 100 || markweight < 0 || markweight === "") {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event with mark weight more than 99% or less than 0%  or null!"
+      );
+      return;
     }
 
     const getColorForEventType = (eventType) => {
@@ -420,6 +468,53 @@ function CalendarPost() {
       type: type,
       color: getColorForEventType(type),
     };
+
+    // retrieve student emails from the database
+    const studentsCollectionRef = collection(db, "users");
+    const studentsSnapshot = await getDocs(studentsCollectionRef);
+    const studentsData = studentsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const studentsEmail = studentsData.map((student) => student.email);
+    console.log("studentsEmail:", studentsEmail);
+
+    // check if student email finished with @student and add to array if true and send email to students in the array
+    const studentEmail = studentsEmail.filter((email) => {
+      if (email && email.endsWith("@student.uj.ac.za")) {
+        return email;
+      }
+    });
+    console.log("studentEmail:", studentEmail);
+
+    // Email notificaion to students
+    try {
+      const docRef = await addDoc(collection(db, "mail"), {
+        to: studentEmail,
+        message: {
+          subject: `${type} Notifications`,
+          html: `
+          <div style="background-color: #f2f2f2; padding: 5px; height: 100%">
+            <div style="padding:30px; background-color: #ffffff">
+              <div style="height: 100%; padding-right: 10%; padding-left: 20%;">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/af/University_of_Johannesburg_Logo.svg/1200px-University_of_Johannesburg_Logo.svg.png" alt="University Logo" style="max-width: 50px; max-height: 50px; padding-right: 0%; padding-left: 30%;" /> <br/>
+                <h2 style="color: #333; font-size: 25px" className:"text-red-700" >Mass Notification New Post</h2>
+              </div>
+              <p style=" padding-right: 0%; padding-left: 0%;">A new ${type} has been posted on the calendar by ${lecturerID}.</p>
+              <p style=" padding-right: 0%; padding-left: 0%;">Please check the calendar for more details.</p>
+            </div>
+          </div> 
+          <div>
+            <p style="color: #888; font-size: 10px">This email was sent to you by MASS. Please do not reply to this email.</p>
+          </div>
+        `,
+        },
+      });
+      console.log("Document written with ID: ", docRef.id);
+      console.log("Email sent successfully!: ", docRef);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
 
     setId(eventObject.uid);
 
@@ -466,11 +561,19 @@ function CalendarPost() {
 
     if (type === "Test") {
       if (existingEventsTypeDate.length > 0) {
-        alert("You cannot post a test on the same day as another test!");
+        setMinorError(true);
+        setMinorErrorText(
+          "You cannot post a test on the same day as another test!"
+        );
+        // alert("You cannot post a test on the same day as another test!");
       } else if (existingEventsTypeDateBefore.length > 0) {
-        alert("You cannot post a test 2 days before another test!");
+        setMinorError(true);
+        setMinorErrorText("You cannot post a test 2 days before another test!");
+        // alert("You cannot post a test 2 days before another test!");
       } else if (existingEventsTypeDateAfter.length > 0) {
-        alert("You cannot post a test 2 days after another test!");
+        setMinorError(true);
+        setMinorErrorText("You cannot post a test 2 days after another test!");
+        // alert("You cannot post a test 2 days after another test!");
       } else {
         // alert("Test posted successfully!");
         await handleEventPost(eventObject);
@@ -508,6 +611,53 @@ function CalendarPost() {
     const lecturerName = userData.name;
     const lecturerEmail = lecturerID;
 
+    const today = new Date();
+
+    if (startTimestamp.toDate() < today) {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event in the past! Check the start date."
+      );
+      return;
+    }
+
+    if (endTimestamp.toDate() < today) {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event in the past! Check the end date."
+      );
+      return;
+    }
+
+    if (endTimestamp.toDate() < startTimestamp.toDate()) {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event with end date before start date!"
+      );
+      return;
+    }
+
+    const regex = /^[0-9]*\.?[0-9]*$/;
+    if (!regex.test(markweightUpdate)) {
+      setMinorError(true);
+      setMinorErrorText(
+        "Mark weight must be a number between 1 and 99 and cannot be empty or null!"
+      );
+      return;
+    }
+
+    if (
+      markweightUpdate > 100 ||
+      markweightUpdate < 0 ||
+      markweightUpdate === ""
+    ) {
+      setMinorError(true);
+      setMinorErrorText(
+        "You cannot post an event with mark weight more than 99% or less than 0% or null!"
+      );
+      return;
+    }
+
     const getColorForEventType = (eventType) => {
       switch (eventType) {
         case "Assignment":
@@ -534,6 +684,53 @@ function CalendarPost() {
       lecturerEmail: lecturerEmail,
       lecturerName: lecturerName,
     };
+
+    // retrieve student emails from the database
+    const studentsCollectionRef = collection(db, "users");
+    const studentsSnapshot = await getDocs(studentsCollectionRef);
+    const studentsData = studentsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const studentsEmail = studentsData.map((student) => student.email);
+    console.log("studentsEmail:", studentsEmail);
+
+    // check if student email finished with @student and add to array if true and send email to students in the array
+    const studentEmail = studentsEmail.filter((email) => {
+      if (email && email.endsWith("@student.uj.ac.za")) {
+        return email;
+      }
+    });
+    console.log("studentEmail:", studentEmail);
+
+    // Email notificaion to students
+    try {
+      const docRef = await addDoc(collection(db, "mail"), {
+        to: studentEmail,
+        message: {
+          subject: `${type} Notifications`,
+          html: `
+              <div style="background-color: #f2f2f2; padding: 5px; height: 100%">
+                <div style="padding:30px; background-color: #ffffff">
+                  <div style="height: 100%; padding-right: 10%; padding-left: 20%;">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/af/University_of_Johannesburg_Logo.svg/1200px-University_of_Johannesburg_Logo.svg.png" alt="University Logo" style="max-width: 50px; max-height: 50px; padding-right: 0%; padding-left: 30%;" /> <br/>
+                    <h2 style="color: #333; font-size: 25px" className:"text-red-700" >Mass Notification Update</h2>
+                  </div>
+                  <p style=" padding-right: 0%; padding-left: 0%;">A new ${type} has been updated on the calendar by ${lecturerID}.</p>
+                  <p style=" padding-right: 0%; padding-left: 0%;">Please check the calendar for more details.</p>
+                </div>
+              </div> 
+              <div>
+                <p style="color: #888; font-size: 10px">This email was sent to you by MASS. Please do not reply to this email.</p>
+              </div>
+            `,
+        },
+      });
+      console.log("Document written with ID: ", docRef.id);
+      console.log("Email sent successfully!: ", docRef);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
 
     const eventsCollectionRef = doc(db, "events", "eventsPosts");
     const eventSnapshot = await getDoc(eventsCollectionRef);
@@ -584,13 +781,21 @@ function CalendarPost() {
 
     if (typeUpdate === "Test") {
       if (existingEventsTypeDate.length > 0) {
-        alert("You cannot post a test on the same day as another test!");
+        setMinorError(true);
+        setMinorErrorText(
+          "You cannot post a test on the same day as another test!"
+        );
+        // alert("You cannot post a test on the same day as another test!");
         preventErrors();
       } else if (existingEventsTypeDateBefore.length > 0) {
-        alert("You cannot post a test 2 days before another test!");
+        setMinorError(true);
+        setMinorErrorText("You cannot post a test 2 days before another test!");
+        // alert("You cannot post a test 2 days before another test!");
         // preventErrors();
       } else if (existingEventsTypeDateAfter.length > 0) {
-        alert("You cannot post a test 2 days after another test!");
+        setMinorError(true);
+        setMinorErrorText("You cannot post a test 2 days after another test!");
+        // alert("You cannot post a test 2 days after another test!");
         // preventErrors();
       } else {
         // alert("Test posted successfully!");
@@ -666,24 +871,30 @@ function CalendarPost() {
 
       {/* // error when clicking on days beforer */}
 
-      <Dialog open={dateBefore} handler={handleDateBefore} color="red">
+      <Dialog
+        open={dateBefore}
+        handler={handleDateBefore}
+        size="xs"
+        color="red"
+      >
         <DialogHeader>
-          <Typography color="blueGray" size="lg" className="text-xl font-bold">
-            <WarningIcon className="text-red-500 mr-2" />
-            Error Message !
+          <Typography className="text-xl font-bold">
+            <WarningIcon className="text-red-700 mr-2" />
+            Error Message!
           </Typography>
         </DialogHeader>
         <DialogBody divider>
-          <Typography color="blueGray">
-            You cannot post an event in the past!
+          <Typography color="black">
+            You cannot post an event in the past
           </Typography>
         </DialogBody>
         <DialogFooter>
           <Button
-            color="red"
+            // color="red"
             buttonType="link"
             onClick={handleDateBefore}
-            ripple="dark"
+            // ripple={true}
+            className="bg-red-700"
           >
             Close
           </Button>
@@ -691,15 +902,15 @@ function CalendarPost() {
       </Dialog>
 
       {/* // error message when click on events not selected  */}
-      <Dialog open={errorModal} handler={preventErrors} color="red">
+      <Dialog open={errorModal} size="xs" handler={preventErrors} color="red">
         <DialogHeader>
-          <Typography color="blueGray" size="lg" className="text-xl font-bold">
+          <Typography color="blue-gray" className="text-xl font-bold">
             <WarningIcon className="text-red-500 mr-2" />
             Error Message !
           </Typography>
         </DialogHeader>
         <DialogBody divider>
-          <Typography color="blueGray">
+          <Typography color="blue-gray">
             You cannot edit other lecturer's post!
           </Typography>
         </DialogBody>
@@ -708,7 +919,7 @@ function CalendarPost() {
             color="red"
             buttonType="link"
             onClick={preventErrors}
-            ripple="dark"
+            // ripple="dark"
           >
             Close
           </Button>
@@ -805,6 +1016,20 @@ function CalendarPost() {
                 onClose={() => setErrorAlert(false)}
               >
                 Please select the assessment!
+              </Alert>
+            )}
+            {minorError && (
+              <Alert
+                color="red"
+                className=""
+                icon={<WarningIcon className="text-white mr-2" />}
+                animate={{
+                  mount: { y: 0 },
+                  unmount: { y: 100 },
+                }}
+                onClose={() => setMinorError(false)}
+              >
+                {minorErrorText}
               </Alert>
             )}
             <List className="flex-row w-full">
@@ -923,6 +1148,34 @@ function CalendarPost() {
               onChange={(e) => setSelectedUpdateEndDate(e.target.value)}
               containerProps={{ className: "min-w-[100px]" }}
             />
+            {errorAlert && (
+              <Alert
+                color="red"
+                className=""
+                icon={<WarningIcon className="text-white mr-2" />}
+                animate={{
+                  mount: { y: 0 },
+                  unmount: { y: 100 },
+                }}
+                onClose={() => setErrorAlert(false)}
+              >
+                Please select the assessment!
+              </Alert>
+            )}
+            {minorError && (
+              <Alert
+                color="red"
+                className=""
+                icon={<WarningIcon className="text-white mr-2" />}
+                animate={{
+                  mount: { y: 0 },
+                  unmount: { y: 100 },
+                }}
+                onClose={() => setMinorError(false)}
+              >
+                {minorErrorText}
+              </Alert>
+            )}
             <List className="flex-row w-full">
               {radio.map((item) => (
                 <ListItem className="p-0" key={item.id}>
