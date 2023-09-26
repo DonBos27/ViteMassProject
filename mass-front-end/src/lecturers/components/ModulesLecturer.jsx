@@ -30,7 +30,7 @@ function ModulesLecturer() {
       const email = authUser.email;
       console.log("Email:", email);
       const unsubscribe = onSnapshot(
-        doc(db, "users", email), // Assuming your collection is "users" and the document ID is the email
+        doc(db, "users", authUser.uid), // Assuming your collection is "users" and the document ID is the email
         (doc) => {
           if (doc.exists()) {
             const data = doc.data();

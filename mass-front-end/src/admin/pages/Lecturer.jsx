@@ -237,6 +237,7 @@ console.log("Filtered lecturers:", filteredLecturers);
     console.log(selectedModules)
     console.log("Selected lecturer id:", selectedLecturerId);
     setOpen((cur) => !cur);
+    console.log("Lecturer id: ", lecturerId)
   };
   useEffect(() => {
     console.log("Selected lecturer id:", selectedLecturerId);
