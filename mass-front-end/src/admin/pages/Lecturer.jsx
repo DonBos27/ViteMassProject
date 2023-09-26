@@ -93,7 +93,7 @@ console.log("Filtered lecturers:", filteredLecturers);
 
   console.log("Rendering component with modulesData:", modulesData);
 
-  const lecturerId = userData.find((user) => user.id.endsWith("@uj.ac.za"))?.id;
+  const lecturerId = userData.find((user) => user.email.endsWith("@uj.ac.za"))?.id;
   console.log("Lecturer id:", lecturerId);
 
   const assignModules = async (e) => {
@@ -237,6 +237,7 @@ console.log("Filtered lecturers:", filteredLecturers);
     console.log(selectedModules)
     console.log("Selected lecturer id:", selectedLecturerId);
     setOpen((cur) => !cur);
+    console.log("Lecturer id: ", lecturerId)
   };
   useEffect(() => {
     console.log("Selected lecturer id:", selectedLecturerId);
