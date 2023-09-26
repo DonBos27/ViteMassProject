@@ -79,6 +79,7 @@ function AnnouncementComponents() {
     //   });
     //   return;
     // }
+    console.log("Content:", text);
 
     try {
       const email = authUser.email;
@@ -89,37 +90,36 @@ function AnnouncementComponents() {
       if (recipient === "everyone") {
         // Create announcements in both lecturer and student collections
         announcementsCollection = collection(db, `announcements_lecturer`);
-        // await addDoc(announcementsCollection, {
-        //   title,
-        //   content,
-        //   recipient: recipient,
-        //   timestamp: serverTimestamp(),
-        //   name: name,
-        // });
+        await addDoc(announcementsCollection, {
+          title,
+          text,
+          recipient: recipient,
+          timestamp: serverTimestamp(),
+          name: name,
+        });
 
         announcementsCollection = collection(db, `announcements_student`);
-        // await addDoc(announcementsCollection, {
-        //   title,
-        //   content,
-        //   recipient: recipient,
-        //   timestamp: serverTimestamp(),
-        //   name: name,
-        // });
+        await addDoc(announcementsCollection, {
+          title,
+          text,
+          recipient: recipient,
+          timestamp: serverTimestamp(),
+          name: name,
+        });
         console.log("Announcement created successfully for everyone!");
       } else {
         // Create announcement in the corresponding collection
         announcementsCollection = collection(db, `announcements_${recipient}`);
-        // await addDoc(announcementsCollection, {
-        //   title,
-        //   content,
-        //   recipient,
-        //   timestamp: serverTimestamp(),
-        //   name: name,
-        // });
+        await addDoc(announcementsCollection, {
+          title,
+          text,
+          recipient,
+          timestamp: serverTimestamp(),
+          name: name,
+        });
         console.log(`Announcement created successfully for ${recipient}!`);
       }
       // setText(text);
-      console.log("Content:", content);
       toast("Announcement created successfully!", {
         position: "top-right",
         autoClose: 5000,
@@ -131,8 +131,9 @@ function AnnouncementComponents() {
         theme: "light",
       });
       setTitle("");
-      setContent("");
+      // setContent("");
       setRecipient("");
+      setText("");
     } catch (err) {
       console.log(err);
       alert("Failed to create announcement!");
@@ -257,16 +258,16 @@ function AnnouncementComponents() {
               >
                 Description of Announcement
               </Typography>
-              <Textarea
+              {/* <Textarea
                 label="Description"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-              />
-              {/* <Editor
+              /> */}
+              <Editor
                 value={text}
                 onTextChange={(e) => setText(e.textValue)}
                 style={{ height: "320px" }}
-              /> */}
+              />
             </div>
             <div className="mb-5">
               <List className="flex-row w-full">

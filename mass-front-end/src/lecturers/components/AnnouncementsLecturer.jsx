@@ -106,7 +106,7 @@ function AnnouncementsLecturer() {
                         color="gray"
                         className="text-base font-normal"
                       >
-                        {announcement.data().content}
+                        {announcement.data().text}
                       </Typography>
                       <Typography
                         variant="h6"
