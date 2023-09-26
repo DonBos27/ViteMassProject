@@ -15,12 +15,12 @@ function ChatFooter() {
         <input type="text" placeholder='Type a message' />
         {
             canRecord ? (
-                <button type='submit' className='send__btn'>
+                <button type='submit' className='send__btn bg-[#F26522]'>
                     {recordIcons}
                 </button>
             ) : (
                 <>
-                <label htmlFor='capture' className='send__btn'>{recordIcons}</label>
+                <label htmlFor='capture' className='send__btn bg-[#F26522]'>{recordIcons}</label>
                 <input type="file" style={{display: 'none'}} id='capture' accept='audio/*' capture />
                 </>
             )
