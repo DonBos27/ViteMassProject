@@ -44,11 +44,11 @@ function Sidebar() {
       icon: <BookmarkIcon />,
       path: "/trello",
     },
-    // {
-    //   name: "Community",
-    //   icon: <PeopleIcon />,
-    //   path: "/community",
-    // },
+    {
+      name: "Community",
+      icon: <PeopleIcon />,
+      path: "/community",
+    },
     {
       name: "Chart",
       icon: <LeaderboardIcon />,
@@ -73,7 +73,7 @@ function Sidebar() {
       const unsubscribe = onSnapshot(doc(db, "users", email), (doc) => {
         if (doc.exists()) {
           const data = doc.data();
-          console.log("Fetched data from Firestore:", data);
+          //console.log("Fetched data from Firestore:", data);
           setUserData(data);
         }
       });

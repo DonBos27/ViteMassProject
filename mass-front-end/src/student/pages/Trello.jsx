@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import { addDoc, arrayUnion, collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db, timestamp } from '../../firebase/configFirebase';
 import StoreApi from '../utils/storeApi';
-function Trello({handleProfile, lists, setLists}) {
+function Trello({handleProfile, lists}) {
     
     const addMoreCard = async(title,listId)=>{
         if(!title){
@@ -69,6 +69,7 @@ function Trello({handleProfile, lists, setLists}) {
             timestamp
         })
     }
+    
 
     const updateListTitle = (title,listId)=>{
         const listRef = doc(db, "lists",listId);
@@ -106,9 +107,9 @@ function Trello({handleProfile, lists, setLists}) {
         }}
         >
           
-            <Droppable droppableId='app' type='list' direction='list'>
+            <Droppable droppableId='app' type='list' direction='horizontal'>
                 {(provided) => (
-                    <div className="wrapper" ref={provided.innerRef}>
+                    <div className=" w-[100%] p-[0.5rem] grid gap-y-10 gap-x-5 md:grid-cols-2 xl:grid-cols-4 min-h-[calc(100hv-5rem)] overflow-y-auto" ref={provided.innerRef}>
                         {lists.map((list, index) => {
                             return <Lists key={list.id} list={list} index={index} />
                         })}

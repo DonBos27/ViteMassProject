@@ -68,8 +68,8 @@ function ModulesLecturer() {
         <SpinnerLoading />
       ) : userData ? (
         userData &&
-        userData.map((item) => (
-          <div>
+        userData.map((item, index) => (
+          <div key={index}>
             <Typography className="text-4xl font-bold py-5">Modules</Typography>
             <Card className="w-96 " key={item.moduleCode}>
               <CardHeader shadow={false} floated={false} className="h-96">

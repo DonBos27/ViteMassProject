@@ -21,13 +21,14 @@ import { useAuth } from "../../context/AuthContext";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/configFirebase";
 import GoodMorning from "../images/goodmorning.gif";
+import useAuthUser from "../../student/utils/useAuthUser";
 
 function Sidebar() {
   const [openAlert, setOpenAlert] = useState(true);
   const [userData, setUserData] = useState([]);
   const { user, logOut } = useAuth();
   const navigate = useNavigate();
-
+  useAuthUser()
   const menuItem = [
     {
       name: "Home",

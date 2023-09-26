@@ -4,7 +4,7 @@
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  background-color: #f1eeee;
+  background-color: #e5e4e4;
 
   /* font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -21,6 +21,7 @@ body {
   /* place-items: center; */
   /* min-width: 320px;
   min-height: 100vh; */
+   
 }
 
 @media (prefers-color-scheme: light) {
