@@ -20,7 +20,7 @@ function Community({handleProfile}) {
       const unsubscribe = onSnapshot(doc(db, "users", user.uid), (doc) => {
         if (doc.exists()) {
           const data = doc.data();
-          console.log("Fetched data from Firestore:", data);
+          //console.log("Fetched data from Firestore:", data);
           setUserData(data);
         }
       });
@@ -29,7 +29,7 @@ function Community({handleProfile}) {
       };
     }
   }, [user]);
-  console.log("data from community", users.uid)
+  //console.log("data from community", users.uid)
   return (
     <div className="flex">
       <div className="w-1/4">
