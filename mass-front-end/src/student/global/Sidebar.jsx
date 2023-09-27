@@ -54,11 +54,11 @@ function Sidebar() {
       icon: <LeaderboardIcon />,
       path: "/chart",
     },
-    {
-      name: "Bookings",
-      icon: <LibraryBooksIcon />,
-      path: "/bookings",
-    },
+    // {
+    //   name: "Bookings",
+    //   icon: <LibraryBooksIcon />,
+    //   path: "/bookings",
+    // },
     // {
     //   name: "Trello",
     //   icon: <FormatListBulletedIcon />,
@@ -118,7 +118,7 @@ function Sidebar() {
         </div>
         <List className="">
           {menuItem.map((item, index) => (
-            <NavLink to={item.path} key={index} className="text-xl">
+            <NavLink to={item.path} key={index} className="">
               <ListItem className="p-4 hover:bg-primary hover:text-white ">
                 <ListItemPrefix className="">{item.icon}</ListItemPrefix>
                 {item.name}
@@ -132,7 +132,7 @@ function Sidebar() {
             <ListItemPrefix>
               <LogoutIcon className="h-5 w-5" />
             </ListItemPrefix>
-            <span className="text-xl">Log Out</span>
+            Log out
           </ListItem>
         </List>
         <Alert
