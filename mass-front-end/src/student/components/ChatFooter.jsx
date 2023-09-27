@@ -61,6 +61,8 @@ function ChatFooter({
     const record = useRef()
     const canRecord = !!navigator.mediaDevices.getUserMedia && !!window.MediaRecorder;
     const [isRecording, setIsRecording ]= useState(false)
+    const [duration, setDuration] = useState("00:00")
+    const timerInterval = useRef()
     const canSendMessage = input.trim() || (input === "" && image)
     const recordIcons = (
         <>
@@ -71,6 +73,23 @@ function ChatFooter({
     useEffect(() => {
         if(isRecording) {
             record.current.start()
+            startTimer()
+        }
+        function pad(value){
+            return String(value).length < 2 ? `0${value}` : value
+        }
+        function startTimer(){
+            const start = Date.now()
+            timerInterval.current = setInterval(setTime, 100)
+            function setTime(){
+                const timeElapsed = Date.now() - start;
+                const totalSeconds = Math.floor(timeElapsed / 1000)
+                const minutes = pad(parseInt(totalSeconds / 60))
+                const seconds = pad(totalSeconds % 60)
+                const duration = `${minutes}:${seconds}`
+                setDuration(duration)
+            }
+            
         }
     }, [isRecording])
     async function startRecording(event){
@@ -78,6 +97,12 @@ function ChatFooter({
         record.current = await recordAudio()
         setIsRecording(true)
         setAudioId('')
+    }
+    function stopRecording(){
+        record.current.stop()
+        setIsRecording(false)
+        clearInterval(timerInterval.current)
+        setDuration("00:00")
     }
   return (
     <div className='chat__footer'>
@@ -100,10 +125,12 @@ function ChatFooter({
     </form>
     {isRecording && (
         <div className='record'>
+            <span onClick={stopRecording}>
             <CancelRounded style={{width: 30, height: 30, color: "#f20519"}} />
+            </span>
             <div>
                 <div className='record__redcircle' />
-                <div className='record__duration'>0:00</div>
+                <div className='record__duration'>{duration}</div>
             </div>
             <CheckCircleRounded style={{width: 30, height: 30, color: "#41bf49"}} />
         </div>
