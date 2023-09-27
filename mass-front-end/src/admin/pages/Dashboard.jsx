@@ -28,24 +28,24 @@ function Dashboard() {
   // const unsub = onSnapshot(doc(usersCollection, `${user.email}`), (doc) => {
   // });
 
-  const handleLogin = async () => {
-    try {
-      if (user) {
-        const userDocRef = doc(db, "users", user.email);
-        console.log(userDocRef);
-        await updateDoc(userDocRef, {
-          timeIn: Timestamp.fromDate(new Date()),
-        });
-      }
-      console.log("Login");
-    } catch (err) {
-      console.log(err);
-      console.log("Failed to Login");
-    }
-  };
-  useEffect(() => {
-    handleLogin();
-  }, []);
+  // const handleLogin = async () => {
+  //   try {
+  //     if (user) {
+  //       const userDocRef = doc(db, "users", user.email);
+  //       console.log(userDocRef);
+  //       await updateDoc(userDocRef, {
+  //         timeIn: Timestamp.fromDate(new Date()),
+  //       });
+  //     }
+  //     console.log("Login");
+  //   } catch (err) {
+  //     console.log(err);
+  //     console.log("Failed to Login");
+  //   }
+  // };
+  // useEffect(() => {
+  //   handleLogin();
+  // }, []);
 
   return (
     <div className="flex">
