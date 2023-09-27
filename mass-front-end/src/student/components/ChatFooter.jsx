@@ -98,11 +98,46 @@ function ChatFooter({
         setIsRecording(true)
         setAudioId('')
     }
-    function stopRecording(){
-        record.current.stop()
+    async function stopRecording(){
+        const audio = await record.current.stop()
         setIsRecording(false)
         clearInterval(timerInterval.current)
         setDuration("00:00")
+        return audio
+    }
+    async function finishRecording(){
+        const audio = await stopRecording()
+        const { audioFile, audioName } = await audio
+        sendAudio(audioFile, audioName)
+        
+    }
+    async function sendAudio(audioFile, audioName){
+        await setDoc(doc(db, `users/${user.uid}/chats/${roomId}`), {
+            name: room.name,
+            photoUrl: room.photoUrl || null,
+            timestamp: serverTimestamp()
+        })
+        const newDoc = await addDoc(collection(db, `rooms/${roomId}/messages`), {
+            name: user.email,
+            uid: user.uid,
+            timestamp: serverTimestamp(),
+            time: new Date().toUTCString(),
+            audioUrl: "uploading",
+            audioName
+        })
+        await uploadBytes(ref(storage, `audio/${audioName}`), audioFile)
+        const url = await getDownloadURL(ref(storage, `audio/${audioName}`))
+        await updateDoc(doc(db, `rooms/${roomId}/messages/${newDoc.id}`), {
+            audioUrl: url
+        })
+    }
+    function audioInputChange(event){
+        const audioFile = event.target.files[0]
+        const audioName = nanoid()
+        if(file){
+            setAudioId("")
+            sendAudio(audioFile, audioName)
+        }
     }
   return (
     <div className='chat__footer'>
@@ -118,21 +153,21 @@ function ChatFooter({
             ) : (
                 <>
                 <label htmlFor='capture' className='send__btn bg-[#F26522]'>{recordIcons}</label>
-                <input type="file" style={{display: 'none'}} id='capture' accept='audio/*' capture />
+                <input type="file" style={{display: 'none'}} id='capture' accept='audio/*' capture onChange={audioInputChange} />
                 </>
             )
         }
     </form>
     {isRecording && (
         <div className='record'>
-            <span onClick={stopRecording}>
-            <CancelRounded style={{width: 30, height: 30, color: "#f20519"}} />
-            </span>
+            
+            <CancelRounded onClick={stopRecording} style={{width: 30, height: 30, color: "#f20519"}} />
+            
             <div>
                 <div className='record__redcircle' />
                 <div className='record__duration'>{duration}</div>
             </div>
-            <CheckCircleRounded style={{width: 30, height: 30, color: "#41bf49"}} />
+            <CheckCircleRounded onClick={finishRecording} style={{width: 30, height: 30, color: "#41bf49"}} />
         </div>
         
     )}
