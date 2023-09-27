@@ -1,10 +1,11 @@
 import { CancelRounded, CheckCircleRounded, MicNone, MicRounded, Send } from '@mui/icons-material'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { nanoid } from 'nanoid'
 import { addDoc, collection, doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from '../../firebase/configFirebase';
 import Compressor from "compressorjs"
+import recordAudio from '../utils/recordAudio';
 function ChatFooter({
     input,
     onChange,
@@ -18,7 +19,8 @@ function ChatFooter({
     userId,
     setSrc,
     setImage,
-    setInput
+    setInput,
+    setAudioId
 }) {
     const [text, setText] = useState("")
     async function IsSend(e){
@@ -56,16 +58,27 @@ function ChatFooter({
             })
         }
     }
-    
-    const canRecord = true
-    const isRecording = false
+    const record = useRef()
+    const canRecord = !!navigator.mediaDevices.getUserMedia && !!window.MediaRecorder;
+    const [isRecording, setIsRecording ]= useState(false)
     const canSendMessage = input.trim() || (input === "" && image)
     const recordIcons = (
         <>
         <Send style={{width: 20, height: 20, color: 'white'}} />
         <MicRounded style={{width: 24, height: 24, color: 'white'}} />
         </>
-    )
+    );
+    useEffect(() => {
+        if(isRecording) {
+            record.current.start()
+        }
+    }, [isRecording])
+    async function startRecording(event){
+        event.preventDefault()
+        record.current = await recordAudio()
+        setIsRecording(true)
+        setAudioId('')
+    }
   return (
     <div className='chat__footer'>
     <form>
@@ -74,7 +87,7 @@ function ChatFooter({
             }} />
         {
             canRecord ? (
-                <button onClick={canSendMessage ? IsSend : SendRecording} type='submit' className='send__btn bg-[#F26522]'>
+                <button onClick={canSendMessage ? IsSend : startRecording} type='submit' className='send__btn bg-[#F26522]'>
                     {recordIcons}
                 </button>
             ) : (

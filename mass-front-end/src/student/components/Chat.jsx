@@ -18,6 +18,7 @@ function Chat({user}) {
     const [image, setImage] = useState(null)
     const [input, setInput] = useState("")
     const [src, setSrc] = useState("")
+    const [audioId, setAudioId] = useState('')
   // Get the query parameter 'roomId' from the location object
     const roomId = new URLSearchParams(location.search).get("roomId");
     const userId = user.uid
@@ -121,7 +122,7 @@ function Chat({user}) {
         {/* chat body */}
         <div className='chat__body--container'>
             <div className='chat__body'>
-                <ChatMessages messages={messages} user={user} roomId={roomId} />
+                <ChatMessages audioId={audioId} setAudioId={setAudioId} messages={messages} user={user} roomId={roomId} />
             </div>
         </div>
       <MediaPreview src={src} closePreview={closePreview} />
@@ -139,6 +140,7 @@ function Chat({user}) {
         room={room}
         SendMessage={SendMessage}
         SendRecording={SendRecording}
+        setAudioId={setAudioId}
       
       />
     </div>
