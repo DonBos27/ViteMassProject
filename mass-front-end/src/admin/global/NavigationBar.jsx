@@ -76,7 +76,7 @@ function NavigationBar({ title }) {
             >
               <Cog6ToothIcon className="h-6 w-6" />
             </IconButton>
-            <Badge content="1" withBorder className="bg-primary">
+            {/* <Badge content="1" withBorder className="bg-primary">
               <Menu placement="bottom-end">
                 <MenuHandler>
                   <IconButton variant="text" color="blue-gray">
@@ -89,7 +89,7 @@ function NavigationBar({ title }) {
                   <MenuItem>Menu Item 3</MenuItem>
                 </MenuList>
               </Menu>
-            </Badge>
+            </Badge> */}
             <IconButton variant="text" color="blue-gray">
               {userData.image ? (
                 <Avatar
