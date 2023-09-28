@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 import useRoom from '../utils/useRoom';
-import { Avatar, IconButton, Menu, MenuItem } from '@mui/material';
+import { Avatar, CircularProgress, IconButton, Menu, MenuItem } from '@mui/material';
 import { AddPhotoAlternate, MoreVert } from '@mui/icons-material';
 import MediaPreview from './MediaPreview';
 import ChatFooter from './ChatFooter';
@@ -19,7 +19,9 @@ function Chat({user}) {
     const [input, setInput] = useState("")
     const [src, setSrc] = useState("")
     const [audioId, setAudioId] = useState('')
-  // Get the query parameter 'roomId' from the location object
+    const [openMenu, setOpenMenu] = useState(null)
+    const [isDeleting, setDeleting] = useState(false)
+    // Get the query parameter 'roomId' from the location object
     const roomId = new URLSearchParams(location.search).get("roomId");
     const userId = user.uid
     const room = useRoom(roomId, userId)
@@ -84,6 +86,10 @@ function Chat({user}) {
         
     }
     //   If there is no room with that ID then redirect to home page
+    async function deleteRoom(){
+        setOpenMenu(null)
+        setDeleting(true)
+    }
     if(!room) return null;
   return (
     <div className='chat'>
@@ -109,11 +115,11 @@ function Chat({user}) {
                         <AddPhotoAlternate  />
                     </label>
                 </IconButton>
-                <IconButton >
+                <IconButton onClick={event => setOpenMenu(event.currentTarget)}>
                     <MoreVert  />
                 </IconButton>
-                <Menu id='menu' keepMounted open={false}>
-                    <MenuItem>Delete menu</MenuItem>
+                <Menu id='menu' anchorEl={openMenu} open={!!openMenu} onClose={() => setOpenMenu(null)} keepMounted>
+                    <MenuItem onClick={deleteRoom}>Delete Room</MenuItem>
                 </Menu>
             </div>
         </div>
@@ -143,6 +149,13 @@ function Chat({user}) {
         setAudioId={setAudioId}
       
       />
+      {
+        isDeleting && (
+            <div className='chat__deleting'>
+                <CircularProgress />
+            </div>
+        )
+      }
     </div>
   )
 }
