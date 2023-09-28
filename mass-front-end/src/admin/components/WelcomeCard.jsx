@@ -33,7 +33,6 @@ function WelcomeCard() {
       );
       console.log("Filtered Lecturers:", filteredAdmin);
       setAdminData(filteredAdmin);
-      
     });
 
     // console.log("User Data:", userData);
@@ -95,14 +94,14 @@ function WelcomeCard() {
             </CardHeader>
             <CardBody className="text-center border-b border-black/20 pb-4 mx-8 my-2 rounded-none">
               <Typography variant="h4" color="blue-gray" className="mb-2">
-                {/* {lecturerId} */} {admin.name}
+                {admin.name}
               </Typography>
               <Typography
                 color="blue-gray"
                 className="font-medium"
                 textGradient
               >
-                {admin.title}
+                {admin.role}
               </Typography>
             </CardBody>
             <CardFooter className=" justify-center">
@@ -111,11 +110,9 @@ function WelcomeCard() {
               </Typography>
               <Tooltip
                 placement="top"
-                // color="lightBlue"
                 content="University of Johannesburg"
               >
                 <Avatar
-                  // color="lightBlue"
                   size="lg"
                   className="mx-1"
                   src={UJLogo}

@@ -283,7 +283,7 @@ console.log("Filtered lecturers:", filteredLecturers);
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           <Avatar
-                            src={user.image ? user.image : Profile}
+                            src={user.photoURL ? user.photoURL : Profile}
                             alt={user.name}
                             size="sm"
                           />

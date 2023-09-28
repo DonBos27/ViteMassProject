@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -7,32 +7,67 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import PersonIcon from "@mui/icons-material/Person";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase/configFirebase";
 
 function StatisticsCard() {
+  const [userData, setUserData] = useState([]);
+  const [lecturerLength, setLecturerLenght] = useState();
+  const [undergraduate, setUndergraduate] = useState();
+  const [postgraduate, setPostgraduate] = useState();
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setUserData(data);
+      console.log("User Data:", data);
+      const filteredLecturer = data.filter((user) =>
+        user.email.endsWith("@uj.ac.za")
+      );
+      const filteredStudent = data.filter((user) =>
+        user.email.endsWith("@student.uj.ac.za")
+      );
+      // check where filteredstudent has a level field that is equal to undergrad or postgrad and then filter it 
+      const filteredUndergrad = filteredStudent.filter((user) => user.level === "undergraduate");
+      const filteredPostgrad = filteredStudent.filter((user) => user.level === "postgraduate");
+      const filterredStudentLenghtUnder = filteredUndergrad.length;
+      const filterredStudentLenghtPost = filteredPostgrad.length;
+      const filterredLecturerLenght = filteredLecturer.length;
+      setUndergraduate(filterredStudentLenghtUnder);
+      setPostgraduate(filterredStudentLenghtPost);
+      setLecturerLenght(filterredLecturerLenght);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [setUserData]);
+
 
   const data = [
     {
       id: 1,
       icon: <PersonIcon />,
       title: "Total Lecturers",
-      amount: "20",
+      amount: lecturerLength,
       color: "blue",
     },
     {
       id: 2,
       icon: <PersonIcon />,
       title: "Undergraduates Students",
-      amount: "661",
+      amount: undergraduate,
       color: "deep-orange",
     },
     {
-        id: 3,
-        icon: <PersonIcon />,
-        title: "Postgraduates Students",
-        amount: "315",
-        color: "deep-purple",
-      },
-
+      id: 3,
+      icon: <PersonIcon />,
+      title: "Postgraduates Students",
+      amount: postgraduate,
+      color: "deep-purple",
+    },
   ];
   return (
     <div className="mb-12 grid gap-y-10 gap-x-5 md:grid-cols-2 xl:grid-cols-3">
