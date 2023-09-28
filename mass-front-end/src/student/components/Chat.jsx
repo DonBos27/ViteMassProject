@@ -6,8 +6,8 @@ import { AddPhotoAlternate, MoreVert } from '@mui/icons-material';
 import MediaPreview from './MediaPreview';
 import ChatFooter from './ChatFooter';
 import { nanoid } from 'nanoid'
-import { addDoc, collection, doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from '../../firebase/configFirebase';
 import Compressor from "compressorjs"
 import useChatMessage from '../utils/useChatMessages';
@@ -89,6 +89,38 @@ function Chat({user}) {
     async function deleteRoom(){
         setOpenMenu(null)
         setDeleting(true)
+        try{
+            const userChatref = doc(db, `users/${userId}/chats/${roomId}`)
+            const roomRef = doc(db, `rooms/${roomId}`)
+            const roomMessagesRef = collection(db, `rooms/${roomId}/messages`)
+            const roomMessages = await getDocs(query(roomMessagesRef))
+            const audioFiles = []
+            const imageFiles = []
+            roomMessages?.docs.forEach(doc =>{
+                if(doc.data().audioName){
+                    audioFiles.push(doc.data().audioName)
+                }else if(doc.data().imageName){
+                    imageFiles.push(doc.data().imageName)   
+                }
+        })
+        await Promise.all([
+            deleteDoc(userChatref),
+            deleteDoc(roomRef),
+            ...roomMessages.docs.map(doc => deleteDoc(doc.ref)),
+            ...imageFiles.map(imageName => (
+                deleteObject(ref(storage, `images/${imageName}`))
+            )),
+            ...audioFiles.map(audioName => (
+                deleteObject(ref(storage, `audios/${audioName}`))
+            )
+            )
+        ])
+        
+        }catch(error){
+            console.log("Error deleting room: ",error.message)
+        }finally{
+            setDeleting(false)
+        }
     }
     if(!room) return null;
   return (
