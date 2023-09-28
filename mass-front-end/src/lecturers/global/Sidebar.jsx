@@ -22,6 +22,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/configFirebase";
 import GoodMorning from "../images/goodmorning.gif";
 import useAuthUser from "../../student/utils/useAuthUser";
+import { PeopleAlt } from "@mui/icons-material";
 
 function Sidebar() {
   const [openAlert, setOpenAlert] = useState(true);
@@ -45,6 +46,11 @@ function Sidebar() {
       name: "Announcements",
       icon: <MeetingRoomIcon />,
       path: "/bookingslecturerfromstudent",
+    },
+    {
+      name: "Community",
+      icon: <PeopleAlt />,
+      path: "/communitylecturer",
     },
     {
       name: "Settings",
