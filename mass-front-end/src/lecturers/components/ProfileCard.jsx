@@ -60,7 +60,7 @@ export default function ProfileCard() {
         <Typography variant="h4" color="blue-gray" className="mb-2">
           {userData.title} {userData.firstname} {lecturerId}
         </Typography>
-        <Typography color="blue-gray" className="font-medium" textGradient key={lecturerId}>
+        <Typography color="gray" className="font-medium" textGradient key={lecturerId}>
           {userData.function}
         </Typography>
       </CardBody>

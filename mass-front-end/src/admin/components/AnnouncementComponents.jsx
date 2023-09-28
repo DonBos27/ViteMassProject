@@ -66,19 +66,19 @@ function AnnouncementComponents() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (!title || !content || !recipient) {
-    //   toast.error("Please fill in all the fields!", {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //     theme: "light",
-    //   });
-    //   return;
-    // }
+    if (title === "" || text === "" || recipient === "") {
+      toast.error("Please fill in all the fields!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
     console.log("Content:", text);
 
     try {
@@ -187,34 +187,34 @@ function AnnouncementComponents() {
     }
 
     // Email notificaion to students, lecturer or everyone
-    // try {
-    //   const docRef = await addDoc(collection(db, "mail"), {
-    //     // to: recipient === "everyone" ? everyoneEmail : recipient === "student" ? studentEmail : lecturerEmail,
-    //     to: "bosengad@gmail.com", // For testing purposes
-    //     message: {
-    //       subject: `Announcements Notifications`,
-    //       html: `
-    //       <div style="background-color: #f2f2f2; padding: 5px; height: 100%">
-    //         <div style="padding:30px; background-color: #ffffff">
-    //           <div style="height: 100%; padding-right: 10%; padding-left: 20%;">
-    //             <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/af/University_of_Johannesburg_Logo.svg/1200px-University_of_Johannesburg_Logo.svg.png" alt="University Logo" style="max-width: 50px; max-height: 50px; padding-right: 0%; padding-left: 30%;" /> <br/>
-    //             <h2 style="color: #333; font-size: 25px" className:"text-red-700" >Mass Notification</h2>
-    //           </div>
-    //           <p style=" padding-right: 0%; padding-left: 0%;">A new announcement has been posted by ${name}.</p>
-    //           <p style=" padding-right: 0%; padding-left: 0%;">Please check the timeline for more details.</p>
-    //         </div>
-    //       </div>
-    //       <div>
-    //         <p style="color: #888; font-size: 10px">This email was sent to you by MASS. Please do not reply to this email.</p>
-    //       </div>
-    //     `,
-    //     },
-    //   });
-    //   console.log("Document written with ID: ", docRef.id);
-    //   console.log("Email sent successfully!: ", docRef);
-    // } catch (e) {
-    //   console.error("Error adding document: ", e);
-    // }
+    try {
+      const docRef = await addDoc(collection(db, "mail"), {
+        // to: recipient === "everyone" ? everyoneEmail : recipient === "student" ? studentEmail : lecturerEmail,
+        to: "215020661@student.uj.ac.za", // For testing purposes
+        message: {
+          subject: `Announcements Notifications`,
+          html: `
+          <div style="background-color: #f2f2f2; padding: 5px; height: 100%">
+            <div style="padding:30px; background-color: #ffffff">
+              <div style="height: 100%; padding-right: 10%; padding-left: 20%;">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/af/University_of_Johannesburg_Logo.svg/1200px-University_of_Johannesburg_Logo.svg.png" alt="University Logo" style="max-width: 50px; max-height: 50px; padding-right: 0%; padding-left: 30%;" /> <br/>
+                <h2 style="color: #333; font-size: 25px" className:"text-red-700" >Mass Notification</h2>
+              </div>
+              <p style=" padding-right: 0%; padding-left: 0%;">A new announcement has been posted by ${name}.</p>
+              <p style=" padding-right: 0%; padding-left: 0%;">Please check the timeline for more details.</p>
+            </div>
+          </div>
+          <div>
+            <p style="color: #888; font-size: 10px">This email was sent to you by MASS. Please do not reply to this email.</p>
+          </div>
+        `,
+        },
+      });
+      console.log("Document written with ID: ", docRef.id);
+      console.log("Email sent successfully!: ", docRef);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   return (

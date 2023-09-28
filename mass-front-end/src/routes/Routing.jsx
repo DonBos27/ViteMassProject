@@ -21,10 +21,9 @@ import Trello from "../student/pages/Trello";
 import Community from "../student/pages/Community";
 import useAuthUser from "../student/utils/useAuthUser";
 
-
-function Routing({lists, setLists}) {
+function Routing({ lists, setLists }) {
   const navigate = useNavigate();
-  useAuthUser()
+  useAuthUser();
   function handleProfile() {
     navigate("/profile");
   }
@@ -137,7 +136,11 @@ function Routing({lists, setLists}) {
           path="Notepad"
           element={
             <ProtectedRoute>
-              <Trello handleProfile={handleProfile} lists={lists} setLists={setLists} />
+              <Trello
+                handleProfile={handleProfile}
+                lists={lists}
+                setLists={setLists}
+              />
             </ProtectedRoute>
           }
         />
@@ -165,7 +168,7 @@ function Routing({lists, setLists}) {
             </ProtectedRoute>
           }
         />
-        
+
         <Route path="profile" element={<Profile />} />
       </Routes>
     </div>

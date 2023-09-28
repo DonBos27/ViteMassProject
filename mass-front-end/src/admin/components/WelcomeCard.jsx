@@ -27,8 +27,16 @@ function WelcomeCard() {
         ...doc.data(),
       }));
       setUserData(data);
+      console.log("User Data:", data);
+      const filteredAdmin = data.filter((user) =>
+        user.email.endsWith("@admin.uj.ac.za")
+      );
+      console.log("Filtered Lecturers:", filteredAdmin);
+      setAdminData(filteredAdmin);
+      
     });
-    console.log("User Data:", userData);
+
+    // console.log("User Data:", userData);
 
     return () => {
       unsubscribe();
