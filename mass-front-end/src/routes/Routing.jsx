@@ -20,6 +20,7 @@ import Profile from "../student/pages/Profile";
 import Trello from "../student/pages/Trello";
 import Community from "../student/pages/Community";
 import useAuthUser from "../student/utils/useAuthUser";
+import Comunity from "../lecturers/pages/Comunity";
 
 function Routing({ lists, setLists }) {
   const navigate = useNavigate();
@@ -103,6 +104,14 @@ function Routing({ lists, setLists }) {
           element={
             <ProtectedRoute>
               <Bookings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/communitylecturer"
+          element={
+            <ProtectedRoute>
+              <Comunity />
             </ProtectedRoute>
           }
         />
