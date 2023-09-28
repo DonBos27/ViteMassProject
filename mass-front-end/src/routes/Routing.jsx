@@ -134,7 +134,7 @@ function Routing({lists, setLists}) {
           }
         />
         <Route
-          path="trello"
+          path="Notepad"
           element={
             <ProtectedRoute>
               <Trello handleProfile={handleProfile} lists={lists} setLists={setLists} />
