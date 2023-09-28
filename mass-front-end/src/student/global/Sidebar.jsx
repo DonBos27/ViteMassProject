@@ -40,9 +40,9 @@ function Sidebar() {
       path: "/calendar",
     },
     {
-      name: "Trello",
+      name: "Notepad",
       icon: <BookmarkIcon />,
-      path: "/trello",
+      path: "/Notepad",
     },
     {
       name: "Community",
