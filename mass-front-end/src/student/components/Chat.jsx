@@ -13,7 +13,6 @@ import Compressor from "compressorjs"
 import useChatMessage from '../utils/useChatMessages';
 import ChatMessages from './ChatMessages';
 function Chat({user}) {
-    const navigate = useNavigate();
     const location = useLocation();
     const [image, setImage] = useState(null)
     const [input, setInput] = useState("")
