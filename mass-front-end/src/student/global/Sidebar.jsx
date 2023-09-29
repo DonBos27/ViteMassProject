@@ -55,6 +55,11 @@ function Sidebar() {
       path: "/chart",
     },
     // {
+    //   name: "Test",
+    //   icon: <LeaderboardIcon />,
+    //   path: "/test",
+    // },
+    // {
     //   name: "Bookings",
     //   icon: <LibraryBooksIcon />,
     //   path: "/bookings",
@@ -111,61 +116,60 @@ function Sidebar() {
     image = "https://media.giphy.com/media/1hMmAbOE57QaVgCgc1/giphy.gif";
   }
   return (
-    <div>
-      <Card className="fixed inset-0 z-50  h-[calc(100vh-2rem)] w-full max-w-[18rem] p-4 m-4 shadow-xl shadow-blue-gray-900/5">
-        <div className="mb-12 mx-auto flex items-center gap-4 p-4">
-          <img src={UJLOGO} alt="UJ LOGO" className="h-24 w-24 " />
-        </div>
-        <List className="">
-          {menuItem.map((item, index) => (
-            <NavLink to={item.path} key={index} className="">
-              <ListItem className="p-4 hover:bg-primary hover:text-white ">
-                <ListItemPrefix className="">{item.icon}</ListItemPrefix>
-                {item.name}
-              </ListItem>
-            </NavLink>
-          ))}
-          <ListItem
-            className="mt-10 p-4 hover:bg-primary hover:text-white "
-            onClick={handleLogout}
-          >
-            <ListItemPrefix>
-              <LogoutIcon className="h-5 w-5" />
-            </ListItemPrefix>
-            Log out
-          </ListItem>
-        </List>
-        <Alert
-          open={openAlert}
-          className="mt-auto "
-          onClose={() => setOpenAlert(false)}
-        >
-          <img
-            src={image}
-            alt="Good Morning"
-            className="mb-4 h-20 w-20 rounded-lg"
-          />
-          {/* <CubeTransparentIcon className="mb-4 h-12 w-12" /> */}
-          <Typography variant="h6" className="mb-1">
-            {greeting}, {userData.initials} {userData.name} !
-          </Typography>
-          <Typography variant="small" className="font-normal opacity-80">
-            Hope you are having a great day! Keep up the good work!
-          </Typography>
-          <div className="mt-4 flex gap-3">
-            <Typography
-              as="a"
-              href="#"
-              variant="small"
-              className="font-medium opacity-80"
-              onClick={() => setOpenAlert(false)}
-            >
-              Dismiss
-            </Typography>
-          </div>
-        </Alert>
-      </Card>
+    <Card className="fixed inset-0 z-50  h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 m-4 shadow-xl shadow-blue-gray-900/5">
+    <div className="my-auto mx-auto flex items-center gap-4 p-4">
+      <img src={UJLOGO} alt="UJ LOGO" className="h-24 w-24 " />
     </div>
+    <List className="my-auto ">
+      {menuItem.map((item, index) => (
+        <NavLink to={item.path} key={index} className="">
+          <ListItem className="p-4 hover:bg-primary hover:text-white text-xl ">
+            <ListItemPrefix className="">{item.icon}</ListItemPrefix>
+            {item.name}
+          </ListItem>
+        </NavLink>
+      ))}
+
+      <ListItem
+        className="mt-10 p-4 hover:bg-primary hover:text-white "
+        onClick={handleLogout}
+      >
+        <ListItemPrefix>
+          <LogoutIcon className="h-5 w-5" />
+        </ListItemPrefix>
+        Log Out
+      </ListItem>
+    </List>
+    <Alert
+      open={openAlert}
+      className="mt-auto "
+      onClose={() => setOpenAlert(false)}
+    >
+      {/* <CubeTransparentIcon className="mb-4 h-12 w-12" /> */}
+      <img
+        src={image}
+        alt="Good Morning"
+        className="mb-4 h-20 w-20 rounded-lg"
+      />
+      <Typography variant="h6" className="mb-1">
+        {greeting}, {userData.name}!
+      </Typography>
+      <Typography variant="small" className="font-normal opacity-80">
+        Hope you are having a great day! Keep up the good work!
+      </Typography>
+      <div className="mt-4 flex gap-3">
+        <Typography
+          as="a"
+          href="#"
+          variant="small"
+          className="font-medium opacity-80"
+          onClick={() => setOpenAlert(false)}
+        >
+          Dismiss
+        </Typography>
+      </div>
+    </Alert>
+  </Card>
   );
 }
 

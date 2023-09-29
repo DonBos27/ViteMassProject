@@ -126,7 +126,7 @@ function Sidebar() {
       <List className="">
         {menuItem.map((item, index) => (
           <NavLink to={item.path} key={index} className="">
-            <ListItem className="p-4 hover:bg-primary hover:text-white ">
+            <ListItem className="p-4 hover:bg-primary hover:text-white text-xl">
               <ListItemPrefix className="">{item.icon}</ListItemPrefix>
               {item.name}
             </ListItem>
