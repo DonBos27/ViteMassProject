@@ -10,22 +10,19 @@ import ProfilePic from "../images/profileicon.png";
 function SettingsLecturer() {
   const [userData, setUserData] = useState([]);
   const { user, logOut } = useAuth();
+  
+  //fetch user information database
   useEffect(() => {
-    if (user) {
-      const email = user.email;
-      //console.log("Email:", email);
-      const unsubscribe = onSnapshot(doc(db, "users", email), (doc) => {
-        if (doc.exists()) {
-          const data = doc.data();
-          console.log("Fetched data from Firestore:", data);
-          setUserData(data);
-        }
-      });
-      return () => {
-        unsubscribe();
-      };
-    }
-  }, [user]);
+    const unsubscribe = onSnapshot(doc(db, "users", user.uid), (doc) => {
+      setUserData(doc.data());
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [setUserData]);
+  //   console.log("user data: ", userData);
+  
+  
   return (
     <div className="flex">
       <div className="w-1/4">

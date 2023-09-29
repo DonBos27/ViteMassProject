@@ -69,11 +69,11 @@ function Calendar({ handleProfile }) {
     const { uid, description, start, end, scope, type, lecturerName } =
       arg.event.extendedProps;
 
-    console.log(title, description, scope, type, lecturerName);
+    //console.log(title, description, scope, type, lecturerName);
 
     const startDate = new Date(arg.event.start);
     const endDate = new Date(arg.event.end);
-    console.log(startDate, endDate);
+    //console.log(startDate, endDate);
 
     const year = startDate.getFullYear();
     const month = startDate.getMonth();
@@ -99,8 +99,8 @@ function Calendar({ handleProfile }) {
       .toString()
       .padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
 
-    console.log(formattedDate);
-    console.log(formattedDateEnd);
+    // console.log(formattedDate);
+    // console.log(formattedDateEnd);
 
     setTitle(title);
     // console.log("Title:", title);

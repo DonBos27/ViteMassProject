@@ -3,12 +3,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase/configFirebase";
 
 export default function useUsers(user){
-    // const queryCondition = query(
-    //     collection(db, "users"),
-    //     orderBy("timestamp", "desc"),
-    //     where("email", ">=", user.email), // StartAt current user's email
-    //     where("email", "<", `${user.email}@uj.ac.za`) // EndAt current user's email (z is used as the upper bound)
-    //   );
+    
     const [snapShot] = useCollection(
         query(collection(db,"users"), orderBy("timestamp", "desc"))
     );
