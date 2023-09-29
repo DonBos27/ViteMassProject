@@ -54,22 +54,19 @@ function Dashboard() {
       </div>
       <div className="flex flex-col w-full mx-5 mt-4">
         <NavigationBar title={"Dashboard"} />
-        <div className="flex">
-          <div className="w-1/3">
-            <WelcomeCard />
-            <div className="mt-12">
-              <AllActivities />
-            </div>
-          </div>
-          <div className="mt-3 mx-10 w-2/3">
-            <StatisticsCard />
-            <div className=" bg-white rounded-lg mb-5">
+        <div className="flex flex-col">
+          <StatisticsCard />
+          <div className="flex mt-3 mx-0 justify-evenly">
+            <div className=" bg-white rounded-lg mb-5 w-2/3">
               <Typography className="text-4xl font-bold py-5 px-6">
                 Timetable
               </Typography>
               <div className="pb-3">
                 <TimetablesModules />
               </div>
+            </div>
+            <div className="w-1/3 ml-5">
+              <WelcomeCard />
             </div>
           </div>
         </div>
