@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Dashboard from "../admin/pages/Dashboard";
 import Lecturer from "../admin/pages/Lecturer";
@@ -22,13 +22,17 @@ import Community from "../student/pages/Community";
 import useAuthUser from "../student/utils/useAuthUser";
 import Comunity from "../lecturers/pages/Comunity";
 import TestResponsive from "../student/pages/TestResponsive";
+import { DragDropContext } from "react-beautiful-dnd";
+import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
+import { db } from "../firebase/configFirebase";
 
-function Routing({ lists, setLists }) {
+function Routing() {
   const navigate = useNavigate();
   useAuthUser();
   function handleProfile() {
     navigate("/profile");
   }
+  
   return (
     <div>
       <Routes>
@@ -146,11 +150,12 @@ function Routing({ lists, setLists }) {
           path="Notepad"
           element={
             <ProtectedRoute>
+             
               <Trello
                 handleProfile={handleProfile}
-                lists={lists}
-                setLists={setLists}
+                
               />
+              
             </ProtectedRoute>
           }
         />
