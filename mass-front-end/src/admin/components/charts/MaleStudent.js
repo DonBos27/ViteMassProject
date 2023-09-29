@@ -1,15 +1,17 @@
+
 const maleRegisterd = {
+    
     height: 220,
     series: [
         {
             type: "line",
             name: "Males",
-            data: [80, 70, 75, 80, 70, 60, 60, 70, 60],
+            data: [],
         },
         {
             type: "area",
             name: "Females",
-            data: [20, 30, 25, 20, 30, 40, 40, 30, 40],
+            data: [],
         }
     ],
 
@@ -50,5 +52,6 @@ const maleRegisterd = {
             ],
         },
     },
+   
 };
 export default maleRegisterd;

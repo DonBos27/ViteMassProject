@@ -14,8 +14,9 @@ import {
 import Background from "./images/background.gif";
 import { useAuth } from "../context/AuthContext";
 import { Timestamp, doc, updateDoc } from "firebase/firestore";
-import { db, usersCollection } from "../firebase/configFirebase";
+import { auth, db, usersCollection } from "../firebase/configFirebase";
 import useAuthUser from "../student/utils/useAuthUser";
+import { signInWithEmailAndPassword } from "@firebase/auth";
 // import { Alert } from "react-native-web";
 
 function Login() {
@@ -81,6 +82,7 @@ function Login() {
       }
       console.log("Login");
       // navigate("/dashboard");
+      
     } catch (err) {
       setError(
         "You could not be authenticated, please check your username/password then try again."
@@ -104,6 +106,7 @@ function Login() {
         await updateDoc(userDocRef, {
           timeIn: Timestamp.fromDate(new Date()),
         });
+        
       }
       console.log("Logout");
     } catch (err) {
