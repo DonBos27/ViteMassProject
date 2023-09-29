@@ -12,12 +12,12 @@ function Profile({ handleProfile }) {
   const { user, logOut } = useAuth();
   useEffect(() => {
     if (user) {
-      const email = user.email;
+      
       //console.log("Email:", email);
       const unsubscribe = onSnapshot(doc(db, "users", user.uid), (doc) => {
         if (doc.exists()) {
           const data = doc.data();
-          console.log("Fetched data from Firestore:", data);
+          //console.log("Fetched data from Firestore:", data);
           setUserData(data);
         }
       });
