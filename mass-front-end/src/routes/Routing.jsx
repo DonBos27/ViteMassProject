@@ -21,6 +21,7 @@ import Trello from "../student/pages/Trello";
 import Community from "../student/pages/Community";
 import useAuthUser from "../student/utils/useAuthUser";
 import Comunity from "../lecturers/pages/Comunity";
+import TestResponsive from "../student/pages/TestResponsive";
 
 function Routing({ lists, setLists }) {
   const navigate = useNavigate();
@@ -177,6 +178,15 @@ function Routing({ lists, setLists }) {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="test"
+          element={
+            <ProtectedRoute>
+              <TestResponsive handleProfile={handleProfile} />
+            </ProtectedRoute>
+          }
+        />
+
 
         <Route path="profile" element={<Profile />} />
       </Routes>

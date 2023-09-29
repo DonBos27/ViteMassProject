@@ -86,6 +86,7 @@ function Chat({user}) {
         
     }
     //   If there is no room with that ID then redirect to home page
+
     async function deleteRoom(){
         setOpenMenu(null)
         setDeleting(true)
