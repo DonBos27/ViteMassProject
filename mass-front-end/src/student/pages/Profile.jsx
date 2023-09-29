@@ -14,7 +14,7 @@ function Profile({ handleProfile }) {
     if (user) {
       const email = user.email;
       //console.log("Email:", email);
-      const unsubscribe = onSnapshot(doc(db, "users", email), (doc) => {
+      const unsubscribe = onSnapshot(doc(db, "users", user.uid), (doc) => {
         if (doc.exists()) {
           const data = doc.data();
           console.log("Fetched data from Firestore:", data);
@@ -54,7 +54,7 @@ function Profile({ handleProfile }) {
                   alt="Profile"
                 />
                 <span className=" font-semibold text-xl">
-                  {userData.initials} {userData.name}
+                  {userData.initial} {userData.surname}
                 </span>
               </div>
 
