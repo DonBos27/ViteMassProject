@@ -13,7 +13,7 @@ import {
 } from "@material-tailwind/react";
 import PersonIcon from "@mui/icons-material/Person";
 import { useAuth } from "../../context/AuthContext";
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/configFirebase";
 import BayPDF from "../files/Bay.pdf";
 
@@ -23,19 +23,122 @@ function ModulesSstudent() {
   const [open, setOpen] = useState(null);
   const [modulesData, setModulesData] = useState([]);
 
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(
+  //     collection(db, "users"),
+  //     async (snapshot) => {
+  //       const users = snapshot.docs.map((doc) => ({
+  //         id: doc.id,
+  //         ...doc.data(),
+  //       }));
+  //       console.log("Users:", users);
+
+  //       const students = users.filter((user) =>
+  //         user.email.endsWith("@student.uj.ac.za")
+  //       );
+  //       console.log("Students:", students);
+
+  //       const modulesData = [];
+  //       for (const student of students) {
+  //         if (Array.isArray(student.enrolled_modules)) {
+  //           // Check if it's an array
+  //           const enrolledModulesData = [];
+  //           for (const moduleReference of student.enrolled_modules) {
+  //             try {
+  //               const moduleDoc = await getDoc(moduleReference);
+  //               if (moduleDoc.exists()) {
+  //                 enrolledModulesData.push({
+  //                   id: moduleReference.id,
+  //                   ...moduleDoc.data(),
+  //                 });
+  //               } else {
+  //                 console.log("Module not found:", moduleReference.id);
+  //               }
+  //             } catch (error) {
+  //               console.error("Error fetching module:", error);
+  //             }
+  //           }
+
+  //           const userData = {
+  //             ...student,
+  //             enrolledModules: enrolledModulesData,
+  //           };
+  //           modulesData.push(userData);
+  //         } else {
+  //           console.log(
+  //             "enrolled_modules is not an array:",
+  //             student.enrolled_modules
+  //           );
+  //         }
+  //       }
+  //       console.log("Modules Data:", modulesData);
+  //       // setModulesData(modulesData);
+  //     }
+  //   );
+
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []);
+
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "modules"), (snapshot) => {
-      const courses = snapshot.docs.map((doc) => ({
+    const unsubscribe = onSnapshot(collection(db, "users"), async (snapshot) => {
+      const users = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      console.log("Courses:", courses);
-      setModulesData(courses);
+      console.log("Users:", users);
+
+      const students = users.filter((user) =>
+        user.email.endsWith("@student.uj.ac.za")
+      );
+      console.log("Students:", students);
+
+      const enrolledModulesData = [];
+      for (const student of students) {
+        if (Array.isArray(student.enrolled_modules)) { // Check if it's an array
+          for (const moduleReference of student.enrolled_modules) {
+            try {
+              const moduleDoc = await getDoc(moduleReference);
+              if (moduleDoc.exists()) {
+                enrolledModulesData.push({
+                  id: moduleReference.id,
+                  ...moduleDoc.data(),
+                });
+              } else {
+                console.log("Module not found:", moduleReference.id);
+              }
+            } catch (error) {
+              console.error("Error fetching module:", error);
+            }
+          }
+        } else {
+          console.log("enrolled_modules is not an array:", student.enrolled_modules);
+        }
+      }
+
+      console.log("Enrolled Modules Data:", enrolledModulesData);
+      setModulesData(enrolledModulesData);
     });
+
     return () => {
       unsubscribe();
     };
   }, []);
+
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(collection(db, "modules"), (snapshot) => {
+  //     const courses = snapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     }));
+  //     console.log("Courses:", courses);
+  //     setModulesData(courses);
+  //   });
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []);
 
   const handleOpen = (moduleCode) => {
     setOpen(moduleCode);
@@ -133,9 +236,7 @@ function ModulesSstudent() {
             <DialogHeader>{item.moduleCode}</DialogHeader>
             <DialogBody divider className="h-[40rem] overflow-scroll">
               <iframe
-                src={
-                  item.moduleInfo ? item.moduleInfo : "nothing"
-                }
+                src={item.moduleInfo ? item.moduleInfo : "nothing"}
                 width="100%"
                 height="100%"
                 title="PDF Viewer"
