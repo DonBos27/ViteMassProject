@@ -108,7 +108,7 @@ function WelcomeCard() {
               <Typography color="blue-gray" className="font-medium my-2">
                 {admin.department}
               </Typography>
-              <Tooltip
+              <Tooltip  
                 placement="top"
                 content="University of Johannesburg"
               >

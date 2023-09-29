@@ -9,8 +9,70 @@ import Chart from "react-apexcharts";
 import StudentsRegistered from "./charts/StudentsRegistered";
 import MaleRegisterd from "./charts/MaleStudent";
 import ComparePass from "./charts/ComparePass";
+import StateGender from "./charts/StateGender";
+import StateFemaleCount from "./charts/StateFemaleCount";
+
 
 function StatisticsChart() {
+  
+  const dataMale = StateGender()
+  const dataFemale = StateFemaleCount()
+  const maleRegisterd = {
+    height: 220,
+    series: [
+      {
+        type: "line",
+        name: "Males",
+        data: [], // Initialize with an empty array
+      },
+      {
+        type: "area",
+        name: "Females",
+        data: [], // Initialize with an empty array
+      }
+    ],
+    options: {
+      colors: ["blue", "#FF92A5"],
+      chart: {
+        toolbar: {
+          show: true,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      fill: {
+        type: "gradient",
+        gradient: {
+          shadeIntensity: 1,
+          opacityFrom: 0.7,
+          opacityTo: 0.5,
+          stops: [0, 90, 100]
+        }
+      },
+      stroke: {
+        curve: "smooth"
+      },
+      xaxis: {
+        categories: [
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "22",
+          "23",
+        ],
+      },
+    },
+  };
+
+  maleRegisterd.series[0].data = [dataMale]
+  maleRegisterd.series[1].data = [dataFemale]
+  console.log("data :", maleRegisterd.series[0].data)
+  
   const menu = [
     {
       id: 1,
@@ -24,7 +86,7 @@ function StatisticsChart() {
       title: "Percentage of male and female students",
       description:
         "This describe the number of males students and females students in the department per year",
-      data: MaleRegisterd,
+      data: maleRegisterd,
     },
     {
       id: 3,
