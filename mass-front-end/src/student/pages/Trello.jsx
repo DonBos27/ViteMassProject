@@ -61,7 +61,7 @@ function Trello({handleProfile}) {
       return;
     }
     // If the source and destination droppable IDs are the same, rearrange cards within the same list
-    if(source.droppableId === destination.droppableId){
+    else if(source.droppableId === destination.droppableId){
       // Find the list where the drag-and-drop occurred
       const list = lists.find((list)=>list.id===source.droppableId);
       // Create an updated list of cards with the order adjusted
