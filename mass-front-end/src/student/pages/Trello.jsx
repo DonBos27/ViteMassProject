@@ -101,9 +101,10 @@ function Trello({handleProfile}) {
       // Insert the dragging card at the appropriate position in the destination list
       destinationList.cards.splice(destination.index,0,draggingCard);
       // Update the destination list in Firestore with the updated 'cards' field
-      await updateDoc(destinationListRef,{
-        cards:destinationList.cards,
-      })
+      await Promise.all([
+        updateDoc(sourceListRef, { cards: sourceList.cards }),
+        updateDoc(destinationListRef, { cards: destinationList.cards }),
+      ]);
     }
   }
     const addMoreCard = async(title,listId)=>{
