@@ -101,9 +101,10 @@ function Trello({handleProfile}) {
       // Insert the dragging card at the appropriate position in the destination list
       destinationList.cards.splice(destination.index,0,draggingCard);
       // Update the destination list in Firestore with the updated 'cards' field
-      await updateDoc(destinationListRef,{
-        cards:destinationList.cards,
-      })
+      await Promise.all([
+        updateDoc(sourceListRef, { cards: sourceList.cards }),
+        updateDoc(destinationListRef, { cards: destinationList.cards }),
+      ]);
     }
   }
     const addMoreCard = async(title,listId)=>{
@@ -187,7 +188,7 @@ function Trello({handleProfile}) {
       <div className="w-1/4">
         <Sidebar />
       </div>
-      <div className="flex flex-col w-full mr-4 mb-4 mt-4 h-screen">
+      <div className="flex flex-col w-full mx-4 mb-4 mt-4 h-screen">
         <NavbarStudent Icon={EventNoteIcon} title={"Trello"} handleProfile={handleProfile} />
         <DragDropContext onDragEnd={onDragEnd}>
         <StoreApi.Provider
