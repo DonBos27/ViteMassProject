@@ -19,6 +19,9 @@ import {
   DialogFooter,
   Alert,
   Avatar,
+  Accordion,
+  AccordionBody,
+  AccordionHeader,
 } from "@material-tailwind/react";
 import {
   collection,
@@ -33,9 +36,14 @@ import {
   modulesCollection,
   usersCollection,
 } from "../../firebase/configFirebase";
-// import { firestore } from "firebase/firestore";
+import { ToastContainer, toast } from "react-toastify";
 
 const TABLE_HEAD = ["Member", "Function", "Cellphone", "Modules Taken", "Edit"];
+const radio = [
+  { id: 1, value: "everyone", color: "blue" },
+  { id: 2, value: "lecturer", color: "green" },
+  { id: 3, value: "student", color: "red" },
+];
 
 function Lecturer() {
   const { user } = useAuth();
@@ -64,9 +72,9 @@ function Lecturer() {
   }, []);
   console.log("Rendering component with userData:", userData);
   const filteredLecturers = userData.filter((user) =>
-  user.email.endsWith('@uj.ac.za')
-);
-console.log("Filtered lecturers:", filteredLecturers);
+    user.email.endsWith("@uj.ac.za")
+  );
+  console.log("Filtered lecturers:", filteredLecturers);
   const modulesTaken = userData.map((user) =>
     user.id.endsWith("@uj.ac.za")
       ? user.modules.map((module) => module.moduleCode)
@@ -89,11 +97,13 @@ console.log("Filtered lecturers:", filteredLecturers);
       // console.log("Unsubscribing from Firestore updates (modules)");
       unsubscribe();
     };
-  }, []);
+  }, [userData]);
 
   console.log("Rendering component with modulesData:", modulesData);
 
-  const lecturerId = userData.find((user) => user.email.endsWith("@uj.ac.za"))?.id;
+  const lecturerId = userData.find((user) =>
+    user.email.endsWith("@uj.ac.za")
+  )?.id;
   console.log("Lecturer id:", lecturerId);
 
   const assignModules = async (e) => {
@@ -199,6 +209,15 @@ console.log("Filtered lecturers:", filteredLecturers);
       })
     );
 
+    // Show a success toast
+    toast.success("Modules assigned successfully", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+    });
+
     // Clear the selected modules array
     setSelectedModules([]);
 
@@ -206,43 +225,57 @@ console.log("Filtered lecturers:", filteredLecturers);
     handleOpen();
   };
 
-  // Update the handleCheckboxChange function to handle multiple module selection
-  const handleCheckboxChange = (index) => {
-    const selectedModule = modulesData[index].moduleCode;
-
+  const handleCheckboxChange = (moduleCode) => {
     setSelectedModules((prevSelectedModules) => {
-      if (prevSelectedModules.includes(selectedModule)) {
+      if (prevSelectedModules.includes(moduleCode)) {
         // If the module is already selected, remove it
-        return prevSelectedModules.filter(
-          (module) => module !== selectedModule
-        );
+        return prevSelectedModules.filter((module) => module !== moduleCode);
       } else {
         // If the module is not selected, add it
-        return [...prevSelectedModules, selectedModule];
+        return [...prevSelectedModules, moduleCode];
       }
-    });
-
-    setModulesData((prevData) => {
-      const newData = prevData.map((module, i) => ({
-        ...module,
-        checked: i === index,
-      }));
-      return newData;
     });
   };
 
   const handleOpen = (lecturerId) => {
     setSelectedLecturerId(lecturerId);
     setModulExits(false);
-    console.log(selectedModules)
+    console.log(selectedModules);
     console.log("Selected lecturer id:", selectedLecturerId);
     setOpen((cur) => !cur);
-    console.log("Lecturer id: ", lecturerId)
+    console.log("Lecturer id: ", lecturerId);
   };
-  useEffect(() => {
-    console.log("Selected lecturer id:", selectedLecturerId);
-    console.log("Selected modules:", selectedModules)
-  }, [selectedLecturerId]);
+  // useEffect(() => {
+  //   console.log("Selected lecturer id:", selectedLecturerId);
+  //   console.log("Selected modules:", selectedModules);
+  // }, [selectedLecturerId]);
+
+  // const [openAccordion, setOpenAccordion] = useState(1);
+  const [openAccordion1, setOpenAccordion1] = useState(true);
+  const [openAccordion2, setOpenAccordion2] = useState(false);
+  const [openAccordion3, setOpenAccordion3] = useState(false);
+
+  const handleOpenAccordion = (value) => {
+    switch (value) {
+      case 1:
+        setOpenAccordion1((prev) => !prev);
+        setOpenAccordion2(false);
+        setOpenAccordion3(false);
+        break;
+      case 2:
+        setOpenAccordion2((prev) => !prev);
+        setOpenAccordion1(false);
+        setOpenAccordion3(false);
+        break;
+      case 3:
+        setOpenAccordion3((prev) => !prev);
+        setOpenAccordion1(false);
+        setOpenAccordion2(false);
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <div className="flex">
@@ -366,32 +399,107 @@ console.log("Filtered lecturers:", filteredLecturers);
           <Card className="mx-auto w-full max-w-[24rem]">
             <CardHeader
               variant="gradient"
-              color="blue"
-              className="mb-4 grid h-28 place-items-center"
+              // color="blue"
+              className="mb-4 grid h-28 place-items-center bg-primary"
             >
               <Typography variant="h3" color="white">
                 Modules Code
               </Typography>
             </CardHeader>
             <CardBody className="flex flex-col gap-4">
-              {modulesData &&
-                modulesData.map((course, index) => (
-                  <div className="-ml-2.5" key={course.id}>
-                    <Checkbox
-                      label={course.moduleCode}
-                      checked={selectedModules.includes(course.moduleCode)}
-                      onChange={() => handleCheckboxChange(index)}
-                    />
-                  </div>
-                ))}
-              {modulExits && (
-                <Alert
-                  icon={<WarningIcon />}
-                  className="rounded-none border-l-4 border-red-700 bg-[#2ec946]/10 font-medium text-red-700 "
-                >
-                  A lecturer already assigned to {modulesAssign}
-                </Alert>
-              )}
+              {/* <Accordion open={openAccordion1} >
+                <AccordionHeader onClick={() => handleOpenAccordion(1)}>
+                  First Year
+                </AccordionHeader>
+                <AccordionBody>
+                  {modulesData &&
+                    modulesData
+                      .filter((course) => course.yearLevel === "1")
+                      .map((course, index) => (
+                        <div className="-ml-2.5" key={course.id}>
+                          <Checkbox
+                            label={course.moduleCode}
+                            checked={selectedModules.includes(
+                              course.moduleCode
+                            )}
+                            onChange={() =>
+                              handleCheckboxChange(course.moduleCode)
+                            }
+                          />
+                        </div>
+                      ))}
+                  {modulExits && (
+                    <Alert
+                      icon={<WarningIcon />}
+                      className="rounded-none border-l-4 border-red-700 bg-[#2ec946]/10 font-medium text-red-700 "
+                    >
+                      A lecturer already assigned to {modulesAssign}
+                    </Alert>
+                  )}
+                </AccordionBody>
+              </Accordion> */}
+              {/* <Accordion open={openAccordion2} >
+                <AccordionHeader onClick={() => handleOpenAccordion(2)}>
+                  Second Year
+                </AccordionHeader>
+                <AccordionBody>
+                  {modulesData &&
+                    modulesData
+                      .filter((course) => course.yearLevel === "2" )
+                      .map((course, index) => (
+                        <div className="-ml-2.5" key={course.id}>
+                          <Checkbox
+                            label={course.moduleCode}
+                            checked={selectedModules.includes(
+                              course.moduleCode
+                            )}
+                            onChange={() =>
+                              handleCheckboxChange(course.moduleCode)
+                            }
+                          />
+                        </div>
+                      ))}
+                  {modulExits && (
+                    <Alert
+                      icon={<WarningIcon />}
+                      className="rounded-none border-l-4 border-red-700 bg-[#2ec946]/10 font-medium text-red-700 "
+                    >
+                      A lecturer already assigned to {modulesAssign}
+                    </Alert>
+                  )}
+                </AccordionBody>
+              </Accordion> */}
+              <Accordion open={openAccordion3}>
+                <AccordionHeader onClick={() => handleOpenAccordion(3)}>
+                  Third Year
+                </AccordionHeader>
+                <AccordionBody>
+                  {modulesData &&
+                    modulesData
+                      .filter((course) => course.yearLevel === "3")
+                      .map((course, index) => (
+                        <div className="-ml-2.5" key={course.id}>
+                          <Checkbox
+                            label={course.moduleCode}
+                            checked={selectedModules.includes(
+                              course.moduleCode
+                            )}
+                            onChange={() =>
+                              handleCheckboxChange(course.moduleCode)
+                            }
+                          />
+                        </div>
+                      ))}
+                  {modulExits && (
+                    <Alert
+                      icon={<WarningIcon />}
+                      className="rounded-none border-l-4 border-red-700 bg-[#2ec946]/10 font-medium text-red-700 "
+                    >
+                      A lecturer already assigned to {modulesAssign}
+                    </Alert>
+                  )}
+                </AccordionBody>
+              </Accordion>
             </CardBody>
             <DialogFooter className="pt-0">
               <Button
@@ -412,6 +520,7 @@ console.log("Filtered lecturers:", filteredLecturers);
             </DialogFooter>
           </Card>
         </Dialog>
+        <ToastContainer />
       </div>
     </div>
   );

@@ -35,9 +35,7 @@ const radio = [
 function AnnouncementComponents() {
   const { user: authUser } = useAuth();
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
   const [recipient, setRecipient] = useState("");
-  const [userData, setUserData] = useState([]);
   const [name, setName] = useState("");
   const [text, setText] = useState("");
 
@@ -66,8 +64,21 @@ function AnnouncementComponents() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (title === "" || text === "" || recipient === "") {
+    if (title === "" || text === "") {
       toast.error("Please fill in all the fields!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+    if(!recipient){
+      toast.error("Please select a recipient!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -131,7 +142,6 @@ function AnnouncementComponents() {
         theme: "light",
       });
       setTitle("");
-      // setContent("");
       setRecipient("");
       setText("");
     } catch (err) {
@@ -190,7 +200,7 @@ function AnnouncementComponents() {
     try {
       const docRef = await addDoc(collection(db, "mail"), {
         // to: recipient === "everyone" ? everyoneEmail : recipient === "student" ? studentEmail : lecturerEmail,
-        to: "215020661@student.uj.ac.za", // For testing purposes
+        to: "bosengad@gmail.com", // For testing purposes
         message: {
           subject: `Announcements Notifications`,
           html: `

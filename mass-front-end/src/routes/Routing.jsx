@@ -21,10 +21,8 @@ import Trello from "../student/pages/Trello";
 import Community from "../student/pages/Community";
 import useAuthUser from "../student/utils/useAuthUser";
 import Comunity from "../lecturers/pages/Comunity";
-import TestResponsive from "../student/pages/TestResponsive";
-import { DragDropContext } from "react-beautiful-dnd";
-import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/configFirebase";
+import LogsReports from "../admin/components/LogsReports";
+
 
 function Routing() {
   const navigate = useNavigate();
@@ -72,10 +70,10 @@ function Routing() {
           }
         />
         <Route
-          path="/timetable"
+          path="/ReportIcon"
           element={
             <ProtectedRoute>
-              <Timetables />
+              <LogsReports />
             </ProtectedRoute>
           }
         />
