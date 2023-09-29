@@ -187,7 +187,7 @@ function Trello({handleProfile}) {
       <div className="w-1/4">
         <Sidebar />
       </div>
-      <div className="flex flex-col w-full mr-4 mb-4 mt-4 h-screen">
+      <div className="flex flex-col w-full mx-4 mb-4 mt-4 h-screen">
         <NavbarStudent Icon={EventNoteIcon} title={"Trello"} handleProfile={handleProfile} />
         <DragDropContext onDragEnd={onDragEnd}>
         <StoreApi.Provider

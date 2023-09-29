@@ -15,7 +15,7 @@ function Chart({ handleProfile }) {
       <div className="w-1/4">
         <Sidebar />
       </div>
-      <div className="flex flex-col w-full mr-4 mb-4 mt-4 h-full">
+      <div className="flex flex-col w-full  mx-4 mb-4 mt-4 h-full">
         <NavbarStudent
           Icon={LeaderboardIcon}
           title={"Chart"}
