@@ -70,7 +70,7 @@ function Routing() {
           }
         />
         <Route
-          path="/ReportIcon"
+          path="/logsreports"
           element={
             <ProtectedRoute>
               <LogsReports />
