@@ -68,7 +68,7 @@ function Routing({ lists, setLists }) {
           }
         />
         <Route
-          path="/ReportIcon"
+          path="/logsreports"
           element={
             <ProtectedRoute>
               <LogsReports />
