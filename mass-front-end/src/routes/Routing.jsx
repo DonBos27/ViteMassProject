@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Dashboard from "../admin/pages/Dashboard";
 import Lecturer from "../admin/pages/Lecturer";
@@ -23,12 +23,14 @@ import useAuthUser from "../student/utils/useAuthUser";
 import Comunity from "../lecturers/pages/Comunity";
 import LogsReports from "../admin/components/LogsReports";
 
-function Routing({ lists, setLists }) {
+
+function Routing() {
   const navigate = useNavigate();
   useAuthUser();
   function handleProfile() {
     navigate("/profile");
   }
+  
   return (
     <div>
       <Routes>
@@ -146,11 +148,12 @@ function Routing({ lists, setLists }) {
           path="Notepad"
           element={
             <ProtectedRoute>
+             
               <Trello
                 handleProfile={handleProfile}
-                lists={lists}
-                setLists={setLists}
+                
               />
+              
             </ProtectedRoute>
           }
         />
@@ -178,6 +181,15 @@ function Routing({ lists, setLists }) {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="test"
+          element={
+            <ProtectedRoute>
+              <TestResponsive handleProfile={handleProfile} />
+            </ProtectedRoute>
+          }
+        />
+
 
         <Route path="profile" element={<Profile />} />
       </Routes>
