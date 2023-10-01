@@ -120,7 +120,7 @@ function Sidebar() {
         ))}
 
         <ListItem
-          className="mt-10 p-4 hover:bg-primary hover:text-white "
+          className="mt-10 p-4 hover:bg-primary hover:text-white text-xl"
           onClick={handleLogout}
         >
           <ListItemPrefix>
