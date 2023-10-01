@@ -95,10 +95,8 @@ function SidebarComL({user}) {
                     alt="Profile" />
                     <h4>{user?.initials} {user?.name}</h4>
             </div>
-            <div className='sidebar__header--right'>
-                <IconButton className='bg-primary'>
-                    <ExitToApp />
-                </IconButton>
+            <div className=''>
+                
             </div>
         </div>
         {/* search */}

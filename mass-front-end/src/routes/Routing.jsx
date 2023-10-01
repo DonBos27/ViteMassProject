@@ -181,14 +181,7 @@ function Routing() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="test"
-          element={
-            <ProtectedRoute>
-              <TestResponsive handleProfile={handleProfile} />
-            </ProtectedRoute>
-          }
-        />
+        
 
 
         <Route path="profile" element={<Profile />} />
