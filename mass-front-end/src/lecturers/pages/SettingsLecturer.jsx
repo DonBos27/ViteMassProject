@@ -43,7 +43,7 @@ function SettingsLecturer() {
               <div className="flex justify-center gap-2 items-center flex-col relative top-[-50px]">
                 <img
                   className="w-[150px] h-[150px] rounded-full"
-                  src={userData.image ? userData.image : ProfilePic}
+                  src={userData.photoURL ? userData.photoURL : ProfilePic}
                   alt="Profile"
                 />
                 <span className=" font-semibold text-xl">

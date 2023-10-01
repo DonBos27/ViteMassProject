@@ -24,7 +24,7 @@ import "./Sidebar.css";
 import { Timestamp, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/configFirebase";
 import GoodMorning from "../images/goodmorning.gif";
-import ReportIcon from '@mui/icons-material/Report';
+import ReportIcon from "@mui/icons-material/Report";
 
 function Sidebar() {
   const [openAlert, setOpenAlert] = useState(true);
@@ -45,7 +45,7 @@ function Sidebar() {
     },
 
     {
-      name: "Programmes",
+      name: "Programs",
       icon: <ViewModuleIcon />,
       path: "/programmes",
     },
@@ -166,10 +166,7 @@ function Sidebar() {
           Log Out
         </ListItem>
       </List>
-      <Alert
-        open={openAlert}
-        className="mt-auto "
-      >
+      <Alert open={openAlert} className="mt-auto ">
         <img
           src={image}
           alt="Good Morning"

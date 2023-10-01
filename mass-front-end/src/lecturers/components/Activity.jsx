@@ -19,9 +19,9 @@ function Activity() {
 
   useEffect(() => {
     if (authUser) {
-      const email = authUser.email;
-      console.log("Email:", email);
-      const unsubscribe = onSnapshot(doc(db, "calendarPost", email), (doc) => {
+      const useruid = authUser.uid;
+      console.log("Email:", useruid);
+      const unsubscribe = onSnapshot(doc(db, "calendarPost", useruid), (doc) => {
         if (doc.exists()) {
           const data = doc.data();
           console.log("Fetched data from Firestore:", data);

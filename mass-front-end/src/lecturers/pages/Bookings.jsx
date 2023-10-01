@@ -10,7 +10,7 @@ function Bookings() {
         <Sidebar />
       </div>
       <div className="flex flex-col w-full mx-2 mt-4 h-screen">
-        <NavbarLecturer title={"Bookings"} />
+        <NavbarLecturer title={"Announcements"} />
         <div className="mt-0">
           <AnnouncementsLecturer />
         </div>

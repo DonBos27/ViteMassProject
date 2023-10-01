@@ -114,19 +114,19 @@ function CalendarPost() {
     };
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "modules"), (snapshot) => {
-      const courses = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      console.log("Courses:", courses);
-      setModulesData(courses);
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(collection(db, "modules"), (snapshot) => {
+  //     const courses = snapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     }));
+  //     console.log("Courses:", courses);
+  //     setModulesData(courses);
+  //   });
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []);
 
   const handleDateClick = (arg) => {
     const currentDate = new Date(arg.date); // Create a new Date object from the clicked date
@@ -177,15 +177,15 @@ function CalendarPost() {
 
   const handleEventClick = (arg) => {
     const { lecturerEmail } = arg.event.extendedProps;
-    // console.log(lecturerEmail);
+    console.log(lecturerEmail);
     const lecturerID = authUser.uid;
-    // console.log(lecturerID);
+    console.log(lecturerID);
 
     if (lecturerID === lecturerEmail) {
       const title = arg.event.title;
       const { uid, description, start, end, scope, type } =
         arg.event.extendedProps;
-      console.log(uid);
+      // console.log(uid);
 
       // console.log(title, description, start, end, scope, type);
 
@@ -232,7 +232,7 @@ function CalendarPost() {
       handleUpdateModal();
     } else {
       // alert("You cannot edit other lecturer's post!");
-      // preventErrors();
+      preventErrors();
       // setErrorModal(true);
       toast.error("You cannot edit other lecturer's post!", {
         position: "top-right",
@@ -389,6 +389,8 @@ function CalendarPost() {
         event.uid === eventObject.uid ? eventObject : event
       );
 
+      console.log("updatedEvents:", updatedEvents);
+
       await setDoc(eventsCollectionRef, { allLecturerPost: updatedEvents });
 
       // Update the event in the user's calendarPost collection
@@ -398,6 +400,8 @@ function CalendarPost() {
       const updatedUserEvents = existingUserEvents.map((event) =>
         event.uid === eventObject.uid ? eventObject : event
       );
+
+      console.log("updatedUserEvents:", updatedUserEvents);
 
       await setDoc(userEventDocRef, { lecturerPost: updatedUserEvents });
 
@@ -415,9 +419,7 @@ function CalendarPost() {
 
     if (!type) {
       setErrorAlert(true);
-      // handleOpen();
       return;
-      // preventErrors();
     }
 
     if (startTimestamp.toDate() < today) {
@@ -523,7 +525,7 @@ function CalendarPost() {
               <p style=" padding-right: 0%; padding-left: 0%;">A new ${type} has been posted on the calendar by ${lecturerID}.</p>
               <p style=" padding-right: 0%; padding-left: 0%;">Please check the calendar for more details.</p>
             </div>
-          </div> 
+          </div>
           <div>
             <p style="color: #888; font-size: 10px">This email was sent to you by MASS. Please do not reply to this email.</p>
           </div>
@@ -582,18 +584,46 @@ function CalendarPost() {
     if (type === "Test") {
       if (existingEventsTypeDate.length > 0) {
         setMinorError(true);
-        setMinorErrorText(
-          "You cannot post a test on the same day as another test!"
-        );
+        // setMinorErrorText(
+        //   "You cannot post a test on the same day as another test!"
+        // );
+        toast.error("You cannot post a test on the same day as another test!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+
         // alert("You cannot post a test on the same day as another test!");
       } else if (existingEventsTypeDateBefore.length > 0) {
         setMinorError(true);
-        setMinorErrorText("You cannot post a test 2 days before another test!");
+        // setMinorErrorText("You cannot post a test 2 days before another test!");
         // alert("You cannot post a test 2 days before another test!");
+        toast.error("You cannot post a test 2 days before another test!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       } else if (existingEventsTypeDateAfter.length > 0) {
         setMinorError(true);
-        setMinorErrorText("You cannot post a test 2 days after another test!");
-        // alert("You cannot post a test 2 days after another test!");
+        // setMinorErrorText("You cannot post a test 2 days after another test!");
+        // // alert("You cannot post a test 2 days after another test!");
+        toast.error("You cannot post a test 2 days after another test!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       } else {
         // alert("Test posted successfully!");
         await handleEventPost(eventObject);
@@ -609,12 +639,9 @@ function CalendarPost() {
         });
       }
     } else {
-      // alert("Event posted successfully!");
       await handleEventPost(eventObject);
       handleOpen();
     }
-
-    // await handleEventPost(eventObject);
     setTitle("");
     setDescription("");
     setScope("");
@@ -623,7 +650,6 @@ function CalendarPost() {
     setSelectedEndDate("");
     setMarkweight("");
     setErrorAlert(false);
-    // handleOpen();
   };
   const handleUpdate = async (arg) => {
     const startTimestamp = Timestamp.fromDate(
@@ -639,38 +665,76 @@ function CalendarPost() {
 
     const lecturerName = userData.name;
     const lecturerEmail = lecturerID;
+    const lecturerTitle = userData.title;
 
     const today = new Date();
 
     if (startTimestamp.toDate() < today) {
       setMinorError(true);
-      setMinorErrorText(
-        "You cannot post an event in the past! Check the start date."
-      );
+      // setMinorErrorText(
+      //   "You cannot post an event in the past! Check the start date."
+      // );
+      toast.error("You cannot post an event in the past! Check the start date.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       return;
     }
 
     if (endTimestamp.toDate() < today) {
       setMinorError(true);
-      setMinorErrorText(
-        "You cannot post an event in the past! Check the end date."
-      );
+      // setMinorErrorText(
+      //   "You cannot post an event in the past! Check the end date."
+      // );
+      toast.error("You cannot post an event in the past! Check the end date.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       return;
     }
 
     if (endTimestamp.toDate() < startTimestamp.toDate()) {
       setMinorError(true);
-      setMinorErrorText(
-        "You cannot post an event with end date before start date!"
-      );
+      // setMinorErrorText(
+      //   "You cannot post an event with end date before start date!"
+      // );
+      toast.error("You cannot post an event with end date before start date!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
       return;
     }
 
     const regex = /^[0-9]*\.?[0-9]*$/;
     if (!regex.test(markweightUpdate)) {
       setMinorError(true);
-      setMinorErrorText(
-        "Mark weight must be a number between 1 and 99 and cannot be empty or null!"
+      toast.error(
+        "Mark weight must be a number between 1 and 99 and cannot be empty or null!",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
       );
       return;
     }
@@ -681,8 +745,17 @@ function CalendarPost() {
       markweightUpdate === ""
     ) {
       setMinorError(true);
-      setMinorErrorText(
-        "You cannot post an event with mark weight more than 99% or less than 0% or null!"
+      toast.error(
+        "You cannot post an event with mark weight more than 99% or less than 0% or null!",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
       );
       return;
     }
@@ -730,12 +803,12 @@ function CalendarPost() {
         return email;
       }
     });
-    console.log("studentEmail:", studentEmail);
+    // console.log("studentEmail:", studentEmail);
 
     // Email notificaion to students
     try {
       const docRef = await addDoc(collection(db, "mail"), {
-        to: studentEmail,
+        to: "bosengad@gmail.com" + "," + studentEmail,
         message: {
           subject: `${type} Notifications`,
           html: `
@@ -745,10 +818,10 @@ function CalendarPost() {
                     <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/af/University_of_Johannesburg_Logo.svg/1200px-University_of_Johannesburg_Logo.svg.png" alt="University Logo" style="max-width: 50px; max-height: 50px; padding-right: 0%; padding-left: 30%;" /> <br/>
                     <h2 style="color: #333; font-size: 25px" className:"text-red-700" >Mass Notification Update</h2>
                   </div>
-                  <p style=" padding-right: 0%; padding-left: 0%;">A new ${type} has been updated on the calendar by ${lecturerID}.</p>
+                  <p style=" padding-right: 0%; padding-left: 0%;">A new ${type} has been updated on the calendar by ${lecturerTitle} ${lecturerName}.</p>
                   <p style=" padding-right: 0%; padding-left: 0%;">Please check the calendar for more details.</p>
                 </div>
-              </div> 
+              </div>
               <div>
                 <p style="color: #888; font-size: 10px">This email was sent to you by MASS. Please do not reply to this email.</p>
               </div>
@@ -761,83 +834,8 @@ function CalendarPost() {
       console.error("Error adding document: ", e);
     }
 
-    const eventsCollectionRef = doc(db, "events", "eventsPosts");
-    const eventSnapshot = await getDoc(eventsCollectionRef);
-    const existingDataEvent = eventSnapshot.data();
-    const existingEvents = existingDataEvent.allLecturerPost;
-    const existingEventsType = existingEvents.filter(
-      (event) => event.type === typeUpdate
-    );
-
-    console.log(id);
-
-    // check if the id is the same as the event id in the database
-    const existingEventsId = existingEvents.filter((event) => event.uid);
-
-    console.log(existingEventsId);
-
-    // Filter existing events of the same type and on the same day as the new event
-    const existingEventsTypeDate = existingEventsType.filter(
-      (event) =>
-        event.start.toDate().toDateString() ===
-        startTimestamp.toDate().toDateString()
-    );
-
-    // Filter existing events of the same type and starting 2 days before the new event
-    const existingEventsTypeDateBefore = existingEventsType.filter(
-      (event) =>
-        event.start.toDate().toDateString() ===
-          new Date(
-            startTimestamp.toDate().getTime() - 1 * 24 * 60 * 60 * 1000
-          ).toDateString() ||
-        event.start.toDate().toDateString() ===
-          new Date(
-            startTimestamp.toDate().getTime() - 2 * 24 * 60 * 60 * 1000
-          ).toDateString()
-    );
-
-    const existingEventsTypeDateAfter = existingEventsType.filter(
-      (event) =>
-        event.start.toDate().toDateString() ===
-          new Date(
-            startTimestamp.toDate().getTime() + 1 * 24 * 60 * 60 * 1000
-          ).toDateString() ||
-        event.start.toDate().toDateString() ===
-          new Date(
-            startTimestamp.toDate().getTime() + 2 * 24 * 60 * 60 * 1000
-          ).toDateString()
-    );
-
-    if (typeUpdate === "Test") {
-      if (existingEventsTypeDate.length > 0) {
-        setMinorError(true);
-        setMinorErrorText(
-          "You cannot post a test on the same day as another test!"
-        );
-        // alert("You cannot post a test on the same day as another test!");
-        preventErrors();
-      } else if (existingEventsTypeDateBefore.length > 0) {
-        setMinorError(true);
-        setMinorErrorText("You cannot post a test 2 days before another test!");
-        // alert("You cannot post a test 2 days before another test!");
-        // preventErrors();
-      } else if (existingEventsTypeDateAfter.length > 0) {
-        setMinorError(true);
-        setMinorErrorText("You cannot post a test 2 days after another test!");
-        // alert("You cannot post a test 2 days after another test!");
-        // preventErrors();
-      } else {
-        // alert("Test posted successfully!");
-        await handleEventUpdate(eventObject);
-      }
-    } else {
-      // alert("Event posted successfully!");
-      await handleEventUpdate(eventObject);
-    }
-
-    // await handleEventUpdate(eventObject);
-
-    // console.log(handleEventUpdate(eventObject));
+    await handleEventUpdate(eventObject);
+    handleUpdateModal();
     setTitleUpdate("");
     setDescriptionUpdate("");
     setScopeUpdate("");
@@ -845,7 +843,6 @@ function CalendarPost() {
     setSelectedUpdateStartDate("");
     setSelectedUpdateEndDate("");
     setMarkweightUpdate("");
-    handleUpdateModal();
   };
   const handleDelete = async (arg) => {
     const lecturerID = authUser.uid;
@@ -867,6 +864,16 @@ function CalendarPost() {
     );
 
     await setDoc(userEventDocRef, { lecturerPost: existingUserEventsType });
+
+    toast.info("Event deleted successfully!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
 
     console.log("Event deleted successfully!");
     setTitleUpdate("");
@@ -900,7 +907,7 @@ function CalendarPost() {
 
       {/* // error when clicking on days beforer */}
 
-      <Dialog
+      {/* <Dialog
         open={dateBefore}
         handler={handleDateBefore}
         size="xs"
@@ -928,10 +935,10 @@ function CalendarPost() {
             Close
           </Button>
         </DialogFooter>
-      </Dialog>
+      </Dialog> */}
 
       {/* // error message when click on events not selected  */}
-      <Dialog open={errorModal} size="xs" handler={preventErrors} color="red">
+      {/* <Dialog open={errorModal} size="xs" handler={preventErrors} color="red">
         <DialogHeader>
           <Typography color="blue-gray" className="text-xl font-bold">
             <WarningIcon className="text-red-500 mr-2" />
@@ -953,7 +960,8 @@ function CalendarPost() {
             Close
           </Button>
         </DialogFooter>
-      </Dialog>
+      </Dialog> */}
+      {/* <ToastContainer /> */}
 
       {/* // Update Modal for Lecturer Post when click on the date in calendar  */}
       <Dialog
@@ -1033,7 +1041,7 @@ function CalendarPost() {
               onChange={(e) => setSelectedEndDate(e.target.value)}
               containerProps={{ className: "min-w-[100px]" }}
             />
-            {errorAlert && (
+            {/* {errorAlert && (
               <Alert
                 color="red"
                 className=""
@@ -1060,7 +1068,8 @@ function CalendarPost() {
               >
                 {minorErrorText}
               </Alert>
-            )}
+            )} */}
+            <ToastContainer />
             <List className="flex-row w-full">
               {radio.map((item) => (
                 <ListItem className="p-0" key={item.id}>
@@ -1177,7 +1186,7 @@ function CalendarPost() {
               onChange={(e) => setSelectedUpdateEndDate(e.target.value)}
               containerProps={{ className: "min-w-[100px]" }}
             />
-            {errorAlert && (
+            {/* {errorAlert && (
               <Alert
                 color="red"
                 className=""
@@ -1204,7 +1213,8 @@ function CalendarPost() {
               >
                 {minorErrorText}
               </Alert>
-            )}
+            )} */}
+            <ToastContainer />
             <List className="flex-row w-full">
               {radio.map((item) => (
                 <ListItem className="p-0" key={item.id}>
