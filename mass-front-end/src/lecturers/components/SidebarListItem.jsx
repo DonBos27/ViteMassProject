@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 function SidebarListItem({item}) {
   return (
-    <Link className='link' to={`/community/?roomId=${item.id}`}>
+    <Link className='link' to={`/communitylecturer/?roomId=${item.id}`}>
       <div className='sidebar__chat'>
         <div className='avatar__container'>
             <Avatar 
