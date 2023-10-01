@@ -98,9 +98,7 @@ function SidebarCommunity({user}) {
                     <h4>{user?.initials} {user?.name}</h4>
             </div>
             <div className='sidebar__header--right'>
-                <IconButton className='bg-primary'>
-                    <ExitToApp />
-                </IconButton>
+                
             </div>
         </div>
         {/* search */}
@@ -143,10 +141,8 @@ function SidebarCommunity({user}) {
         ) : null
         }
         {/* create room button */}
-        <div className='sidebar__chat--addRoom'>
-            <IconButton onClick={() => setCreatingRoom(true)} className='bg-primary'>
-                <Add />
-            </IconButton>
+        <div className=''>
+           
         </div>
         {/* Create room dialog */}
         <Dialog open={isCreatingRoom} handler={() => setCreatingRoom(false)}>
