@@ -38,6 +38,8 @@ import { db } from "../../firebase/configFirebase";
 import { v4 as uuidv4 } from "uuid";
 import WarningIcon from "@mui/icons-material/Warning";
 import UJ from "../images/uj.png";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/ReactToastify.min.css";
 
 const radio = [
   { id: 1, value: "Assignment", color: "blue" },
@@ -144,7 +146,16 @@ function CalendarPost() {
 
     if (selectedDateTime < new Date()) {
       // alert("You cannot post an event in the past!");
-      handleDateBefore();
+      // handleDateBefore();
+      toast.error("You cannot post an event in the past!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     } else {
       setTitle("");
       setDescription("");
@@ -167,7 +178,7 @@ function CalendarPost() {
   const handleEventClick = (arg) => {
     const { lecturerEmail } = arg.event.extendedProps;
     // console.log(lecturerEmail);
-    const lecturerID = authUser.email;
+    const lecturerID = authUser.uid;
     // console.log(lecturerID);
 
     if (lecturerID === lecturerEmail) {
@@ -222,14 +233,23 @@ function CalendarPost() {
     } else {
       // alert("You cannot edit other lecturer's post!");
       // preventErrors();
-      setErrorModal(true);
+      // setErrorModal(true);
+      toast.error("You cannot edit other lecturer's post!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
   };
 
   const eventContent = (arg) => {
     const { lecturerEmail } = arg.event.extendedProps;
     // console.log(lecturerEmail);
-    const lecturerID = authUser.email;
+    const lecturerID = authUser.uid;
     // console.log(lecturerID);
     const title = arg.event.title;
     const { description, start, end, scope, type, lecturerName } =
@@ -270,7 +290,7 @@ function CalendarPost() {
   };
 
   const handleEventPost = async (eventObject) => {
-    const lecturerID = authUser.email;
+    const lecturerID = authUser.uid;
     // const id = uuidv4();
     try {
       // Fetch lecturer's name and email from the users collection
@@ -355,7 +375,7 @@ function CalendarPost() {
   };
 
   const handleEventUpdate = async (eventObject) => {
-    const lecturerID = authUser.email;
+    const lecturerID = authUser.uid;
     // const eventID = eventObject.uid;
     // console.log("eventID:", eventID);
     try {
@@ -578,6 +598,15 @@ function CalendarPost() {
         // alert("Test posted successfully!");
         await handleEventPost(eventObject);
         handleOpen();
+        toast.success("Test posted successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       }
     } else {
       // alert("Event posted successfully!");
@@ -601,7 +630,7 @@ function CalendarPost() {
       new Date(selectedUpdateStartDate)
     ); // Convert to Timestamp
     const endTimestamp = Timestamp.fromDate(new Date(selectedUpdateEndDate)); // Convert to Timestamp
-    const lecturerID = authUser.email;
+    const lecturerID = authUser.uid;
     const usersCollectionRef = doc(db, "users", lecturerID);
     const userSnapshot = await getDoc(usersCollectionRef);
 
@@ -819,7 +848,7 @@ function CalendarPost() {
     handleUpdateModal();
   };
   const handleDelete = async (arg) => {
-    const lecturerID = authUser.email;
+    const lecturerID = authUser.uid;
     const eventsCollectionRef = doc(db, "events", "eventsPosts");
     const eventSnapshot = await getDoc(eventsCollectionRef);
     const existingDataEvent = eventSnapshot.data();
@@ -1222,6 +1251,7 @@ function CalendarPost() {
           </CardFooter>
         </Card>
       </Dialog>
+      <ToastContainer />
     </div>
   );
 }
