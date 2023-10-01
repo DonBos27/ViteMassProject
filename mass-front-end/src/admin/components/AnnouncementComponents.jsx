@@ -41,10 +41,10 @@ function AnnouncementComponents() {
 
   useEffect(() => {
     if (authUser) {
-      const email = authUser.email;
-      console.log("Email:", email);
+      const uid = authUser.uid;
+      console.log("Email:", authUser.uid);
       const unsubscribe = onSnapshot(
-        doc(db, "users", email), // Assuming your collection is "users" and the document ID is the email
+        doc(db, "users", uid), 
         (doc) => {
           if (doc.exists()) {
             const data = doc.data();
