@@ -61,12 +61,15 @@ function Dashboard() {
               <Typography className="text-4xl font-bold py-5 px-6">
                 Timetable
               </Typography>
-              <div className="pb-3">
+              <div className="pb-0">
                 <TimetablesModules />
               </div>
             </div>
             <div className="w-1/3 ml-5">
               <WelcomeCard />
+              {/* <div className="mt-5">
+                <WelcomeCard />
+              </div> */}
             </div>
           </div>
         </div>

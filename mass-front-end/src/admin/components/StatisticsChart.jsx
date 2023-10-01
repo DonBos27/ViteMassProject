@@ -12,11 +12,9 @@ import ComparePass from "./charts/ComparePass";
 import StateGender from "./charts/StateGender";
 import StateFemaleCount from "./charts/StateFemaleCount";
 
-
 function StatisticsChart() {
-  
-  const dataMale = StateGender()
-  const dataFemale = StateFemaleCount()
+  const dataMale = StateGender();
+  const dataFemale = StateFemaleCount();
   const maleRegisterd = {
     height: 220,
     series: [
@@ -29,7 +27,7 @@ function StatisticsChart() {
         type: "area",
         name: "Females",
         data: [], // Initialize with an empty array
-      }
+      },
     ],
     options: {
       colors: ["blue", "#FF92A5"],
@@ -47,32 +45,43 @@ function StatisticsChart() {
           shadeIntensity: 1,
           opacityFrom: 0.7,
           opacityTo: 0.5,
-          stops: [0, 90, 100]
-        }
+          stops: [0, 90, 100],
+        },
       },
       stroke: {
-        curve: "smooth"
+        curve: "smooth",
       },
       xaxis: {
-        categories: [
-          "15",
-          "16",
-          "17",
-          "18",
-          "19",
-          "20",
-          "21",
-          "22",
-          "23",
-        ],
+        categories: ["15", "16", "17", "18", "19", "20", "21", "22", "23"],
       },
     },
   };
 
-  maleRegisterd.series[0].data = [dataMale]
-  maleRegisterd.series[1].data = [dataFemale]
-  console.log("data :", maleRegisterd.series[0].data)
-  
+  const allData = dataMale + dataFemale;
+  console.log("all data :", allData);
+
+  // percentage of male students registered in the department per year
+  const malePercentage = (dataMale / allData) * 100;
+  const femalePercentage = (dataFemale / allData) * 100;
+
+  // round up the percentage to 2 decimal places\
+  const maleRegisteredRound = malePercentage.toFixed(0);
+  const femaleRegisteredRound = femalePercentage.toFixed(0);
+
+  maleRegisterd.series[0].data = [75, 77, 78, 66, 65, 68, 68, 59, maleRegisteredRound];
+  maleRegisterd.series[1].data = [
+    25,
+    23,
+    22,
+    34,
+    35,
+    32,
+    32,
+    41,
+    femaleRegisteredRound,
+  ];
+  console.log("data :", maleRegisterd);
+
   const menu = [
     {
       id: 1,

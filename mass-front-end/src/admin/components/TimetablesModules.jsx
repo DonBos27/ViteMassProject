@@ -128,7 +128,7 @@ function TimetablesModules() {
           right: "today",
         }}
         titleFormat={{ year: "numeric", month: "long", day: "numeric" }}
-        height="600px"
+        height="350px"
         allDaySlot={false}
         // slotDuration={"00:15:00"}
         slotEventOverlap={false}
