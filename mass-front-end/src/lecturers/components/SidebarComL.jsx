@@ -61,7 +61,7 @@ function SidebarComL({user}) {
         setCreatingRoom(false)
         setRoomName("")
         setMenu(2)
-        route(`/community/?roomId=${newRoom.id}`)
+        route(`/communitylecturer/?roomId=${newRoom.id}`)
 
         
     }
