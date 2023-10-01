@@ -11,7 +11,7 @@ import { useAuth } from "../../context/AuthContext";
 function CalendarLecturer() {
   const [formattedEvents, setFormattedEvents] = useState([]);
   const { user } = useAuth();
-  const lecturerEmail = user.email;
+  const lecturerEmail = user.uid;
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "modules"), (snapshot) => {
       if (!snapshot.empty) {
