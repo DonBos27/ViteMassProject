@@ -40,6 +40,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import UJ from "../images/uj.png";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.min.css";
+import { set } from "date-fns";
 
 const radio = [
   { id: 1, value: "Assignment", color: "blue" },
@@ -389,7 +390,7 @@ function CalendarPost() {
         event.uid === eventObject.uid ? eventObject : event
       );
 
-      console.log("updatedEvents:", updatedEvents);
+      // console.log("updatedEvents:", updatedEvents);
 
       await setDoc(eventsCollectionRef, { allLecturerPost: updatedEvents });
 
@@ -401,7 +402,7 @@ function CalendarPost() {
         event.uid === eventObject.uid ? eventObject : event
       );
 
-      console.log("updatedUserEvents:", updatedUserEvents);
+      // console.log("updatedUserEvents:", updatedUserEvents);
 
       await setDoc(userEventDocRef, { lecturerPost: updatedUserEvents });
 
@@ -414,7 +415,16 @@ function CalendarPost() {
   const handlePost = async (arg) => {
     const startTimestamp = Timestamp.fromDate(new Date(selectedStartDate)); // Convert to Timestamp
     const endTimestamp = Timestamp.fromDate(new Date(selectedEndDate)); // Convert to Timestamp
-    const lecturerID = authUser.email;
+    const lecturerID = authUser.uid;
+    const usersCollectionRef = doc(db, "users", lecturerID);
+    const userSnapshot = await getDoc(usersCollectionRef);
+
+    const userData = userSnapshot.data();
+    console.log("userData:", userData);
+
+    const lecturerName = userData.name;
+    const lecturerEmail = lecturerID;
+    const lecturerTitle = userData.title;
     const today = new Date();
 
     if (!type) {
@@ -424,29 +434,58 @@ function CalendarPost() {
 
     if (startTimestamp.toDate() < today) {
       setMinorError(true);
-      setMinorErrorText(
-        "You cannot post an event in the past! Check the start date."
+      // setMinorErrorText(
+      //   "You cannot post an event in the past! Check the start date."
+      // );
+      toast.error(
+        "You cannot post an event in the past! Check the start date.",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
       );
       return;
     }
 
     if (endTimestamp.toDate() < today) {
       setMinorError(true);
-      setMinorErrorText(
-        "You cannot post an event in the past! Check the end date."
-      );
+      // setMinorErrorText(
+      //   "You cannot post an event in the past! Check the end date."
+      // );
+      toast.error("You cannot post an event in the past! Check the end date.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       return;
     }
 
     if (endTimestamp.toDate() < startTimestamp.toDate()) {
       setMinorError(true);
-      setMinorErrorText(
-        "You cannot post an event with end date before start date!"
-      );
+      // setMinorErrorText(
+      //   "You cannot post an event with end date before start date!"
+      // );
+      toast.error("You cannot post an event with end date before start date!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       return;
     }
 
-    // check regex for mark weight input field to only allow numbers and decimals
     const regex = /^[0-9]*\.?[0-9]*$/;
     if (!regex.test(markweight)) {
       setMinorError(true);
@@ -477,8 +516,6 @@ function CalendarPost() {
       }
     };
 
-    // setId(uuidv4())
-
     const eventObject = {
       uid: uuidv4(),
       title: title,
@@ -496,23 +533,90 @@ function CalendarPost() {
     const studentsSnapshot = await getDocs(studentsCollectionRef);
     const studentsData = studentsSnapshot.docs.map((doc) => ({
       id: doc.id,
+      modules: doc.enrolled_modules,
       ...doc.data(),
     }));
-    const studentsEmail = studentsData.map((student) => student.email);
-    console.log("studentsEmail:", studentsEmail);
-
-    // check if student email finished with @student and add to array if true and send email to students in the array
-    const studentEmail = studentsEmail.filter((email) => {
-      if (email && email.endsWith("@student.uj.ac.za")) {
-        return email;
+    const filteredLecturers = studentsData.filter((users) =>
+      authUser.email.endsWith("@uj.ac.za") ? users.id === authUser.uid : null
+    );
+    const modulesTaken = filteredLecturers.flatMap(
+      (user) => user.modules || []
+    );
+    const modulesCodeTaken = modulesTaken.flatMap((module) => {
+      if (Array.isArray(module)) {
+        return module.map((item) => item.code);
+      } else if (typeof module === "object") {
+        return [module.moduleCode];
+      } else {
+        console.error(
+          "Unexpected data type for 'module':",
+          typeof module,
+          module
+        );
+        return [];
       }
     });
-    console.log("studentEmail:", studentEmail);
+    const targetUserStudent = studentsData
+      .filter((user) => user.email.endsWith("@student.uj.ac.za"))
+      .map((student) => ({
+        id: student.id,
+        modules: student.enrolled_modules,
+        email: student.email,
+      }));
+    const enrolledModulesData = [];
+    if (Array.isArray(targetUserStudent)) {
+      for (const userRefObject of targetUserStudent) {
+        try {
+          if (Array.isArray(userRefObject.modules)) {
+            for (const moduleRef of userRefObject.modules) {
+              try {
+                const moduleDoc = await getDoc(moduleRef);
+                if (moduleDoc.exists()) {
+                  enrolledModulesData.push({
+                    id: moduleDoc.id,
+                    ...moduleDoc.data(),
+                    email: userRefObject.email,
+                  });
+                } else {
+                  console.error(
+                    "Module document does not exist:",
+                    moduleRef.id
+                  );
+                }
+              } catch (error) {
+                console.error("Error fetching module document:", error);
+              }
+            }
+          } else {
+            console.error(
+              "Unexpected data type for 'userRefObject.modules':",
+              typeof userRefObject.email,
+              userRefObject.email
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching userRefObject:", error);
+        }
+      }
+    } else {
+      console.error(
+        "Unexpected data type for 'targetUserStudent':",
+        typeof targetUserStudent,
+        targetUserStudent
+      );
+    }
+    const modules = enrolledModulesData.map((module) => module.moduleCode);
+    const emails = enrolledModulesData.map((modules) => modules.email);
+    const modulesCode = modules.filter((module) =>
+      modulesCodeTaken.includes(module)
+    );
+    const uniqueStudentEmails = [...new Set(emails)];
+    console.log("Unique student emails:", uniqueStudentEmails);
 
     // Email notificaion to students
     try {
       const docRef = await addDoc(collection(db, "mail"), {
-        to: studentEmail,
+        to: uniqueStudentEmails,
         message: {
           subject: `${type} Notifications`,
           html: `
@@ -522,7 +626,7 @@ function CalendarPost() {
                 <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/af/University_of_Johannesburg_Logo.svg/1200px-University_of_Johannesburg_Logo.svg.png" alt="University Logo" style="max-width: 50px; max-height: 50px; padding-right: 0%; padding-left: 30%;" /> <br/>
                 <h2 style="color: #333; font-size: 25px" className:"text-red-700" >Mass Notification New Post</h2>
               </div>
-              <p style=" padding-right: 0%; padding-left: 0%;">A new ${type} has been posted on the calendar by ${lecturerID}.</p>
+              <p style=" padding-right: 0%; padding-left: 0%;">A new ${type} has been posted on the calendar by ${lecturerTitle} ${lecturerName}.</p>
               <p style=" padding-right: 0%; padding-left: 0%;">Please check the calendar for more details.</p>
             </div>
           </div>
@@ -539,7 +643,6 @@ function CalendarPost() {
     }
 
     setId(eventObject.uid);
-
     console.log(eventObject.uid);
     const eventsCollectionRef = doc(db, "events", "eventsPosts");
     const eventSnapshot = await getDoc(eventsCollectionRef);
@@ -641,6 +744,15 @@ function CalendarPost() {
     } else {
       await handleEventPost(eventObject);
       handleOpen();
+      toast.success("Event posted successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
     setTitle("");
     setDescription("");
@@ -674,15 +786,18 @@ function CalendarPost() {
       // setMinorErrorText(
       //   "You cannot post an event in the past! Check the start date."
       // );
-      toast.error("You cannot post an event in the past! Check the start date.", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      toast.error(
+        "You cannot post an event in the past! Check the start date.",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
       return;
     }
 
@@ -792,23 +907,90 @@ function CalendarPost() {
     const studentsSnapshot = await getDocs(studentsCollectionRef);
     const studentsData = studentsSnapshot.docs.map((doc) => ({
       id: doc.id,
+      modules: doc.enrolled_modules,
       ...doc.data(),
     }));
-    const studentsEmail = studentsData.map((student) => student.email);
-    console.log("studentsEmail:", studentsEmail);
-
-    // check if student email finished with @student and add to array if true and send email to students in the array
-    const studentEmail = studentsEmail.filter((email) => {
-      if (email && email.endsWith("@student.uj.ac.za")) {
-        return email;
+    const filteredLecturers = studentsData.filter((users) =>
+      authUser.email.endsWith("@uj.ac.za") ? users.id === authUser.uid : null
+    );
+    const modulesTaken = filteredLecturers.flatMap(
+      (user) => user.modules || []
+    );
+    const modulesCodeTaken = modulesTaken.flatMap((module) => {
+      if (Array.isArray(module)) {
+        return module.map((item) => item.code);
+      } else if (typeof module === "object") {
+        return [module.moduleCode];
+      } else {
+        console.error(
+          "Unexpected data type for 'module':",
+          typeof module,
+          module
+        );
+        return [];
       }
     });
-    // console.log("studentEmail:", studentEmail);
+    const targetUserStudent = studentsData
+      .filter((user) => user.email.endsWith("@student.uj.ac.za"))
+      .map((student) => ({
+        id: student.id,
+        modules: student.enrolled_modules,
+        email: student.email,
+      }));
+    const enrolledModulesData = [];
+    if (Array.isArray(targetUserStudent)) {
+      for (const userRefObject of targetUserStudent) {
+        try {
+          if (Array.isArray(userRefObject.modules)) {
+            for (const moduleRef of userRefObject.modules) {
+              try {
+                const moduleDoc = await getDoc(moduleRef);
+                if (moduleDoc.exists()) {
+                  enrolledModulesData.push({
+                    id: moduleDoc.id,
+                    ...moduleDoc.data(),
+                    email: userRefObject.email,
+                  });
+                } else {
+                  console.error(
+                    "Module document does not exist:",
+                    moduleRef.id
+                  );
+                }
+              } catch (error) {
+                console.error("Error fetching module document:", error);
+              }
+            }
+          } else {
+            console.error(
+              "Unexpected data type for 'userRefObject.modules':",
+              typeof userRefObject.email,
+              userRefObject.email
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching userRefObject:", error);
+        }
+      }
+    } else {
+      console.error(
+        "Unexpected data type for 'targetUserStudent':",
+        typeof targetUserStudent,
+        targetUserStudent
+      );
+    }
+    const modules = enrolledModulesData.map((module) => module.moduleCode);
+    const emails = enrolledModulesData.map((modules) => modules.email);
+    const modulesCode = modules.filter((module) =>
+      modulesCodeTaken.includes(module)
+    );
+    const uniqueStudentEmails = [...new Set(emails)];
+    console.log("Unique student emails:", uniqueStudentEmails);
 
     // Email notificaion to students
     try {
       const docRef = await addDoc(collection(db, "mail"), {
-        to: "bosengad@gmail.com" + "," + studentEmail,
+        to: uniqueStudentEmails,
         message: {
           subject: `${type} Notifications`,
           html: `
@@ -836,6 +1018,15 @@ function CalendarPost() {
 
     await handleEventUpdate(eventObject);
     handleUpdateModal();
+    toast.success("Event updated successfully!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
     setTitleUpdate("");
     setDescriptionUpdate("");
     setScopeUpdate("");
@@ -904,64 +1095,6 @@ function CalendarPost() {
         eventClick={handleEventClick}
         eventContent={eventContent}
       />
-
-      {/* // error when clicking on days beforer */}
-
-      {/* <Dialog
-        open={dateBefore}
-        handler={handleDateBefore}
-        size="xs"
-        color="red"
-      >
-        <DialogHeader>
-          <Typography className="text-xl font-bold">
-            <WarningIcon className="text-red-700 mr-2" />
-            Error Message!
-          </Typography>
-        </DialogHeader>
-        <DialogBody divider>
-          <Typography color="black">
-            You cannot post an event in the past
-          </Typography>
-        </DialogBody>
-        <DialogFooter>
-          <Button
-            // color="red"
-            buttonType="link"
-            onClick={handleDateBefore}
-            // ripple={true}
-            className="bg-red-700"
-          >
-            Close
-          </Button>
-        </DialogFooter>
-      </Dialog> */}
-
-      {/* // error message when click on events not selected  */}
-      {/* <Dialog open={errorModal} size="xs" handler={preventErrors} color="red">
-        <DialogHeader>
-          <Typography color="blue-gray" className="text-xl font-bold">
-            <WarningIcon className="text-red-500 mr-2" />
-            Error Message !
-          </Typography>
-        </DialogHeader>
-        <DialogBody divider>
-          <Typography color="blue-gray">
-            You cannot edit other lecturer's post!
-          </Typography>
-        </DialogBody>
-        <DialogFooter>
-          <Button
-            color="red"
-            buttonType="link"
-            onClick={preventErrors}
-            // ripple="dark"
-          >
-            Close
-          </Button>
-        </DialogFooter>
-      </Dialog> */}
-      {/* <ToastContainer /> */}
 
       {/* // Update Modal for Lecturer Post when click on the date in calendar  */}
       <Dialog
@@ -1041,34 +1174,6 @@ function CalendarPost() {
               onChange={(e) => setSelectedEndDate(e.target.value)}
               containerProps={{ className: "min-w-[100px]" }}
             />
-            {/* {errorAlert && (
-              <Alert
-                color="red"
-                className=""
-                icon={<WarningIcon className="text-white mr-2" />}
-                animate={{
-                  mount: { y: 0 },
-                  unmount: { y: 100 },
-                }}
-                onClose={() => setErrorAlert(false)}
-              >
-                Please select the assessment!
-              </Alert>
-            )}
-            {minorError && (
-              <Alert
-                color="red"
-                className=""
-                icon={<WarningIcon className="text-white mr-2" />}
-                animate={{
-                  mount: { y: 0 },
-                  unmount: { y: 100 },
-                }}
-                onClose={() => setMinorError(false)}
-              >
-                {minorErrorText}
-              </Alert>
-            )} */}
             <ToastContainer />
             <List className="flex-row w-full">
               {radio.map((item) => (
@@ -1186,34 +1291,6 @@ function CalendarPost() {
               onChange={(e) => setSelectedUpdateEndDate(e.target.value)}
               containerProps={{ className: "min-w-[100px]" }}
             />
-            {/* {errorAlert && (
-              <Alert
-                color="red"
-                className=""
-                icon={<WarningIcon className="text-white mr-2" />}
-                animate={{
-                  mount: { y: 0 },
-                  unmount: { y: 100 },
-                }}
-                onClose={() => setErrorAlert(false)}
-              >
-                Please select the assessment!
-              </Alert>
-            )}
-            {minorError && (
-              <Alert
-                color="red"
-                className=""
-                icon={<WarningIcon className="text-white mr-2" />}
-                animate={{
-                  mount: { y: 0 },
-                  unmount: { y: 100 },
-                }}
-                onClose={() => setMinorError(false)}
-              >
-                {minorErrorText}
-              </Alert>
-            )} */}
             <ToastContainer />
             <List className="flex-row w-full">
               {radio.map((item) => (
