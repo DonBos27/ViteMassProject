@@ -56,12 +56,12 @@ function NavbarStudent({ title, Icon, handleProfile }) {
             </div>
           </Typography>
           <div className=" flex gap-1 md:mr-4">
-            <IconButton variant="text" color="blue-gray">
+            {/* <IconButton variant="text" color="blue-gray">
               <Cog6ToothIcon className="h-6 w-6" />
             </IconButton>
             <IconButton variant="text" color="blue-gray">
               <BellIcon className="h-6 w-6" />
-            </IconButton>
+            </IconButton> */}
             <div
               onClick={handleProfile}
               className="w-10 h-10"
