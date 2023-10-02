@@ -54,11 +54,11 @@ function Sidebar() {
       icon: <CampaignIcon />,
       path: "/announcements",
     },
-    {
-      name: "Logs & Reports",
-      icon: <ReportIcon />,
-      path: "/logsreports",
-    },
+    // {
+    //   name: "Logs & Reports",
+    //   icon: <ReportIcon />,
+    //   path: "/logsreports",
+    // },
     // {
     //   name: "Settings",
     //   icon: <SettingsIcon />,
