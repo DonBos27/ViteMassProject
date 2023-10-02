@@ -429,6 +429,28 @@ function CalendarPost() {
 
     if (!type) {
       setErrorAlert(true);
+      toast.error("Please select an event type!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+    if (title === "" || description === "" || scope === "" || markweight === "") {
+      setErrorAlert(true);
+      toast.error("Please fill in all the fields!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       return;
     }
 

@@ -68,7 +68,7 @@ function Sidebar() {
 
   useEffect(() => {
     if (user) {
-      const email = user.email;
+      const email = user.uid;
       console.log("Email:", email);
       const unsubscribe = onSnapshot(doc(db, "users", email), (doc) => {
         if (doc.exists()) {
