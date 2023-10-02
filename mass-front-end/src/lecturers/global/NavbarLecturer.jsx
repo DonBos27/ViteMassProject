@@ -29,7 +29,7 @@ function NavbarLecturer({ title }) {
         if (doc.exists()) {
           const data = doc.data();
           console.log("Fetched data from Firestore:", data);
-          // console.log("Time spent:", calculateTimeSpent(email));
+          console.log("Time spent:", calculateTimeSpent(email));
           setUserData(data);
           setLecturerId(data.name);
         }
