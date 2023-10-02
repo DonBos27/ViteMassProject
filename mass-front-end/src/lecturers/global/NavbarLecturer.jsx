@@ -29,7 +29,7 @@ function NavbarLecturer({ title }) {
         if (doc.exists()) {
           const data = doc.data();
           console.log("Fetched data from Firestore:", data);
-          // console.log("Time spent:", calculateTimeSpent(email));
+          console.log("Time spent:", calculateTimeSpent(email));
           setUserData(data);
           setLecturerId(data.name);
         }
@@ -53,12 +53,12 @@ function NavbarLecturer({ title }) {
             {title}
           </Typography>
           <div className=" flex gap-1 md:mr-4">
-            <IconButton variant="text" color="blue-gray">
+            {/* <IconButton variant="text" color="blue-gray">
               <Cog6ToothIcon className="h-6 w-6" />
             </IconButton>
             <IconButton variant="text" color="blue-gray">
               <BellIcon className="h-6 w-6" />
-            </IconButton>
+            </IconButton> */}
             <IconButton variant="text" color="blue-gray">
               {userData.image ? (
                 <Avatar

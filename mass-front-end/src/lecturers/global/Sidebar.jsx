@@ -52,16 +52,16 @@ function Sidebar() {
       icon: <PeopleAlt />,
       path: "/communitylecturer",
     },
-    {
-      name: "Settings",
-      icon: <SettingsIcon />,
-      path: "/settingslecturer",
-    },
+    // {
+    //   name: "Settings",
+    //   icon: <SettingsIcon />,
+    //   path: "/settingslecturer",
+    // },
   ];
 
   useEffect(() => {
     if (user) {
-      const email = user.email;
+      const email = user.uid;
       console.log("Email:", email);
       const unsubscribe = onSnapshot(doc(db, "users", email), (doc) => {
         if (doc.exists()) {
