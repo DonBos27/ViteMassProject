@@ -195,8 +195,8 @@ function AnnouncementComponents() {
     // Email notificaion to students, lecturer or everyone
     try {
       const docRef = await addDoc(collection(db, "mail"), {
-        // to: recipient === "everyone" ? everyoneEmail : recipient === "student" ? studentEmail : lecturerEmail,
-        to: "bosengad@gmail.com", // For testing purposes
+        to: recipient === "everyone" ? everyoneEmail : recipient === "student" ? studentEmail : lecturerEmail,
+        // to: "bosengad@gmail.com", // For testing purposes
         message: {
           subject: `Announcements Notifications`,
           html: `
