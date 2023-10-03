@@ -183,6 +183,7 @@ function AnnouncementComponents() {
     const uniqueEmails = new Set([...studentEmail, ...lecturerEmail]);
     // Convert the Set back to an array
     const everyoneEmail = Array.from(uniqueEmails);
+    console.log(everyoneEmail)
 
     if (recipient === "student") {
       console.log("Sending email to students", studentEmail);
