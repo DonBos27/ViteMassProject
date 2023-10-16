@@ -9,7 +9,6 @@ export default function useRoom(roomId, userId){
     const [snapShot] = useDocument(docId ? doc(db, `${collectionId}/${docId}`) : null);
 
     if (!snapShot?.exists()) return null;
-
     return {
     id: snapShot.id,
     photoUrl: snapShot.photoUrl || `https://avatars.dicebear.com/api/jdenticon/${snapShot.id}.svg`,
