@@ -6,7 +6,6 @@ import {
   Input,
   Button,
   Typography,
-  Textarea,
   List,
   ListItem,
   ListItemPrefix,
@@ -43,17 +42,14 @@ function AnnouncementComponents() {
     if (authUser) {
       const uid = authUser.uid;
       console.log("Email:", authUser.uid);
-      const unsubscribe = onSnapshot(
-        doc(db, "users", uid), 
-        (doc) => {
-          if (doc.exists()) {
-            const data = doc.data();
-            console.log("Fetched data from Firestore:", data);
-            setName(data.name);
-            console.log("Admin name:", name);
-          }
+      const unsubscribe = onSnapshot(doc(db, "users", uid), (doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          console.log("Fetched data from Firestore:", data);
+          setName(data.name);
+          console.log("Admin name:", name);
         }
-      );
+      });
 
       return () => {
         unsubscribe();
@@ -77,7 +73,7 @@ function AnnouncementComponents() {
       });
       return;
     }
-    if(!recipient){
+    if (!recipient) {
       toast.error("Please select a recipient!", {
         position: "top-right",
         autoClose: 5000,
@@ -187,6 +183,7 @@ function AnnouncementComponents() {
     const uniqueEmails = new Set([...studentEmail, ...lecturerEmail]);
     // Convert the Set back to an array
     const everyoneEmail = Array.from(uniqueEmails);
+    console.log(everyoneEmail)
 
     if (recipient === "student") {
       console.log("Sending email to students", studentEmail);
@@ -199,8 +196,8 @@ function AnnouncementComponents() {
     // Email notificaion to students, lecturer or everyone
     try {
       const docRef = await addDoc(collection(db, "mail"), {
-        // to: recipient === "everyone" ? everyoneEmail : recipient === "student" ? studentEmail : lecturerEmail,
-        to: "bosengad@gmail.com", // For testing purposes
+        to: recipient === "everyone" ? everyoneEmail : recipient === "student" ? studentEmail : lecturerEmail,
+        // to: "bosengad@gmail.com", // For testing purposes
         message: {
           subject: `Announcements Notifications`,
           html: `
@@ -226,6 +223,17 @@ function AnnouncementComponents() {
       console.error("Error adding document: ", e);
     }
   };
+  const renderHeader = () => {
+    return (
+      <span className="ql-formats">
+        <button className="ql-bold" aria-label="Bold"></button>
+        <button className="ql-italic" aria-label="Italic"></button>
+        <button className="ql-underline" aria-label="Underline"></button>
+      </span>
+    );
+  };
+
+  const header = renderHeader();
 
   return (
     <div>
@@ -268,15 +276,11 @@ function AnnouncementComponents() {
               >
                 Description of Announcement
               </Typography>
-              {/* <Textarea
-                label="Description"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-              /> */}
               <Editor
                 value={text}
                 onTextChange={(e) => setText(e.textValue)}
                 style={{ height: "320px" }}
+                headerTemplate={header}
               />
             </div>
             <div className="mb-5">
@@ -313,7 +317,6 @@ function AnnouncementComponents() {
             <Button size="lg" className="bg-primary" onClick={handleSubmit}>
               <Typography color="white">Submit</Typography>
             </Button>
-            {/* <ToastContainer /> */}
           </form>
         </CardBody>
       </Card>

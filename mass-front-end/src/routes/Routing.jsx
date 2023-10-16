@@ -21,7 +21,7 @@ import Trello from "../student/pages/Trello";
 import Community from "../student/pages/Community";
 import useAuthUser from "../student/utils/useAuthUser";
 import Comunity from "../lecturers/pages/Comunity";
-import LogsReports from "../admin/components/LogsReports";
+import LogsReports from "../admin/pages/LogsReports";
 
 
 function Routing() {

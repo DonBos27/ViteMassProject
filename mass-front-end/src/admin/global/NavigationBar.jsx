@@ -64,18 +64,18 @@ function NavigationBar({ title }) {
             as="a"
             href="#"
             variant="h6"
-            className="mr-4 ml-2 cursor-pointer py-1.5"
+            className="mr-4 ml-0 cursor-pointer py-1.5"
           >
             {title}
           </Typography>
           <div className=" flex gap-1 md:mr-4">
-            <IconButton
+            {/* <IconButton
               variant="text"
               color="blue-gray"
               onClick={handleOpenDrawer}
             >
               <Cog6ToothIcon className="h-6 w-6" />
-            </IconButton>
+            </IconButton> */}
             {/* <Badge content="1" withBorder className="bg-primary">
               <Menu placement="bottom-end">
                 <MenuHandler>
@@ -90,7 +90,7 @@ function NavigationBar({ title }) {
                 </MenuList>
               </Menu>
             </Badge> */}
-            <IconButton variant="text" color="blue-gray">
+            {/* <IconButton variant="text" color="blue-gray">
               {userData.image ? (
                 <Avatar
                   size="xs"
@@ -101,7 +101,7 @@ function NavigationBar({ title }) {
               ) : (
                 <UserCircleIcon className="h-6 w-6" />
               )}
-            </IconButton>
+            </IconButton> */}
           </div>
         </div>
       </Navbar>

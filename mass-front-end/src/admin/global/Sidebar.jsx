@@ -24,7 +24,7 @@ import "./Sidebar.css";
 import { Timestamp, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/configFirebase";
 import GoodMorning from "../images/goodmorning.gif";
-import ReportIcon from '@mui/icons-material/Report';
+import ReportIcon from "@mui/icons-material/Report";
 
 function Sidebar() {
   const [openAlert, setOpenAlert] = useState(true);
@@ -45,7 +45,7 @@ function Sidebar() {
     },
 
     {
-      name: "Programmes",
+      name: "Programs",
       icon: <ViewModuleIcon />,
       path: "/programmes",
     },
@@ -54,11 +54,11 @@ function Sidebar() {
       icon: <CampaignIcon />,
       path: "/announcements",
     },
-    {
-      name: "Logs & Reports",
-      icon: <ReportIcon />,
-      path: "/logsreports",
-    },
+    // {
+    //   name: "Logs & Reports",
+    //   icon: <ReportIcon />,
+    //   path: "/logsreports",
+    // },
     // {
     //   name: "Settings",
     //   icon: <SettingsIcon />,
@@ -68,7 +68,7 @@ function Sidebar() {
 
   useEffect(() => {
     if (user) {
-      const email = user.email;
+      const email = user.uid;
       console.log("Email:", email);
       const unsubscribe = onSnapshot(doc(db, "users", email), (doc) => {
         if (doc.exists()) {
@@ -166,10 +166,7 @@ function Sidebar() {
           Log Out
         </ListItem>
       </List>
-      <Alert
-        open={openAlert}
-        className="mt-auto "
-      >
+      <Alert open={openAlert} className="mt-auto ">
         <img
           src={image}
           alt="Good Morning"
