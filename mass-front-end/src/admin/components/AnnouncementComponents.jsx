@@ -37,6 +37,8 @@ function AnnouncementComponents() {
   const [recipient, setRecipient] = useState("");
   const [name, setName] = useState("");
   const [text, setText] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   useEffect(() => {
     if (authUser) {
@@ -59,6 +61,9 @@ function AnnouncementComponents() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
+    setIsSubmitting(true); // Set isSubmitting to true when submission starts
 
     if (title === "" || text === "") {
       toast.error("Please fill in all the fields!", {
@@ -84,6 +89,7 @@ function AnnouncementComponents() {
         progress: undefined,
         theme: "light",
       });
+      setIsSubmitting(false);
       return;
     }
     console.log("Content:", text);
@@ -222,6 +228,7 @@ function AnnouncementComponents() {
     } catch (e) {
       console.error("Error adding document: ", e);
     }
+  setIsSubmitting(false);
   };
   const renderHeader = () => {
     return (

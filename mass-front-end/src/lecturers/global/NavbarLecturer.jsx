@@ -62,10 +62,10 @@ function NavbarLecturer({ title }) {
             <IconButton variant="text" color="blue-gray">
               {userData.image ? (
                 <Avatar
-                  size="md"
+                  size="xl"
                   alt="avatar"
                   src={userData.image}
-                  className="border shadow-xl h-6 w-6 shadow-green-900/20 mt-0 mx-auto "
+                  className="border shadow-xl h-10 w-10 shadow-green-900/20 mt-0 mx-auto "
                 />
               ) : (
                 <UserCircleIcon className="h-6 w-6" />
