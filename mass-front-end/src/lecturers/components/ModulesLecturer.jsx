@@ -66,7 +66,7 @@ function ModulesLecturer() {
     <div className="flex flex-row gap-3">
       {isLoading ? (
         <SpinnerLoading />
-      ) : userData ? (
+      ) : userData && userData.length ?  (
         userData &&
         userData.map((item, index) => (
           <div key={index}>
@@ -103,9 +103,9 @@ function ModulesLecturer() {
           </div>
         ))
       ) : (
-        <div className="flex flex-col items-center justify-center">
-          <Typography className="text-2xl font-bold">No modules</Typography>
-          <Typography className="text-lg font-normal">
+        <div className="flex flex-col ">
+          <Typography className="text-2xl font-bold px-5">No Modules Assigned </Typography>
+          <Typography className="text-lg font-normal px-5">
             Please check back later
           </Typography>
         </div>

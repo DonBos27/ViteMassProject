@@ -55,7 +55,7 @@ function NavbarStudent({ title, Icon, handleProfile }) {
               {/* <div className=" text-2xl">{title}</div> */}
             </div>
           </Typography>
-          <div className=" flex gap-1 md:mr-4">
+          <div className=" flex gap-1 md:mr-0">
             {/* <IconButton variant="text" color="blue-gray">
               <Cog6ToothIcon className="h-6 w-6" />
             </IconButton>
