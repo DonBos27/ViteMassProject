@@ -34,21 +34,30 @@ function Calendar({ handleProfile }) {
   const [open, setOpen] = useState(false);
   const [tabs, setTabs] = useState("Upcoming");
   const { user: authUser } = useAuth();
+  const [allEvents, setAllEvents] = useState([]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "events", "eventsPosts"), (doc) => {
       if (doc.exists()) {
         const data = doc.data();
-        // console.log("Fetched data from Firestore:", data);
+        const today = new Date();
+
         const posts = data.allLecturerPost.map((post) => ({
           ...post,
-          start: post.start.toDate(), // Convert Firestore Timestamp to JavaScript Date
-          end: post.end.toDate(), // Convert Firestore Timestamp to JavaScript Date
+          start: post.start.toDate(),
+          end: post.end.toDate(),
         }));
 
-        //console.log("Post from all lecturer:", posts);
-        setEvent(posts);
+        setAllEvents(posts);
+
+        const futurePosts = posts.filter(
+          (post) => new Date(post.start) >= today
+        );
+        setUpcomingEvents(futurePosts);
       }
     });
+
     return () => {
       unsubscribe();
     };
@@ -120,17 +129,35 @@ function Calendar({ handleProfile }) {
     const title = arg.event.title;
     const { description, start, end, scope, type, lecturerName } =
       arg.event.extendedProps;
-    const styles = {
+
+    const startDate = new Date(arg.event.start);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset the time part, to only compare the date.
+
+    const isPastEvent = startDate < today;
+
+    const baseStyles = {
       padding: "3px",
       borderRadius: "5px",
       cursor: "pointer",
       backgroundColor: arg.event.backgroundColor,
       color: "white",
     };
+
+    // If the event date has passed, gray out the event.
+    const styles = isPastEvent
+      ? {
+          ...baseStyles,
+          opacity: 0.5,
+          backgroundColor: "#cccccc",
+          color: "black",
+        }
+      : baseStyles;
+
     return (
       <div style={styles} className="text-center w-full">
         <i>
-          <span className="font-bold text-lg">{lecturerName}</span> <br />{" "}
+          <span className="font-bold text-lg">{lecturerName}</span> <br />
           <b>{truncate(title, 25)}</b>
         </i>
         <p className="w-full p-2">{truncate(description, 15)}</p>
@@ -145,6 +172,8 @@ function Calendar({ handleProfile }) {
   const daysleft = (date) => {
     const today = new Date();
     const eventDate = new Date(date);
+    if (eventDate < today) return null; // Return null if eventDate is in the past
+
     const diffTime = Math.abs(eventDate - today);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
@@ -203,7 +232,7 @@ function Calendar({ handleProfile }) {
                       }}
                     >
                       <TabPanel value="Upcoming" className="p-0">
-                        {event.map((item,index) => (
+                        {upcomingEvents.map((item, index) => (
                           <div key={index} className="flex flex-col gap-2 p-2">
                             <div className="flex flex-row justify-between">
                               <Typography variant="h6" color="gray">
@@ -216,19 +245,26 @@ function Calendar({ handleProfile }) {
                           </div>
                         ))}
                       </TabPanel>
+
                       <TabPanel value="DaysLeft" className="p-0">
-                        {event.map((item,index) => (
-                          <div key={index} className="flex flex-col gap-2 p-2">
-                            <div className="flex flex-row justify-between">
-                              <Typography variant="h6" color="gray">
-                                {item.title}
-                              </Typography>
-                              <Typography variant="h6" color="gray">
-                                {daysleft(item.start)} days left
-                              </Typography>
+                        {upcomingEvents.map((item, index) => {
+                          const remainingDays = daysleft(item.start);
+                          return (
+                            <div
+                              key={index}
+                              className="flex flex-col gap-2 p-2"
+                            >
+                              <div className="flex flex-row justify-between">
+                                <Typography variant="h6" color="gray">
+                                  {item.title}
+                                </Typography>
+                                <Typography variant="h6" color="gray">
+                                  {remainingDays} days left
+                                </Typography>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </TabPanel>
                     </TabsBody>
                   </Tabs>
@@ -239,7 +275,7 @@ function Calendar({ handleProfile }) {
               plugins={[dayGridPlugin]}
               initialView="dayGridMonth"
               weekends={false}
-              events={event}
+              events={allEvents}
               height="800px"
               eventContent={eventContent}
               eventClick={handleEventClick}
