@@ -21,6 +21,7 @@ function ModuleStudent({ handleProfile }) {
   const [userData, setUserData] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -30,7 +31,10 @@ function ModuleStudent({ handleProfile }) {
         if (doc.exists()) {
           const data = doc.data();
           // console.log("Fetched data from Firestore:", data);
-          setUserData(data);
+          setTimeout(() => {
+            setUserData(data);
+            setIsLoading(false);
+          }, 2000);
         }
       });
       return () => {
@@ -61,7 +65,7 @@ function ModuleStudent({ handleProfile }) {
         ...everyoneAnnouncements.docs,
       ];
 
-      // Sort the combinedAnnouncements array by timestamp if needed 
+      // Sort the combinedAnnouncements array by timestamp if needed
       // combinedAnnouncements.sort((a, b) => {
       //   if (a.data().timestamp < b.data().timestamp) {
       //     return 1;
@@ -72,8 +76,10 @@ function ModuleStudent({ handleProfile }) {
       const sortedAnnouncements = studentAnnouncements.docs.sort(
         (a, b) => b.data().timestamp - a.data().timestamp
       );
-      
-      setAnnouncements(sortedAnnouncements);
+      setTimeout(() => {
+        setAnnouncements(sortedAnnouncements);
+        setIsLoading(false);
+      }, 2000);
       // console.log("Announcements:", combinedAnnouncements)
       console.log("Announcements Lecturer:", lecturerAnnouncements.docs);
       console.log("Announcements Student:", studentAnnouncements.docs);
@@ -107,10 +113,10 @@ function ModuleStudent({ handleProfile }) {
           </Typography>
         </div>
         <div className="w-full mb-4 mt-0">
-          {announcements.length > 0 ? (
+          { announcements.length > 0 ? (
             announcements.map((announcement, index) => (
               <div className="mb-4 mt-8" key={index}>
-                <Timeline >
+                <Timeline>
                   <TimelineItem className="h-28 ">
                     <TimelineConnector className="!w-[78px]" />
                     <TimelineHeader className="relative rounded-none hover:border-l-8 hover:border-primary  bg-transparent hover:bg-white py-3 pl-4 pr-8  shadow-blue-gray-900/5">
@@ -126,7 +132,7 @@ function ModuleStudent({ handleProfile }) {
                           color="gary"
                           className="text-base font-normal"
                         >
-                          {announcement.data().content}
+                          {announcement.data().text}
                         </Typography>
                         {announcement.data().timestamp && (
                           <Typography
@@ -154,7 +160,7 @@ function ModuleStudent({ handleProfile }) {
               </div>
             ))
           ) : (
-            <p>No announcements to display</p>
+            <p className="p-8">No announcements to display</p>
           )}
         </div>
         {/* </Card> */}
