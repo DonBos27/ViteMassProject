@@ -73,6 +73,8 @@ function CalendarPost() {
   const [errorAlert, setErrorAlert] = useState(false);
   const [minorError, setMinorError] = useState(false);
   const [minorErrorText, setMinorErrorText] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const handleOpen = () => {
     setOpen((cur) => !cur);
@@ -413,6 +415,21 @@ function CalendarPost() {
   };
 
   const handlePost = async (arg) => {
+    if (title === "" || description === "" || scope === "" || markweight === "") {
+  setErrorAlert(true);
+  toast.error("Please fill in all the fields!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+  return;
+}else{
+ if (isSubmitting) return;  // Early exit if already submitting
+    setIsSubmitting(true); 
     const startTimestamp = Timestamp.fromDate(new Date(selectedStartDate)); // Convert to Timestamp
     const endTimestamp = Timestamp.fromDate(new Date(selectedEndDate)); // Convert to Timestamp
     const lecturerID = authUser.uid;
@@ -634,7 +651,7 @@ function CalendarPost() {
     );
     const uniqueStudentEmails = [...new Set(emails)];
     console.log("Unique student emails:", uniqueStudentEmails);
-
+    
     // Email notificaion to students
     try {
       const docRef = await addDoc(collection(db, "mail"), {
@@ -784,9 +801,25 @@ function CalendarPost() {
     setSelectedEndDate("");
     setMarkweight("");
     setErrorAlert(false);
+    setIsSubmitting(false);
+}
+   
   };
   const handleUpdate = async (arg) => {
-    const startTimestamp = Timestamp.fromDate(
+    if (title === "" || description === "" || scope === "" || markweight === "") {
+  setErrorAlert(true);
+  toast.error("Please fill in all the fields!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+  return;
+}else{
+  const startTimestamp = Timestamp.fromDate(
       new Date(selectedUpdateStartDate)
     ); // Convert to Timestamp
     const endTimestamp = Timestamp.fromDate(new Date(selectedUpdateEndDate)); // Convert to Timestamp
@@ -1056,6 +1089,9 @@ function CalendarPost() {
     setSelectedUpdateStartDate("");
     setSelectedUpdateEndDate("");
     setMarkweightUpdate("");
+}
+
+    
   };
   const handleDelete = async (arg) => {
     const lecturerID = authUser.uid;
@@ -1228,8 +1264,9 @@ function CalendarPost() {
             </List>
           </CardBody>
           <CardFooter className="pt-0">
-            <Button variant="gradient" onClick={handlePost} fullWidth>
-              Post
+            <Button className={`w-full ${isSubmitting ? 'bg-gray-400' : 'bg-primary'} 
+                 hover:${isSubmitting ? 'bg-gray-500' : 'bg-primary'}`} variant="gradient" onClick={handlePost} fullWidth>
+              {isSubmitting ? "Posting..." : "Post"}
             </Button>
           </CardFooter>
         </Card>
